@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /images/
+Disallow: /media/
+Disallow: /js/
+Disallow: /css/
+Disallow: /locale/
+Sitemap: http://www.hr.am/sitemap_index.xml
