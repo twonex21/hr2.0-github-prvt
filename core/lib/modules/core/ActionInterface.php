@@ -7,7 +7,7 @@ interface ActionInterface
      * Processes the request and renders the view
      *
      */
-    public function perform($reqParameters);
+    public function perform();
 }    
 //EOF
 ?>

@@ -5,54 +5,39 @@ require PATH_DIR.'/frontend/configs/const.ini';
 require PATH_DIR.'/frontend/messages/properties.ini';
 
 class FrontendController
-{            		
-    /**
-     * Parses the get parameters hidden in the url
-     */
-    private function parseParameters($parameters) {
-        $reqP = array();
-        $lk = '';
-
-        if($parameters == '/' || $parameters == '') {
-            return null;
-        }
-
-        $parameters = str_replace(' ', '=', $parameters);
-
-        // Find seperator char first in the path
-        $pos = strpos($parameters,'/t/');
-        if($pos === false) {
-            //TODO handle error differently
-            //throw new BaseException('url manipulation','The URL was manipulated','403');
-            header("Location: /notfound");
-        }
-
-        $param = substr($parameters, 0, $pos);
-        
-        // Removing the first and the last /
-        if($str = trim(str_replace('/', ' ',$param))) {
-            $tmp = explode(' ',$str);
-            // After splitting odd=key even=value
-            $cnt = count($tmp);               
-            for($i = 0; $i < $cnt; $i++) {
-                // Build the array
-                if(($i % 2) == 0) {
-                    $lk = $tmp[$i];
-                } else {
-                    $reqP[$lk] = $tmp[$i];
-                }
-            }
-
-            return $reqP;
-        } else {
-            return null;
-        }
-    }
-
+{	
+	const CONTROLLER_KEY = 'controller';
+	const ACTION_KEY = 'action';
+	const PARAMETERS_KEY = 'parameters';
+	const QUERY_KEY = 'query';
+	
+	private static $querySpecialKeys = array(
+		self::CONTROLLER_KEY, 
+		self::ACTION_KEY, 
+		self::PARAMETERS_KEY, 
+		self::QUERY_KEY
+	);	
+	
+	protected $request;
+	
+	protected $session;
+	
+	private $locale;
+	
+	public function __construct() {
+		$this->request = new Request();
+   		$this->session = new Session();
+   		$this->session->start();   		
+	}
+	
+	
+	public function getRequest() {
+		return $this->request;
+	}
+	
+	
     /**
      * Process a request, calls delegate to handle the request
-     * @param array theRequest The request array containing cleaned input
-     * variables
      */
     public function process() {
     	$controller = NAVIGATE_DEFAULT_CONTROLLER;
@@ -60,28 +45,28 @@ class FrontendController
     	$query = null;        
         $parameters = null;
 
-        if(isset($_GET['parameters'])) {
-            $parameters = $this->parseParameters($_GET['parameters']);
+        if($this->request->query->has(self::PARAMETERS_KEY)) {
+            $parameters = $this->request->parseParameters($this->request->query->get(self::PARAMETERS_KEY));
         }
         
-        foreach($_GET as $k => $v) {
-            if($k != 'controller' && $k != 'action' && $k != 'parameters' && $k != 'query') {
-                $parameters[$k] = $v;
-            }
-        }	
+        foreach($this->request->query->getParameters() as $key => $value) {
+            if(!in_array($key, self::$querySpecialKeys)) {
+                $parameters[$key] = $value;
+            }                        
+        }        
         
-        if(isset($_GET["query"]) && $_GET["query"] != "" && !(isset($_GET["controller"]) && isset($_GET["action"]))) {
-        	$directActions = unserialize(DIRECT_ACTIONS);        	
-        	$query = strtolower($_GET["query"]);        	          	
+        if(!$this->request->query->isNullOrEmpty(self::QUERY_KEY) && ($this->request->query->isNullOrEmpty(self::CONTROLLER_KEY) || $this->request->query->isNullOrEmpty(self::ACTION_KEY))) {
+        	$directActions = unserialize(DIRECT_ACTIONS);
+        	$query = strtolower($this->request->query->get(self::QUERY_KEY));        	          	
         	
         	// Handling short url cases (direct actions)
         	if(array_key_exists($query, $directActions)) {
         		if(is_array($directActions[$query])) {
-        			$controller = $directActions[$query]["controller"];
-        			$action = $directActions[$query]["action"];
+        			$controller = $directActions[$query][self::CONTROLLER_KEY];
+        			$action = $directActions[$query][self::ACTION_KEY];
         			
-        			if(isset($directActions[$query]["parameters"])) {
-        				foreach($directActions[$query]["parameters"] as $key => $value) {
+        			if(isset($directActions[$query][self::PARAMETERS_KEY])) {
+        				foreach($directActions[$query][self::PARAMETERS_KEY] as $key => $value) {
         					$parameters[$key] = $value;
         				}
         			}
@@ -91,13 +76,14 @@ class FrontendController
 	        		$action = $query;
         		}
         	} else {
-				header("Location: /notfound");				
+        		$this->delegateNotFound();
+        		return;
         	}
 				
-        } elseif(isset($_GET["controller"]) && isset($_GET["action"])) {
-	        $controller = $_GET['controller'];
-	        $action = $_GET['action'];	        
-        }
+        } elseif(!$this->request->query->isNullOrEmpty(self::CONTROLLER_KEY) && !$this->request->query->isNullOrEmpty(self::ACTION_KEY)) {
+	        $controller = $this->request->query->get(self::CONTROLLER_KEY);
+	        $action = $this->request->query->get(self::ACTION_KEY);
+        }                
         
         // Let delegate handle the rest
         $this->delegate($controller, $action, $parameters);
@@ -108,49 +94,79 @@ class FrontendController
      * @param string targetController The controller handling the request
      * @param string targetAction The action requested
      */
-    public function delegate($targetController, $targetAction, $reqParams = null, $objectParams = null) {    	
-        $newController = '';
-        $newAction = '';
-
+    public function delegate($targetController, $targetAction, $queryParams = array(), $objectParams = null) {
         if(!isset($targetController) || !isset($targetAction)) {
             throw new BaseException('Controller', 'No controller or no action');
         }
 
         // The module that handles our request
-        $controller = ucfirst(strtolower($targetController));
+        $targetController = ucfirst(strtolower($targetController));
         // The class that will perform the action requested
-        $action = ucfirst(strtolower($targetAction));
+        $targetAction = ucfirst(strtolower($targetAction));
 
-        $filepath = LIB_DIR.'modules/frontend/'.$controller.'/'.$action.'Action.php';
+        // Checking if user has access to the requested page
+        $userSecuredActions = unserialize(USER_SECURED_ACTIONS);
+        $companySecuredActions = unserialize(COMPANY_SECURED_ACTIONS); 
+        $isUserSecured = isset($userSecuredActions[$targetController]) && in_array($targetAction, $userSecuredActions[$targetController]);
+        $isCompanySecured = isset($companySecuredActions[$targetController]) && in_array($targetAction, $companySecuredActions[$targetController]);        
+        
+        if(($isUserSecured && !$this->session->isUserAuthorized()) || ($isCompanySecured && !$this->session->isCompanyAuthorized())) {
+        	// Forced attempt to secured page
+        	// Showing 'no access' page
+        	// TODO: Consider showing login form instead
+        	$this->delegateNoAccess();
+        	return;
+        }
+        
+        $filepath = LIB_DIR.'modules/frontend/'.$targetController.'/'.$targetAction.'Action.php';
 		
         if(file_exists($filepath))
             require $filepath;
         else {
-            header("Location: /notfound");
+            $this->delegateNotFound();
             return;
         }
         
+        // Getting action namespace
+        $actionNamespace = 'HR\\' . $targetController;
+        
         // Getting action class name
-        $actionClass = 'HR\\' . $controller . '\\' . $action . 'Action';
+        $actionClass =  $actionNamespace . '\\' . $targetAction . 'Action';
         // Create an instance of action class
-        $actionInstance = new $actionClass();              
+        $actionInstance = new $actionClass();
+                
+        // Registering OOP encapsulated models for global variables   
+        $this->request->query->setParameters($queryParams);
+        $actionInstance->registerGlobals($this->request, $this->session);
+        
+        // Registering model, view and mail layers.
+        $actionInstance->registerLayers($actionNamespace);
 
-        if($objectParams != null) {
-            $actionInstance->objectParams = $objectParams;
-        }        
-
-        if ($this->locale == null) {
-            $this->locale = $this->selectLocale();
+        // Setting some additional parameters        
+        if($objectParams != null) {        	
+        	$actionInstance->setParameters($objectParams);
         }
-
-       	// Setting global vars to be visible in all templates.
-       	//$GLOBALS["tplVars"] = $this->setGlobalTplVars();              	
+        
+        if ($this->locale == null) {
+            $this->locale = $this->request->selectLocale();
+        }
 		
         // Call the perform method
-        $actionInstance->perform($reqParams);
+        $actionInstance->perform();
         
     }
+    
+    
+    public function delegateNotFound() {
+    	$this->delegate('statics', 'page', array('p' => 'not-found'));
+    }
 
+    
+    public function delegateNoAccess() {
+    	$this->delegate('statics', 'page', array('p' => 'no-access'));
+    }
+
+    
     /**
      * True HTTP redirect
      */
@@ -164,33 +180,10 @@ class FrontendController
         // The class that will perform the action requested
         $action = strtolower($targetAction);
 
-        $target = sprintf('Location: http://%s/%s/%s/', $_SERVER['HTTP_HOST'], $controller, $action);
+        $target = sprintf('Location: http://%s/%s/%s/', $this->request->server->get('HTTP_HOST'), $controller, $action);
         header($target);
         exit;
-    }
-
-    /**
-     * Select the language based on tld and then on accept-language header
-     */
-    public function selectLocale() {
-        global $localeArray;
-        $language = 'en_GB';     	
-    	
-        if(isset($_SESSION['curr_lang']) && isset($localeArray[$_SESSION['curr_lang']])) {
-            $language = $localeArray[$_SESSION['curr_lang']];
-        }
-
-        setlocale (LC_ALL,$language);
-        //set the .po file
-        putenv("LANG=".$language);
-        bindtextdomain('messages',$_SERVER['DOCUMENT_ROOT']."locale");
-        textdomain("messages");
-        bind_textdomain_codeset('messages', 'UTF-8');
-        
-        $this->locale = $language;
-
-        return $language;
-    }        
+    }       
 }
 
 //EOF

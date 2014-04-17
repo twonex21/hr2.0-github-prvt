@@ -1,55 +1,59 @@
 <?php
-namespace HR\Supprot;
+namespace HR\Support;
 
+use HR\Core\ActionInterface;
+use HR\Core\Action;
 use HR\Core\FrontendUtils;
-class ResizeImageAction extends Action implements ActionInterface {
 
-    function perform($reqParameters) {
-        $s = 0;
-        $tmp = 0;
-        $key = "";
-        $paramType = 1;
-        $paramValue = 80;
-        $type = 1; // 1 for USER, 2 for COMPANY                
+class ResizeImageAction extends Action implements ActionInterface 
+{
+    function perform() {
+        $sizeType = 0;
+        $isTemp = false;
+        $filePath = '';
+        $fileName = '';
+        $dimensions = array('w', 'h');
+        $dimension = 'w'; 					// Either 'width' or 'height'
+        $dimensionSize = MIDDLE_IMAGE_SIZE; // Default size
+        $type = 1;	 						// 1 for USER, 2 for COMPANY
+        $square = false;
         
-        if(isset($reqParameters['s']) && is_numeric($reqParameters['s'])) {
-            $s = $reqParameters['s'];
-        }
-        
-        if(isset($reqParameters['tmp']) && is_numeric($reqParameters['tmp'])) {
-            $tmp = $reqParameters['tmp'];
-        }
-        
-        if(isset($reqParameters['key'])) {
-            $key = $reqParameters['key'];            
+        if($this->request->query->has('s') && $this->request->query->isDigit('s')) {
+            $sizeType = $this->request->query->getInt('s');
         }
         
-        if(isset($reqParameters['tp'])) {
-            $type = $reqParameters['tp'];            
+        if($this->request->query->has('dim') && in_array($this->request->query->get('dim'), $dimensions)) {
+            $dimension = $this->request->query->get('dim');
         }
-                
-          
-        switch ($s) {      
-   			case 1: $paramValue = LARGE_IMAGE_WIDTH; break;
-   			case 2: $paramValue = MIDDLE_IMAGE_WIDTH; break;
-   			case 3: $paramValue = SMALL_IMAGE_WIDTH; break;
-   			case 4: $paramValue = EXTRA_LARGE_IMAGE_WIDTH; break;
+        
+        if(!$this->request->query->isNullOrEmpty('key')) {
+            $fileName = $this->request->query->get('key');
         }
-           
+        
+        $square = !$this->request->query->isNullOrEmpty('sq');
+        
+        if($this->request->query->has('tmp') && $this->request->query->getInt('tmp') == 1) {
+        	// Temporary image
+        	$filePath = FrontendUtils::getTempFilePath($fileName);
+        } elseif($this->request->query->has('tp') && $this->request->query->isDigit('tp')) {
+        	$type = $this->request->query->getInt('tp');
+            if($type == 1) {
+            	// User picture
+            	$filePath = FrontendUtils::getPicturePath($fileName, USER, $square);
+            } elseif($type == 2) {
+            	// Company picture
+            	$filePath = FrontendUtils::getPicturePath($fileName, COMPANY, $square);
+            }
+        }                                
             
-        if($tmp == 1) {
-        	$filepath = FrontendUtils::getTempImagePath($key);
-        } else {
-        	if($type == 1) {
-        		$filepath = FrontendUtils::getUserImagePath($key);		
-        	} elseif($type == 2) {
-        		$filepath = FrontendUtils::getCompanyImagePath($key);
-        	}
-        }
-        
+        switch ($sizeType) {      
+   			case 1: $dimensionSize = LARGE_IMAGE_SIZE; break;
+   			case 2: $dimensionSize = MIDDLE_IMAGE_SIZE; break;
+   			case 3: $dimensionSize = SMALL_IMAGE_SIZE;
+        }        
             
-    	if($filepath!='' && $filepath!=null)
-        	FrontendUtils::outputImage($filepath,$paramType,$paramValue);
+    	if($filePath != '')
+        	FrontendUtils::outputImage($filePath, $dimension, $dimensionSize);
     }
 }
 //EOF

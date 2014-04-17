@@ -4,18 +4,14 @@ namespace HR\Statics;
 use HR\Core\ActionInterface;
 use HR\Core\Action;
 
-class PageAction extends Action implements ActionInterface {
-	public function __construct() {
-		parent::__construct(__NAMESPACE__);
-	}	
-	
-    function perform($reqParameters){	
-    	$pagesArray = array("tos", "privacy", "faq", "not-found");    	        
+class PageAction extends Action implements ActionInterface {	
+    function perform(){	
+    	$pagesArray = array("tos", "privacy", "faq", "not-found", "no-access");    	        
 
-        if(isset($reqParameters['p']) && $reqParameters['p']!="" && in_array($reqParameters['p'], $pagesArray)) {
-        	$this->view->showStaticPage($reqParameters['p']);
+        if(!$this->request->query->isNullOrEmpty('p') && in_array($this->request->query->get('p'), $pagesArray)) {
+        	$this->view->showStaticPage($this->request->query->get('p'));
         } else {
-        	header("Location: /notfound");
+        	$this->delegateNotFound();        	
         }
     }
 }

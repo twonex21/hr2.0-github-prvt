@@ -2053,6 +2053,7 @@ class Smarty_Compiler extends Smarty {
                 break;
 
             case 'session':
+            	
                 $compiled_ref = ($this->request_use_auto_globals) ? '$_SESSION' : "\$GLOBALS['HTTP_SESSION_VARS']";
                 break;
 

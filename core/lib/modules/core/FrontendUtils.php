@@ -2,35 +2,107 @@
 namespace HR\Core;
 
 require_once LIB_DIR.'phpass/PasswordHash.php';
+use \PasswordHash as PasswordHash;
 
 class FrontendUtils
-{
-    
+{	
     private $monthsArray_en;
-    private static $randChars = Array (2, "o", 9, "R", "s", "y", "K", "P", 6, "w", "Y", "h", "C", "m", "A", "Z", "l", "D", 8, "k", "T", "p", "L", "c", "G", "I", "b", "O", "F", "z", "S", "t", "E", "a", 3, "d", "V", "q", "H", 7, "v", "u", "X", "f", "r", "W", "e", 4, "J", "N", "i", "B", "n", 5, "U", "j", "g", 1, "Q", "x", "M");    
+    private static $randChars = array (2, "o", 9, "R", "s", "y", "K", "P", 6, "w", "Y", "h", "C", "m", "A", "Z", "l", "D", 8, "k", "T", "p", "L", "c", "G", "I", "b", "O", "F", "z", "S", "t", "E", "a", 3, "d", "V", "q", "H", 7, "v", "u", "X", "f", "r", "W", "e", 4, "J", "N", "i", "B", "n", 5, "U", "j", "g", 1, "Q", "x", "M");
+    private static $digitMap = array('0' => '13', '1' => '12', '2' => '31', '3' => '81', '4' => '15', '5' => '42', '6' => '37', '7' => '26', '8' => '59', '9' => '83');
+    private static $randMap = array(1 => '4', 2 => '03', 3 => '724', 4 => '3036', 5 => '80192', 6 => '709365', 7 => '1375062', 8 => '95034712', 9 => '173054302');
+    
+    public static function validateSessionData($data, $attributes) {
+    	foreach($data as $key => $value) {
+    		if(!in_array($key, $attributes)) {
+    			throw new BaseException('Session Management', 'Attempt to retrieve field that is not part of session attributes');
+    		}
+    	}
+    	    	    	
+    	foreach($attributes as $attribute) {
+    		if(!array_key_exists($attribute, $data)) {
+    			$data[$attribute] = '';
+    		}
+    	}
+    	
+    	return $data;
+    }
     
     
-    public static function getDate($start,$end,$type=0,$lang)
-    {
+    public static function isUploadFileValid($file, $type, &$errorMessage) {
+    	$type = strtoupper($type);
+    
+    	if(!in_array(strtoupper($type), array('FILE', 'PICTURE'))) {
+    		return false;
+    	}
+    	
+    	// Checking for file error
+    	if(isset($file['error']) && $file['error'] != UPLOAD_ERR_OK) {
+    		$errorMessage = constant('VALIDATION_' . $type . '_UPLOAD_ERROR');
+    		return false;
+    	}
+    	
+    	// Checking for file size
+    	$fileSizes = unserialize(constant($type . '_FILESIZE'));
+    	if($file["size"] < ($fileSizes['min'] * 1024)) {
+    		$errorMessage = constant('VALIDATION_' . $type . '_FILESIZE_SMALL');
+    		return false;
+    	} elseif($file["size"] > ($fileSizes['max'] * 1024)) {
+    		$errorMessage = constant('VALIDATION_' . $type . '_FILESIZE_LARGE');
+    		return false;
+    	}
+    	
+    	// Checking for right extension    	
+    	$fileNameParts = explode('.', $file['name']);
+    	$extension = strtolower(end($fileNameParts));
+    	$mimeType = self::getFileMimeType($file['tmp_name']);
+    	if(!in_array($extension, unserialize(constant($type . '_ALLOWED_EXTENSIONS'))) || 
+    	   !in_array($mimeType, unserialize(constant($type . '_ALLOWED_TYPES')))) {
+    		$errorMessage = constant('VALIDATION_' . $type . '_TYPE');
+    		return false;
+    	}
+    	
+    	if($type == TYPE_PICTURE) {
+    		// For pictures checking pixel size as well
+    		$extension = ($extension == "jpg") ? "jpeg" : $extension;
+            $funcName = "imagecreatefrom" . $extension;
+            
+            $tempImage = $funcName($file["tmp_name"]);
+                              
+            $pxSizes = unserialize(constant('PICTURE_PXSIZE'));
+            if(imagesx($tempImage) < $pxSizes['min'] || imagesy($tempImage) < $pxSizes['min']) {                
+            	imagedestroy($tempImage);
+            	$errorMessage = VALIDATION_PICTURE_PXSIZE_SMALL;
+            	return false;
+            } elseif(imagesx($tempImage) > $pxSizes['max'] || imagesy($tempImage) > $pxSizes['max']) {
+            	imagedestroy($tempImage);
+            	$errorMessage = VALIDATION_PICTURE_PXSIZE_LARGE;
+            	return false;
+            }
+            
+            imagedestroy($tempImage);
+    	}
+    	
+    	return true;
+    }
+    
+        
+    public static function getDate($start, $end, $type=0, $lang) {
         $dateArray = array();
-        if($type==0)
-        {
+        if($type == 0) {
             $dateArray[''] = ($lang=='ru')?"Год":"Year";
-        }
-        else 
-        {
+        } else {
             $dateArray[''] = ($lang=='ru')?"День":"Day";
         }
-        for($i=$end;$i>=$start;$i--)
-        {
+        
+        for($i=$end; $i>=$start; $i--) {
             $dateArray[$i] = $i;
         }
         
         return $dateArray;
     }
     
-    public static function constructDate($year,$month,$day='01')
-    {       
+    
+    public static function constructDate($year, $month, $day='01') {       
         return $year.'-'.$month.'-'.$day;
     }
     
@@ -38,8 +110,7 @@ class FrontendUtils
             list($year, $month, $day) = explode('-', $date);
     }
     
-    public static  function getFormatedDate($date_string)
-    {  
+    public static  function getFormatedDate($date_string) {  
         $formated_date="";
         list($year, $month, $day) = explode('-', $date_string);
         $monthsArray = self::getMonths();
@@ -50,22 +121,18 @@ class FrontendUtils
         
     }
     
-    public static function calculatePaging($total_count,$page,$count)
-    {
+    public static function calculatePaging($total_count,$page,$count) {
         $pagingArray = array();
         $pages_count = ceil($total_count/$count);
         
         $pagingArray["totalCount"] = $total_count;
-        if($total_count>0)
-        {
+        if($total_count > 0) {
             $pagingArray["resultFrom"] = ($page-1)*$count+1;
         }
-        else 
-        {
+        else {
             $pagingArray["resultFrom"] = 0;
         }
-        if($total_count > ($page*$count))   
-        {
+        if($total_count > ($page*$count)) {
             $pagingArray["resultTo"] = $page*$count;
             $pagingArray["next"] = ($page+1);           
             $pagingArray["nextHref"] = "/p/".($page+1);           
@@ -75,8 +142,7 @@ class FrontendUtils
         else         
             $pagingArray["resultTo"] = $total_count;
         
-        if($page>1)
-        {        
+        if($page > 1) {        
             $pagingArray["prevHref"] = "/p/".($page-1);            
             $pagingArray["prev"] = ($page-1);            
             $pagingArray["firstHref"] = "/p/1";
@@ -87,34 +153,27 @@ class FrontendUtils
         
     }
     
-    public static function calculateListing($total_count,$page,$count,$listing_count)
-    { 
-		$pages_count = ceil($total_count/$count);
+    public static function calculateListing($total_count, $page, $count, $listing_count) { 
+		$pages_count = ceil($total_count / $count);
 		$listingArray = array();
 		$loop_start = 0;
 		$loop_end = 0;
 
-		if($page < (ceil($listing_count/2)+1) && $total_count > $count)
-		{
+		if($page < (ceil($listing_count / 2) + 1) && $total_count > $count) {
 		   $loop_start = 1;
-		   $loop_end = ($pages_count<$listing_count)?$pages_count:$listing_count;
+		   $loop_end = ($pages_count < $listing_count) ? $pages_count : $listing_count;
 		   
-		   $listingArray = self::getListingArray($page,$loop_start,$loop_end);
-		}
-		elseif(($page+floor($listing_count/2)) <= $pages_count && $total_count > $count)
-		{
-		   $loop_start = $page-floor($listing_count/2);
-		   $loop_end = (($page+floor($listing_count/2))>$pages_count)?$pages_count:$page+floor($listing_count/2);
+		   $listingArray = self::getListingArray($page, $loop_start, $loop_end);
+		} elseif(($page + floor($listing_count / 2)) <= $pages_count && $total_count > $count) {
+		   $loop_start = $page - floor($listing_count / 2);
+		   $loop_end = (($page + floor($listing_count / 2)) > $pages_count) ? $pages_count : $page + floor($listing_count / 2);
 		   
-		   $listingArray = self::getListingArray($page,$loop_start,$loop_end);
-		}
-		elseif($total_count > $count) 
-		{
-		   $loop_start = ($pages_count < $listing_count) ? 1 : ($pages_count - $listing_count+1);
-		   
+		   $listingArray = self::getListingArray($page, $loop_start, $loop_end);
+		} elseif($total_count > $count) {
+		   $loop_start = ($pages_count < $listing_count) ? 1 : ($pages_count - $listing_count + 1);		   
 		   $loop_end = $pages_count;
-		            
-		   $listingArray = self::getListingArray($page,$loop_start,$loop_end);
+
+		   $listingArray = self::getListingArray($page, $loop_start, $loop_end);
 		}
 		
 		return $listingArray;
@@ -122,20 +181,15 @@ class FrontendUtils
     }
     
     
-     public static function getListingArray($page,$start,$end)
-    {
+     public static function getListingArray($page, $start, $end) {
         $counter = 0;
         $listingArray = array();
         
-        for ($i=$start;$i<=$end;$i++)
-       {
+        for ($i=$start; $i<=$end; $i++) {
            $listingArray[$counter]["digit"] = $i;
-           if($i==$page)
-           {
+           if($i==$page) {
                $listingArray[$counter++]["active"] = 1;
-           }
-           else 
-           {
+           } else {
                $listingArray[$counter++]["active"] = 0;
            }
        }
@@ -143,58 +197,46 @@ class FrontendUtils
     }
     
     
-    public function constructGetString($reqParameters)
-    {       
+    public function constructGetString($reqParameters) {       
         $getString = "";
-        if(is_array($reqParameters) && !empty($reqParameters))
-        {       
+        if(is_array($reqParameters) && !empty($reqParameters)) {       
             $getKeys = array_keys($reqParameters);
             $getString = "?";
-            for($i=0;$i<count($reqParameters);$i++)
-            {
-                if($i==0)
-                {
-                    $getString .= $getKeys[$i]."=".$reqParameters[$getKeys[$i]];
-                }
-                else
-                {
-                    if(is_array($reqParameters[$getKeys[$i]]))
-                    {
-                        foreach($reqParameters[$getKeys[$i]] as $val)
-                        {
-                            $getString .= "&".$getKeys[$i]."%5B%5D=".$val;
+            for($i=0; $i<count($reqParameters); $i++) {
+                if($i==0) {
+                    $getString .= $getKeys[$i] . "=" . $reqParameters[$getKeys[$i]];
+                } else {
+                    if(is_array($reqParameters[$getKeys[$i]])) {
+                        foreach($reqParameters[$getKeys[$i]] as $val) {
+                            $getString .= "&" . $getKeys[$i] . "%5B%5D=".$val;
                         }
-                    }
-                    else 
-                    {
-                        $getString .= "&".$getKeys[$i]."=".$reqParameters[$getKeys[$i]];
+                    } else {
+                        $getString .= "&" . $getKeys[$i] . "=" . $reqParameters[$getKeys[$i]];
                     }
                 }
             }
         }
-        return str_replace(" ","+",$getString);
+        return str_replace(" ", "+", $getString);
     }
     
     
     
-    public static function generateFileName($filename)
-    {
+    public static function generateFileName($filename) {
         $microsecs = "";
         $secs = "";
         $filetype = "";
         
-        $filetype = substr($filename, strrpos($filename,".")+1); 
-        list($microsecs,$secs) = explode(" ",microtime());       
-        $microsecs = substr($microsecs,2);
+        $filetype = substr($filename, strrpos($filename, ".") + 1); 
+        list($microsecs, $secs) = explode(" ", microtime());       
+        $microsecs = substr($microsecs, 2);
         
         
-        return "temp_file_".$secs.$microsecs.".".$filetype;
+        return "temp_file_" . $secs.$microsecs . "." . $filetype;
     }
     
     
     
-    public static function generateUniqueId($id=0)
-    {
+    public static function generateUniqueId($id=0) {
         $microsecs = "";
         $secs = "";        
                 
@@ -213,22 +255,50 @@ class FrontendUtils
     }
     
     
-    public static function isEmailAddress($mail) 
-    {
+    public static function isEmailAddress($mail) {
 	    $mail = trim($mail);
 	    if($mail == '') {
 	        return false;
 	    }
-	    
+
         $is_valid = !(preg_match('!@.*@|\.\.|\,|\;!', $mail) ||
-        !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i", $mail));            
+        !preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i', $mail));            
                                 
         return $is_valid;
     }
     
     
-    public static function isNumber($string) 
-    {
+    public static function isLinkedIn($url) {
+	    $url = trim($url);
+	    if($url == '') {
+	        return true;
+	    }
+	    
+        return preg_match('/^((http|https):\/\/)?((www|\w{2})\.)?linkedin.com\/((in\/[^\/]+\/?)|(pub\/[^\/]+\/(\w+\/?){3}))$/i', $url);
+    }
+    
+    
+    public static function isLatin($string) {
+    	$string = trim($string);
+	    if($string == '') {
+	        return true;
+	    }
+
+	    return preg_match('/^[a-zA-Z\s,]*$/u', $string);
+    }
+    
+    
+    public static function isDate($date) {
+    	$date = trim($date);
+	    if($date == '') {
+	        return true;
+	    }
+	    
+	    return strtotime($date);
+    }
+    
+    
+    public static function isNumber($string) {
 	    if(strlen($string) == 0)
         	return false;        
 
@@ -236,22 +306,30 @@ class FrontendUtils
     }
     
     
-    public static function isPasswordLength($string) {
-    	return (strlen($string) >= 6);
+    public static function isPasswordLength($password) {
+    	if($password != '') {
+    		return (mb_strlen($password) >= HR_MIN_PASSWORD_LENGTH);
+    	}
+    	
+    	return true;
     }
-    
-    
+
+       
     public static function passwordsMatch($passwords) {
     	if(is_array($passwords) && count($passwords) == 2) {
     		return ($passwords[0] === $passwords[1]);
     	}
     	
     	return false;
+    }
+
+    
+    public static function notDuplicate($array) {
+    	return count($array) == count(array_unique($array));
     }       
     
     
-    public static function isEmailAddresses($mail_string) 
-    {
+    public static function isEmailAddresses($mail_string) {
 
         if(strlen($mail_string) == 0)
             return false;
@@ -273,8 +351,7 @@ class FrontendUtils
     }
     
     
-    public static function isUsernameValid($username) 
-    {
+    public static function isUsernameValid($username) {
     	$username = trim($username);
 	    if($username == '') {
 	        return false;
@@ -284,8 +361,7 @@ class FrontendUtils
     }
     
     
-    public static function randomString($length,$captcha = false,$nocase = false)
-    {
+    public static function randomString($length, $captcha = false, $nocase = false) {
     	
     	$randomString = "";
         $charsArray = array(2, 3, 4, 7, 9); // 1, 5, 6 and 8 may look like characters.
@@ -294,8 +370,7 @@ class FrontendUtils
         'U','V','W','X','Y','Z'));
         // I, O, S, B may look like numbers
 
-        if(!$captcha)
-        {
+        if(!$captcha) {
             $charsArray = array_merge($charsArray,array(1, 5, 6, 8 ,'I','O','S','B'));
         }
         
@@ -304,9 +379,7 @@ class FrontendUtils
         foreach($charIndxArray as $charidx) {           
             if(rand(0,1)==0 && !$captcha && $nocase) {
                 $randomString .= strtolower($charsArray[$charidx]);	
-            }
-            else 
-            {
+            } else {
                 $randomString .= $charsArray[$charidx];    
             }
         }        
@@ -315,8 +388,7 @@ class FrontendUtils
     }
     
     
-    public static function createCaptchaImage($captcha_string)
-    {
+    public static function createCaptchaImage($captcha_string) {
         list($musec, $msec) = explode(' ', microtime());
         $srand = (float) $msec + ((float) $musec * 100000);
         srand($srand);
@@ -373,74 +445,62 @@ class FrontendUtils
     }
     
     
-    public static function outputImage($filepath,$param_type,$param_value)
-    {
-        $file_width = 0;
-        $file_height = 0;
-        $percent = 0;
+    public static function outputImage($filePath, $dimension, $dimensionSize) {
+        $width = 0;
+        $height = 0;
+        $ratio = 0;
 
-        list($file_width, $file_height) = getimagesize($filepath);
+        list($width, $height) = getimagesize($filePath);
         
-        if($param_type==1)
-        {
-	        $percent = floatval($file_width) / floatval($param_value);        
-	        $new_width = $param_value;
-	        $new_height = $file_height / $percent;
-        }
-        elseif($param_type=2)
-        {
-        	$percent = floatval($file_height) / floatval($param_value);        	        
-	        $new_height = $param_value; 
-	        $new_width = $file_width / $percent;
+        if($dimension == 'w') {
+	        $ratio = floatval($width) / floatval($dimensionSize);        
+	        $newWidth = $dimensionSize;
+	        $newHeight = $height / $ratio;
+        } elseif($dimension == 'h') {
+        	$ratio = floatval($height) / floatval($dimensionSize);        	        
+	        $newHeight = $dimensionSize; 
+	        $newWidth = $width / $ratio;
         }
         
-        $filetype = strtolower(substr($filepath, strrpos($filepath,".")+1));
-        $filetype = ($filetype=="jpg")?"jpeg":$filetype;               
+        $fileNameParts = explode('.', $filePath);
+        $extension = strtolower(end($fileNameParts));        
         
-        $imagecreate_func = "imagecreatefrom".$filetype;        
+        $imagecreateFunc = "imagecreatefrom" . $extension;        
         
         // Resample
-        $image_p = imagecreatetruecolor($new_width, $new_height);
-        $white = imagecolorallocate($image_p, 255, 255, 255);
-        imagefill($image_p, 0, 0, $white);
+        $newImage = imagecreatetruecolor($newWidth, $newWidth);
+        $white = imagecolorallocate($newImage, 255, 255, 255);
+        imagefill($newImage, 0, 0, $white);
         
-        $image = $imagecreate_func($filepath);
-        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $file_width, $file_height);
+        $image = $imagecreateFunc($filePath);
+        imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
         
-
-        header('Content-type: image/png');
+        Response::setHeader('Content-type', 'image/' . $extension);
         
-        switch($filetype)
-        {
+        switch($extension) {
             case 'jpeg':
-                imagejpeg($image_p,null,100);
+                imagejpeg($newImage, null, 100);
                 break;
             case 'png':
-                imagepng($image_p,null);
+                imagepng($newImage, null);
                 break;
             case 'gif':
-                imagegif($image_p);
-                break;
+                imagegif($newImage);         
         }
     }
     
     
-    public static function getTagCloud($allTags)
-    {        
+    public static function getTagCloud($allTags) {        
         $tagCloud = array();
         $numArray = array();
         $count = count($allTags);        
         $key = 0;
         
-        for($i=0;$i<$count;$i++)
-        {
-            if(!in_array($allTags[$i],$tagCloud))
-            {
+        for($i=0;$i<$count;$i++) {
+            if(!in_array($allTags[$i], $tagCloud)) {
                 $num = 1;
-                for($j=$i+1;$j<$count;$j++)
-                {
-                    if($allTags[$i]==$allTags[$j])
-                    {                        
+                for($j=$i+1; $j<$count; $j++) {
+                    if($allTags[$i]==$allTags[$j]) {                        
                         $num++;
                     }
                 }
@@ -456,9 +516,8 @@ class FrontendUtils
         
         $coef = (TAG_MAX_SIZE-TAG_MIN_SIZE)/$num_range;
         
-        foreach($tagCloud as $key=>$value)
-        {            
-            $tagCloud[$key]['font_size'] = ceil(TAG_MIN_SIZE+$coef*($numArray[$key]-$min_num));
+        foreach($tagCloud as $key => $value) {            
+            $tagCloud[$key]['font_size'] = ceil(TAG_MIN_SIZE + $coef * ($numArray[$key] - $min_num));
             $tagCloud[$key]['url_tag'] = urlencode($value['tag']);
         }
         
@@ -466,20 +525,23 @@ class FrontendUtils
     }    
     
     
-    public static function uploadPicture($tempFilename,$fileName) {    	
-        $fileType = "";                
-        
-        $fileType = substr($fileName, strrpos($fileName,".")+1); 
-        $newFileName = self::randomString(8, false, true).".".$fileType;
-        $filePath = MEDIA_DIR."temp_files/tmp_file_".$newFileName;
+    public static function uploadFile($tempFilename, $fileName, $keepName = false) {
+    	// Getting file extension
+    	$fileNameParts = explode('.', $fileName);
+        $extension = strtolower(end($fileNameParts));
+        // Getting file name without extension
+        $fileName = trim($fileName, '.' . $extension);
+        $extension = ($extension == 'jpg') ? 'jpeg' : $extension;
+        // Generating new temporary file name
+        $newFileName = ($keepName) ? self::randomString(4, false, true) . '_' . str_replace(' ', '_', $fileName) : self::randomString(10, false, true);
+        $filePath = sprintf(TEMP_FILE_PATH, $newFileName, $extension);
 
         if (move_uploaded_file($tempFilename, $filePath)) {
             return $newFileName;
         }
         else {
-            return "";
+            return '';
         }
-
     }
     
     
@@ -505,80 +567,107 @@ class FrontendUtils
         }
 
     }
-    
-    
-    public static function uploadVideoThumbnail($tempFilename,$fileName,$newFileName) {
-        $fileType = "";
-        
-        $fileType = substr($fileName, strrpos($fileName,".")+1);
-        $fileType = ($fileType=="ile")?"png":$fileType;
-                 
 
-        //$newFileName = self::randomString(10, false, true).".".$fileType;
-        $filePath = MEDIA_DIR."thumbnails/".$newFileName.".".$fileType;        
-
-        if (move_uploaded_file($tempFilename, $filePath)) {
-            return $newFileName.".".$fileType;
-        }
-        else {
-            return "";
-        }
-
-    }
     
-    
-    public static function uploadAvatar($tempFilename,$fileName) {
-        $fileType = "";
-        
-        $fileType = substr($fileName, strrpos($fileName,".")+1);
-        $fileType = ($fileType=="ile")?"png":$fileType;
-        
-        $newFileName = "";
-
-        $newFileName = self::randomString(10, false, true).".".$fileType;
-        $filePath = MEDIA_DIR."user_pictures/".$newFileName;
-        
-
-        if (move_uploaded_file($tempFilename, $filePath)) {
-            return $newFileName;
-        }
-        else {
-            return "";
-        }
-
-    }
-
-
-    public static function getTempImagePath($key) {
-    	return MEDIA_DIR."temp_files/tmp_file_".$key;
-    }
-    
-    
-    public static function getUserImagePath($key) {
-    	return MEDIA_DIR."user_pictures/user_".$key;
-    }
-    
-    
-    public static function getCompanyImagePath($key) {
-    	return MEDIA_DIR."company_pictures/company_".$key;
-    }    
-    
-    public static function saveTemporaryFile($tempFile, $type) {
-    	$tempLocation = MEDIA_DIR."temp_files/tmp_file_".$tempFile;
-    	if($type == "user") {
-    		$permanentLocation = MEDIA_DIR."user_pictures/".$tempFile;
-    	} elseif($type == "venue") {
-    		$permanentLocation = MEDIA_DIR."venue_logos/logo_".$tempFile;    		
-    	} elseif($type == "offer_logo") {
-    		$permanentLocation = MEDIA_DIR."offer_logos/logo_".$tempFile;    		
+    public static function getTempFilePath($key) {
+    	$allExtensions = array_merge(unserialize(HR_PICTURE_EXTENSIONS), unserialize(HR_FILE_EXTENSIONS));
+    	
+    	foreach($allExtensions as $extension) {
+	    	if(file_exists(sprintf(TEMP_FILE_PATH, $key, $extension))) {
+	    		return sprintf(TEMP_FILE_PATH, $key, $extension);
+	    	}
     	}
-    	if(file_exists($tempLocation)) {
-	    	if(rename($tempLocation, $permanentLocation)) {
-	    		return $tempFile;
+	    	
+    	return '';
+    }
+    
+    
+    public static function getPicturePath($key, $type = USER, $square = false) { 
+    	$picturePath = constant(strtoupper($type) . (($square) ? '_SQUARE' : '') . '_PICTURE_PATH');   	
+    	foreach(unserialize(HR_PICTURE_EXTENSIONS) as $extension) {
+	    	if(file_exists(sprintf($picturePath, $key, $extension))) {
+	    		return sprintf($picturePath, $key, $extension);
+	    	}
+    	}    	
+    	
+    	return '';
+    }
+    
+    
+    public static function getUserFilePath($key, $square = false) {
+    	return array(
+    			   'original' => self::getPicturePath($key, USER), 
+    			   'square' => self::getPicturePath($key, USER, true)
+			   );
+    }
+
+    
+    public static function getCompanyFilePath($key) {
+    	return self::getPicturePath($key, COMPANY);
+    }
+    
+    
+	public static function getFilePath($key, $type = RESUME) { 
+    	$picturePath = constant(strtoupper($type) . '_PATH');
+    	foreach(unserialize(HR_FILE_EXTENSIONS) as $extension) {
+	    	if(file_exists(sprintf($picturePath, $key, $extension))) {
+	    		return sprintf($picturePath, $key, $extension);
+	    	}
+    	}    	
+    	
+    	return '';
+    }
+    
+    
+    public static function getResumeFilePath($key) {
+    	return self::getFilePath($key, RESUME);
+    }
+
+    
+    public static function getVacancyFilePath($key) {
+    	return self::getFilePath($key, VACANCY);
+    }
+
+    public static function saveTemporaryFile($key, $type, $stripPrefix = false) {
+    	// Finding temp path by key
+    	$tempLocation = self::getTempFilePath($key);
+		
+    	if($tempLocation != '') {
+	    	$fileNameParts = explode('.', $tempLocation);
+	    	$extension = strtolower(end($fileNameParts));
+	    	
+	    	switch($type) {
+	    		case USER: 
+	    			$permanentLocation = sprintf(USER_PICTURE_PATH, $key, $extension);
+	    			break;
+    			case COMPANY:
+    				$permanentLocation = sprintf(COMPANY_PICTURE_PATH, $key, $extension);
+    				break;
+				case RESUME:
+					$permanentLocation = sprintf(RESUME_PATH, $key, $extension);
+					break;
+				case VACANCY:
+					$permanentLocation = sprintf(VACANCY_PATH, $key, $extension);
+					break;
+	    	}
+	    	
+	    	if(file_exists($tempLocation)) {
+	    		if(rename($tempLocation, $permanentLocation)) {
+	    			return $permanentLocation;
+	    		}
 	    	}
     	}
     	
-    	return "";
+    	return false;
+    }
+    
+    
+    public static function deleteFile($filePath) {
+    	if(!file_exists($filePath)) {
+    		return false;
+    	}
+    	
+    	return unlink($filePath);
     }
     
     
@@ -644,49 +733,50 @@ class FrontendUtils
     
     
     public static function cropAndSaveImage($picturePath, $destinationPath, $newWidth, $newHeight, $type, $croppedWidth=0, $croppedHeight=0, $cropX=0, $cropY=0) {
-    	// Getting image resource for the original image
-    	$imagecreate = "imagecreatefrom".$type;
-    	
-    	if(function_exists($imagecreate)) {
-	    	$originalImage = $imagecreate($picturePath);
+    	// Getting dimensions of the original picture
+		list($originalWidth, $originalHeight) = getimagesize($picturePath);
+		
+		if($originalWidth >= $newWidth || $originalHeight >= $newHeight) {
+	    	// Getting image resource for the original image
+	    	$imagecreate = 'imagecreatefrom' . $type;
 	    	
-	    	
-	    	if($croppedWidth == 0 && $croppedHeight == 0) {
-				// Getting dimensions of the original picture
-				list($originalWidth, $originalHeight) = getimagesize($picturePath);
+	    	if(function_exists($imagecreate)) {
+		    	$originalImage = $imagecreate($picturePath);	    	
+		    	
+		    	if($croppedWidth == 0 && $croppedHeight == 0) {								
+					$originalRatio = $originalWidth / $originalHeight;
+					$newRatio = $newWidth/$newHeight;
+					
+					// Getting the dimensions of cropped original image
+					if($originalRatio < $newRatio) {
+						$croppedWidth = ceil($originalWidth);
+						$croppedHeight = ceil($croppedWidth / $newRatio);
+					} else {
+						$croppedHeight = ceil($originalHeight);
+						$croppedWidth = ceil($croppedHeight * $newRatio);
+					}
+					
+					// Calculating crop coordinates
+					if($cropX == 0 && $cropY == 0) {
+						$cropX = ceil(($originalWidth - $croppedWidth) / 2);
+						$cropY = ceil(($originalHeight - $croppedHeight) / 2);
+					}		
+		    	}
 				
-				$originalRatio = $originalWidth/$originalHeight;
-				$newRatio = $newWidth/$newHeight;
+				// Creating new image resource for our result image
+				$newImage = imagecreatetruecolor($newWidth, $newHeight);
 				
-				// Getting the dimensions of cropped original image
-				if($originalRatio < $newRatio) {
-					$croppedWidth = ceil($originalWidth);
-					$croppedHeight = ceil($croppedWidth/$newRatio);
-				} else {
-					$croppedHeight = ceil($originalHeight);
-					$croppedWidth = ceil($croppedHeight*$newRatio);
+				// Cropping and resizing the original image
+				imagecopyresampled($newImage, $originalImage, 0, 0, $cropX, $cropY, $newWidth, $newHeight, $croppedWidth, $croppedHeight);
+				
+				// Saving the result image into file
+				$imageFunc = 'image' . $type;
+				$quality = ($type == 'png') ? 8 : 90;
+				if(function_exists($imageFunc)) {
+					return $imageFunc($newImage, $destinationPath, $quality);
 				}
-				
-				// Calculating crop coordinates
-				if($cropX == 0 && $cropY == 0) {
-					$cropX = ceil(($originalWidth - $croppedWidth)/2);
-					$cropY = ceil(($originalHeight - $croppedHeight)/2);
-				}		
 	    	}
-			
-			// Creating new image resource for our result image
-			$newImage = imagecreatetruecolor($newWidth, $newHeight);
-			
-			// Cropping and resizing the original image
-			imagecopyresampled($newImage, $originalImage, 0, 0, $cropX, $cropY, $newWidth, $newHeight, $croppedWidth, $croppedHeight);
-			
-			// Saving the result image into file
-			$imageFunc = "image".$type;
-			$quality = ($type=="png") ? 8 : 90;
-			if(function_exists($imageFunc)) {
-				return $imageFunc($newImage, $destinationPath, $quality);
-			}
-    	}
+		}
 		
 		return false;
     }
@@ -772,30 +862,39 @@ class FrontendUtils
     }
     
     
+    public static function hrEncode($number, $hashLenght = 12, $onlyDigits = false) {
+    	return $onlyDigits ? self::hrStringEncode($number, $hashLenght) : self::hrDigitEncode($number);
+    }
     
-	public static function fcEncode($digit, $hashLength=12) {				
-		$digitStr = (string) $digit;
-		$length = strlen($digitStr);
-		$hashStr = "";
+    
+    public static function hrDecode($hashStr) {
+    	return ctype_digit($hashStr) ? self::hrDigitDecode($hashStr) : self::hrStringDecode($hashStr);
+    }
+    
+    
+	private static function hrStringEncode($number, $hashLength = 12) {				
+		$numberStr = (string) $number;
+		$length = strlen($numberStr);
+		$hashStr = "";		
 		$count = count(self::$randChars);
-		$startIdx = $digit % $count;
+		$startIdx = $number % $count;
 		$step = 0;
 	
 		for($i = 1; $i <= $hashLength; $i++) {
 			if($i <= $length) {
-				if($i < $length && isset($digitStr[$length-$i-1]) && $digitStr[$length-$i] != "0" && $digitStr[$length-$i-1] != "0" && intval($digitStr[$length-$i].$digitStr[$length-$i-1]) < $count) {
-					$currentDigit = intval($digitStr[$length-$i].$digitStr[$length-$i-1]);
+				if($i < $length && isset($numberStr[$length-$i-1]) && $numberStr[$length-$i] != "0" && $numberStr[$length-$i-1] != "0" && intval($numberStr[$length-$i].$numberStr[$length-$i-1]) < $count) {
+					$currentDigit = intval($numberStr[$length-$i].$numberStr[$length-$i-1]);
 				} else {
-					$currentDigit = intval($digitStr[$length-$i]);
+					$currentDigit = intval($numberStr[$length-$i]);
 				}
 				
-				$step += intval($digitStr[$i-1]);
+				$step += intval($numberStr[$i-1]);
 				$hashStr .= self::$randChars[$currentDigit];
 			} else {
 				if($i == ($hashLength -1)) {
 					$hashStr .= self::$randChars[$length];
 				} else {
-					$idx = (($i*$step) + $digit) % $count;			
+					$idx = (($i*$step) + $number) % $count;			
 					$hashStr .= self::$randChars[$idx];
 				}
 			}
@@ -805,10 +904,10 @@ class FrontendUtils
 	}
 	
 	
-	public static function fcDecode($hashStr) {		
+	private static function hrStringDecode($hashStr) {		
 		$count = count(self::$randChars);
-		$digitsStr = "";
-		$digit = 0;
+		$numbersStr = "";
+		$number = 0;
 	
 		$length = array_search($hashStr[strlen($hashStr) - 2], self::$randChars);
 		
@@ -816,13 +915,43 @@ class FrontendUtils
 			$digitsIdxs = substr($hashStr, 0, $length);
 						
 			for($i=$length-1; $i>=0; $i--) {				
-				$digitStr = (string) array_search($digitsIdxs[$i], self::$randChars);
-				$digitsStr .= $digitStr[0];
+				$numberStr = (string) array_search($digitsIdxs[$i], self::$randChars);
+				$numbersStr .= $numberStr[0];
 			}
 		}
 		
-		return $digitsStr;
+		return (int) $numbersStr;
 	}
+	
+	
+	private static function hrDigitEncode($number) {    	
+    	$hashStr = '';
+    	$numberStr = (string) $number;
+    	$length = strlen($numberStr);
+    	$randPattern = self::$randMap[$length];    	
+    	
+    	for($idx = 0; $idx < $length; $idx++) {
+    		$substituteStr = self::$digitMap[$numberStr[$idx]];
+    		$hashStr .= substr_replace($substituteStr, $randPattern[$idx], 1, 0);
+    	}    
+    	
+    	return $hashStr;
+    }
+    
+    
+    private static function hrDigitDecode($hashStr) {    	
+    	$numberStr = '';
+    	$length = strlen($hashStr);    	
+    	
+    	for($idx = 0; $idx < $length; $idx++) {
+    		if(($idx + 2) % 3 == 0) {
+    			$key = $hashStr[$idx-1] . $hashStr[$idx+1];
+    			$numberStr .= array_search($key, self::$digitMap);
+    		}
+    	}
+    	
+    	return (int) $numberStr;
+    }
 
 	/**
 	 * Calculates the great-circle distance between two points, with
@@ -873,12 +1002,103 @@ class FrontendUtils
 	}
 	
 	
+	public static function getRefArray($inputArray) {	    
+        $refArray = array();
+        
+        foreach($inputArray as $key => $val) {
+            $refArray[$key] = &$inputArray[$key];
+        }
+        
+        return $refArray;	    
+	} 
+	
+	
+	public static function strposa($haystack, $needles, $offset, $escapeChar = '') {
+		$posArray = array();
+		if(!is_array($needles)) $needles = array($needles);
+		
+        foreach($needles as $needle) {
+        	if(!in_array($needle, $posArray)) {
+	            $pos = strpos($haystack, $needle, $offset);
+	            
+	            if($pos != false) {
+	            	// Skipping escaped $needle characters (e.g. %%d)
+	            	$needleFound = true;
+	            	while(($haystack[$pos - 1] == $escapeChar) || !$needleFound) {
+	            		if(strpos($haystack, $needle, $pos + 1)) {
+	            			$pos = strpos($haystack, $needle, $pos + 1);
+	            		} else {
+	            			// No unecsaped charecter found in string, ending while
+	            			$needleFound = false;
+	            		}
+	            	}
+	            	
+	            	if($needleFound) $posArray[$pos] = $needle;
+	            }	            
+        	}
+        }
+        
+        if(empty($posArray)) return false;
+        
+        $minPos = min(array_keys($posArray));
+        return array($minPos, $posArray[$minPos]);
+	}
+	
 	public static function truncateString($string, $length) {
 		if(strlen($string) > $length) {
 			return substr($string, 0, $length)."..";
 		}
 		
 		return $string;
+	}
+	
+	
+	public static function getFileMimeType($file, $encoding = false) {
+	    $mime = '';
+
+	    if(function_exists('finfo_file')) {
+	        $finfo = finfo_open(FILEINFO_MIME);
+	        $mime = finfo_file($finfo, $file);
+	        finfo_close($finfo);
+	    }
+	    elseif(substr(PHP_OS, 0, 3) == 'WIN') {
+	        $mime = mime_content_type($file);
+	    }
+	    else {
+	        $file = escapeshellarg($file);
+	        $cmd = "file -iL $file";
+	
+	        exec($cmd, $output, $r);
+	
+	        if ($r == 0) {
+	            $mime = substr($output[0], strpos($output[0], ': ') + 2);
+	        }
+	    }
+	
+	    if($mime == '') {
+	        return false;
+	    }
+
+		if ($encoding) {
+	        return $mime;
+	    }
+    
+        return substr($mime, 0, strpos($mime, '; '));
+	}
+	
+	
+	public static function arrayUnique($array) {
+		$dupes = array();
+		$count = count($array);
+		foreach(array_reverse($array) as $key => $value) {
+			if(in_array($value, $dupes)) {
+				unset($array[$count - $key - 1]);
+			} else {			
+				$dupes[] = $value;
+			}
+		}
+		
+		return $array;
 	}
 	
 }

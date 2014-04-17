@@ -1,32 +1,40 @@
 <?php
 namespace HR\Support;
 
+use HR\Core\ActionInterface;
+use HR\Core\Action;
 use HR\Core\FrontendUtils;
 
-class ValidateAction extends FrontendController {
-
-    function perform($reqParameters)
-    {     
-    	$jsonArray = array("status" => "ok");
+class ValidateAction extends Action implements ActionInterface 
+{
+    function perform() {
+    	$this->response->jsonPrepare(SUCCESS);
     	$validationMessages = unserialize(VALIDATION_MESSAGES);
     	
-    	if(!empty($_POST)) {
-    		if(isset($_POST["fields"])) {
-    			foreach($_POST["fields"] as $field) {
-    				foreach($field["criterias"] as $criteria) {
-    					if(method_exists('FrontendUtils', $criteria)) {
-    						if(!FrontendUtils::$criteria($field["value"])) {
-    							$jsonArray["status"] = "fail";
-    							$jsonArray["messages"][$field["id"]] = $validationMessages[$criteria];
-    							break;
-    						}
-    					}
+    	if(!$this->request->request->isEmpty()) {
+    		// Post is not empty
+    		if($this->request->request->has('fields')) {
+    			// Looping through fields to be validated
+    			foreach($this->request->request->get('fields') as $field) {
+    				if(isset($field['criterias'])) {
+    					// Looping through field criterias to validate against
+	    				foreach($field['criterias'] as $criteria) {
+	    					// Validating criteria
+	    					if(method_exists('HR\Core\FrontendUtils', $criteria)) {
+	    						if(!FrontendUtils::$criteria($field['value'])) {
+	    							// Validation failed
+	    							$this->response->jsonSetStatus(FAIL);
+	    							$this->response->jsonErrorMessagesPush($field['id'], $validationMessages[$criteria]);    							
+	    							break;
+	    						}
+	    					}
+	    				}
     				}
     			}
     		}
     	}
     	
-    	echo json_encode($jsonArray);
+    	$this->response->jsonOutput();
     }
 }
 //EOF

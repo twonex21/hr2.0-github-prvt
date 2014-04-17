@@ -10,8 +10,14 @@ class MainView extends View
 		$this->assign("_encodedNumber", $encodedNumber);
 		$this->assign("_data", $data);
 		
-        $this->render('test.tpl', 'CONTENT');
-        $this->finish();
+        $this->render('test.tpl');
+        //$this->render('test.tpl', 'CONTENT');
+        //$this->finish();
+	}
+	
+	
+	function testForm() {
+		$this->render('test-form.tpl');
 	}	
 }
 //EOF
