@@ -1,1 +1,1 @@
-<div class="not-found">Oops! The page you're requesting was not found on Favecast server. Sorry about that :).</div>
+<div class="not-found">Oops! The page you're requesting was not found on this server. Sorry about that :).</div>

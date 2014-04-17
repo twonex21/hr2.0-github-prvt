@@ -1,0 +1,451 @@
+@charset "utf-8";
+/* CSS Document with helper styles */
+
+.hidden {
+	display: none !important;
+}
+
+/* Grid */
+.grid{display:inline;float:left;position:relative;margin-left:0;margin-right:0; min-height:20px}
+.grid100pcnt {width:100%;}
+.grid670 {width:670px;} .grid400{width:400px} .grid440{width:440px} .grid320 {width:320px} .grid310 {width:310px} .grid300 {width:300px} 
+.grid290 {width:290px;} .grid260 { width:290px; } .grid268 { width:268px } .grid230 {width:230px} .grid180 {width:180px} .grid200 {width:200px} .grid100{width:100px} 
+.clear{clear:both;display:block;overflow:hidden;visibility:hidden;width:0;height:0}
+.clearfix:before,.clearfix:after{content:'\0020';display:block;overflow:hidden;visibility:hidden;width:0;height:0}
+.clearfix:after{clear:both}
+.clearfix{zoom:1}
+
+.label105 {height:105px;}
+
+/*padding & margin*/
+.padding28 { padding:28px !important; }
+.padding10 { padding:10px !important; }
+.padding20 { padding:20px !important; }
+.paddingtop0 {padding-top: 0px !important; }
+.paddingtop60 {padding-top: 60px !important; }
+.paddingleft20  { padding-left:20px !important; }
+.paddingleft40  { padding-left:40px !important; }
+.paddingright0 { padding-right:0px !important; }
+.paddingright20 { padding-right:20px !important; }
+.paddingright40 { padding-right:40px !important; }
+.paddingbottom0 {padding-bottom:0px !important;}
+.paddingbottom10 {padding-bottom:10px !important;}
+
+.margintop10 { margin-top:10px !important; } 
+.margintop15 { margin-top:15px !important; }
+.margintop20 { margin-top:20px !important; } 
+.margintop30 { margin-top:30px !important; } 
+.marginleft120 {margin-left:120px !important }
+.marginright0 { margin-right:0px !important; } 
+.marginright9 { margin-right:9px !important; } 
+.marginright10 { margin-right:10px !important; } 
+.marginright12 { margin-right:12px !important; } 
+.marginright30 { margin-right:30px !important; }
+.marginright40 { margin-right:40px !important; }
+.marginbottom19 { margin-bottom:19px !important; }
+.marginbottom25 { margin-bottom:25px !important; }
+.marginbottom30 { margin-bottom:30px !important; }
+
+.attach-ico {background:url(../images/form/attach_ico.png) no-repeat center left}
+
+.attach-resume {font-size:1.7rem !important;line-height:3.2rem !important;}
+
+/*colors*/
+.green { color:#34ab00 }
+.red { color:#ff3000 }
+
+/*Table*/
+table{font-size:1.5rem;color:rgba(0,0,0,.7);font-weight:bold;background:#fff;margin:20px 0}
+table a:link{color:#474747}
+table a:visited{color:#474747;font-weight:bold;text-decoration:none}
+table a:active,table a:hover{color:#bd5a35;text-decoration:underline}
+table th{padding:15px 5px 15px 5px;text-transform:uppercase;text-align:left;font-size:2rem}
+table tr{text-align:left;padding-left:20px}
+table tr td{padding:15px 12px;background:#f2f2f2}
+table tr:nth-child(2n+1) td{background:#FFF}
+table tr:hover td{background:#4c4c4c;color:#FFF;cursor:pointer}
+table.tablesorter thead tr .header span{background-image:url(../images/sort_bg.png);background-repeat:no-repeat;background-position:center right;cursor:pointer;display:inline-block;padding-right:20px}
+table.tablesorter thead tr .headerSortUp span{background-image:url(../images/sort_asc.png)}
+table.tablesorter thead tr .headerSortDown span{background-image:url(../images/sort_desc.png)}
+
+
+
+/*bottons*/
+.button {
+	display:inline-block;
+	font-size:1.5rem;
+	color:#FFF;
+	background-color:#ff5400;
+	margin-bottom:9px;
+	padding:15px 20px;
+	text-transform:uppercase
+}
+
+.button:hover {
+	opacity:.8;
+	cursor:pointer;	
+}
+
+	.large {
+		font-size:1.8rem;
+		background:#db421f;
+		display:block	
+	}
+
+	 a.loc { 
+		padding-left:40px; 
+		background:#ff5400 url(../images/loc.png)  10px center no-repeat;	
+	 }
+	 
+	 a.mail {
+		padding-left:45px; 
+		background:#00a4f9 url(../images/mail.png)  10px center no-repeat;	
+	 }
+	 
+	 a.linkedin {
+		padding-left:45px; 
+		background:#005988 url(../images/linkedin.png)  10px center no-repeat;	
+	 }
+	 
+	 a.face {
+		padding-left:45px; 
+		background:#3c5a95 url(../images/face.png)  10px center no-repeat;	
+	 }
+	 
+	 a.twitter {
+		padding-left:45px; 
+		background:#00aced url(../images/twitter.png)  10px center no-repeat;	
+	 }
+	 
+	 a.subscribe {
+	 	background-color:#ff9600;
+	 }
+	 
+.sbutton {
+	border-radius:3px;
+	display:inline-block;
+	font-size:2.4rem;
+	font-weight:bold;	
+	color:#FFF;
+	background-color:#34ab00;
+	margin-bottom:9px;
+	padding:12px 20px 15px 20px;
+	min-width:320px;
+	text-transform:uppercase;
+	text-shadow: 0px 3px 0px rgba(0, 0, 0, 0.3);
+	
+	-moz-box-shadow:inset 0px -5px 0px #2a8900;
+	-webkit-box-shadow:inset 0px -5px 0px #2a8900;
+	box-shadow:inset 0px -5px 0px #2a8900;	
+	
+}
+
+	.sbutton:hover {
+		-moz-box-shadow:inset 0px 5px 5px #2a8900;
+		-webkit-box-shadow:inset 0px 5px 5px #2a8900;
+		box-shadow:inset 0px 5px 5px #2a8900;
+		
+		text-shadow: 0px -3px 0px rgba(0, 0, 0, 0.3);
+		padding:15px 20px 12px 20px;
+	}
+	
+.form-add-thin-btn {
+	opacity:.9;
+	background-color:#34ab00;
+	min-height:50px;
+	background-image:url(../images/form/lng_plus.png);
+	background-position: 10px center ;
+	background-repeat:no-repeat;
+	color:rgba(255,255,255,.9);
+	text-transform:uppercase;
+	font-size:1.5rem;
+	font-weight:bold;
+	padding-left:40px;
+	box-sizing:border-box;
+	line-height:5rem;
+	margin-top:10px;
+}
+
+.form-add-thin-btn:hover {
+	opacity:1;
+	cursor:pointer;		
+}	
+	
+.form-add-btn {	
+	position:relative;
+	width:310px;	
+	opacity:.9;
+	background-color:#34ab00;
+	background-image:url(../images/form/skill_plus.png);	
+	background-repeat:no-repeat;
+	color:rgba(255,255,255,.9);
+	text-transform:uppercase;
+	text-align:center;
+	font-size:1.5rem;
+	font-weight:bold;
+	box-sizing:border-box;	
+}
+
+.add-education-btn, .add-experience-btn {
+	height:350px;
+	background-position: center 100px;
+	line-height:44.5rem;
+}
+
+.add-language-btn {
+	height:72px;	
+	background-position: 25px center ;
+	background-size: 30px 30px;
+	line-height:7.2rem;
+}
+
+.add-skill-btn {
+	height:238px;
+	background-position: center 60px;
+	line-height:35.5rem;
+}
+
+.form-add-btn:hover {
+	opacity:1;
+	cursor:pointer;		
+}
+		
+
+.remove-block {
+	display: block;
+	float: right;
+	margin: -15px 0 5px;
+	color: #999 !important;
+	font-size: 1.2rem;
+	text-transform: capitalize;
+	cursor: pointer;
+}
+
+#block_skills .remove-block {
+	margin: 10px 0 -15px !important;
+}
+
+.remove-block:hover {
+	color: #777 !important;
+}
+		
+.profbutton {
+      border-radius:3px;
+      display:inline-block;
+      font-size:3.7rem;
+      font-weight:bold;	
+      color:#FFF !important;
+      background-color:#ff5400;
+      margin-bottom:9px;
+      padding:12px 20px 15px 20px;
+      min-width:200px;
+      text-transform:uppercase;
+      text-shadow:0px 3px 0px rgba(0, 0, 0, 0.3);
+      text-align:center;
+      cursor:pointer;
+      -moz-box-shadow:inset 0px -5px 0px #cc4300;
+      -webkit-box-shadow:inset 0px -5px 0px #cc4300;
+      box-shadow:inset 0px -5px 0px #cc4300;	
+	  box-sizing: border-box;
+	  -moz-box-sizing: border-box;
+}	
+	
+	
+	.profbutton:hover {
+        -moz-box-shadow:inset 0px 5px 5px #cc4300;
+        -webkit-box-shadow:inset 0px 5px 5px #cc4300;
+        box-shadow:inset 0px 5px 5px #cc4300;
+
+        text-shadow: 0px -3px 0px rgba(0, 0, 0, 0.3);
+        padding:15px 20px 12px 20px;
+	}
+	
+	
+	
+	
+	
+/*file upload*/
+.fileselect {
+	width:150px; 
+	position:absolute; 
+	visibility:hidden	
+}
+
+.filefield {
+	position:relative;
+	width:200px;
+	height:200px;	
+}
+
+.filefield .photo {	
+	position:absolute;
+	width:200px;
+	height:200px;	
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	border: 2px dashed #d9d9d9;
+	cursor: default;	
+	box-sizing: border-box;		
+}
+
+.filefield .photo > img {width:200px;height:200px;}
+
+.filefield .profile-photo {	
+	background:url(../images/photo.png) no-repeat center !important;
+}
+
+#photoaddbtn {
+	position:absolute;
+	background-color:#34ab00;
+	background-image:url(../images/form/lng_plus.png);
+	background-position:10px center;
+	background-repeat:no-repeat;
+	width:136px;
+	bottom:10px;
+	left:14px;
+	color:#FFF;
+	font-size:1.6rem;
+	padding:12px 0 12px 40px;
+	text-transform:uppercase;	
+}
+
+#photoaddbtn.photo-remove, #fileaddbtn.file-remove {	
+	background-color:red !important;	
+	background-image:url(../images/form/photo_remove.png) !important;
+	font-size:1.4rem;
+}
+
+#photoaddbtn:hover {
+	cursor:pointer;
+	opacity:.8;
+}
+
+
+#filedrag {
+	position:absolute;
+	width:200px;
+	height:200px;
+	display: none;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	border: 2px dashed #d9d9d9;
+	cursor: default;
+	background:url(../images/quest.png) no-repeat center;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;	
+}
+
+#filedrag.hover {
+	border-color: #34ab00;
+}
+
+#profile-photo {
+	position:absolute;
+	width:200px;
+	height:200px;	
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	border: 2px dashed #d9d9d9;
+	cursor: default;	
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;	
+}
+
+#messages>img {
+	width: 100%;
+	height:100%;
+}
+
+#messages {
+	top:0;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	position:absolute;
+	width:200px;
+	height:200px;
+	padding: 0;
+	margin: 0;
+}
+
+
+.user-photo {
+	border: 1px solid #E0E2E2 !important;
+	width: 200px;
+	height: 200px;
+}
+
+/* jCarousel */
+.jcarousel-wrapper {
+    margin: 20px auto 0;
+    position: relative;
+    width: 876px;
+}
+
+.jcarousel {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.jcarousel ul {
+    width: 20000em;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jcarousel li {
+    float: left;    
+}
+
+.jcarousel-control {
+	width:42px;
+	height:42px;
+	margin-top:-30px;
+	position:absolute;
+	top:50%;
+	background:url('../images/carousel-controls.png') no-repeat;
+	border-radius:2px;
+	cursor:pointer;
+}
+
+.jcarousel-control-prev {
+	background-position: -4px 0px;
+	left: -42px;
+}
+
+.jcarousel-control-next {
+    background-position: -2px -38px; 	
+    right: -42px;
+}
+
+.jcarousel-control-prev:not(.inactive):hover {
+	background-color: #34AB00;
+	background-position: -38px 0px;
+}
+
+.jcarousel-control-next:not(.inactive):hover {
+	background-color: #34AB00;
+    background-position: -36px -38px;
+}
+
+.jcarousel-control-prev:hover span,
+.jcarousel-control-next:hover span {
+    display: block;
+}
+
+.jcarousel-control-prev.inactive {
+	background-position: -72px 0px;
+    cursor: default;
+}
+
+.jcarousel-control-next.inactive {
+    background-position: -72px -38px;
+    cursor: default;
+}
+	 
+	 

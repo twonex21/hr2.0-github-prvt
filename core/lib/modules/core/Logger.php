@@ -88,7 +88,7 @@ class Logger
     	return $formattedLine;
     }
     
-    public function write() {
+    private function write() {
     	if($this->outputStr !== "") {
     		$isNew = true;
     		if(file_exists($this->filePath)) {
@@ -135,6 +135,11 @@ class Logger
         		chmod($filePath, 766);
         	}
     	}
-    }    
+    }
+
+    
+    public function __destruct() {   
+    	$this->write();
+    }
 }
 ?>

@@ -4,6 +4,7 @@ namespace HR\Core;
 class View
 {
 	private static $_instance = null;
+	protected $session = array();
     protected $locale = null;
         
     public $smarty = null;
@@ -19,7 +20,8 @@ class View
     /**
      * Constructor. Must be called by constuctor of extending class
      */
-    public function __construct($namespace = '', $layoutTpl = '') {        
+    public function __construct($namespace = '', &$sessionArray = array(), $layoutTpl = '') {
+    	$this->session = &$sessionArray;
 		$this->locale = $GLOBALS['locale'];
         
 		$this->mainTemplate = empty($mainTpl)? BASE_MAIN_TEMPLATE : $layoutTpl;
@@ -37,10 +39,10 @@ class View
     }
 
     
-    static public function getInstance($namespace = '', $layoutTpl = '') {
+    static public function getInstance($namespace = '', $sessionArray = array(), $layoutTpl = '') {
         if(is_null(self::$_instance))
         {
-            self::$_instance = new self($namespace, $layoutTpl);
+            self::$_instance = new self($namespace, $sessionArray, $layoutTpl);
         }
         return self::$_instance;
     }
@@ -55,10 +57,8 @@ class View
         // Make sure we have the correct locale set
         setlocale(LC_ALL,$this->locale);
         
-        if(isset($GLOBALS['tplVars'])) {
-        	$this->assign('GLOBALS', $GLOBALS['tplVars']);
-        }
-                
+        $this->assign('_HR_SESSION', $this->session);
+                   
         if($block != null) {
             if(!isset($this->blocks[$block]))
             {

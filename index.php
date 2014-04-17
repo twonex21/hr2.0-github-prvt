@@ -1,7 +1,4 @@
 <?php
-echo "Local Changes here!";
-echo "Online change";
-
 header('Content-Type: text/html; charset=utf-8');
 
 /**
@@ -37,13 +34,10 @@ if(strpos(php_sapi_name(), "cli") && isset($argv) && count($argv) > 3) {
 require LIB_DIR.'modules/core/AutoLoader.php';
 HR\Core\AutoLoader::init();
 
-// Starting the session
-session_start();    
-
 $fC = new HR\Core\FrontendController();
 
 // Setting current language
-$locale = $fC->selectLocale();    
+$locale = $fC->getRequest()->selectLocale(); 
 
 try{
     // Processing the request
@@ -51,7 +45,7 @@ try{
 } catch(HR\Core\MySQLBeanException $e) {
     $fC->delegate('statics', 'error', null, $e);
 } catch(HR\Core\BaseException $e) {
-    $fC->delegate('statics', 'error',  null, $e);
+    $fC->delegate('statics', 'error', null, $e);
 }
 
 //EOF

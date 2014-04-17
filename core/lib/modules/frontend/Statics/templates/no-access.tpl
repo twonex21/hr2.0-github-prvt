@@ -1,0 +1,1 @@
+<div class="not-found">Access denied!. You have no privileges to view this page. Please login or register.</div>

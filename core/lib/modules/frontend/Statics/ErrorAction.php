@@ -8,17 +8,13 @@ use HR\Core\BaseException;
 use HR\Core\MySQLBeanException;
 
 class ErrorAction extends Action implements ActionInterface {
-	public function __construct() {
-		parent::__construct(__NAMESPACE__);
-	}
-	
-    function perform($reqParameters) {
-        if($this->objectParams != null) {
+    function perform() {
+        if($this->parameters != null) {
         	
-        	if($this->objectParams instanceof MySQLBeanException) {
-        		Logger::writeLog($this->objectParams->getErrorMessage(), Logger::ERROR);
-        	} elseif($this->objectParams instanceof BaseException) {
-        		Logger::writeLog($this->objectParams->getMessage(), Logger::ERROR);
+        	if($this->parameters instanceof MySQLBeanException) {
+        		Logger::writeLog($this->parameters->getErrorMessage(), Logger::ERROR);
+        	} elseif($this->parameters instanceof BaseException) {
+        		Logger::writeLog($this->parameters->getMessage(), Logger::ERROR);
         	}
         }
 

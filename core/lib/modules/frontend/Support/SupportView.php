@@ -1,16 +1,10 @@
 <?php
+namespace HR\Support;
+
+use HR\Core\View;
 
 class SupportView extends View
 {
-    /**
-     * Constructs a view
-     *
-     */
-    function __construct()
-    {
-        parent::__construct();
-    }  
-    
     /**
      * show form
      */
