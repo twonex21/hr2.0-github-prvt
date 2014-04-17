@@ -31,6 +31,9 @@ class ProfileAction extends Action implements ActionInterface
 	    	$this->setPageTitle($userProfile['fullName']);
 	    	
 	    	$this->view->showProfilePage($userProfile, $userEducation, $userExperience, $userLanguages, $userSkills, $userSoftSkills);
+    	} else {
+    		// Show not found page
+    		$this->delegateNotFound();
     	}
     }
     
