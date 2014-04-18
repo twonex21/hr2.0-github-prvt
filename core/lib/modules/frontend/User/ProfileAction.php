@@ -8,7 +8,7 @@ use HR\Core\FrontendUtils;
 class ProfileAction extends Action implements ActionInterface 
 {
     public function perform() {
-    	$userId = null;
+    	$userId = 0;
     	    	
     	if(!$this->request->query->isNullOrEmpty('uid')) {
     		// Taking get parameter
@@ -18,26 +18,23 @@ class ProfileAction extends Action implements ActionInterface
     		// User is watching his/her own profile
     		$userId = $this->session->getCurrentUserId();
     	}
-
-    	if($userId !== null) {
-	    	$userProfile = $this->model->getUserProfileById($userId);
+    	
+    	$userProfile = $this->model->getUserProfileById($userId);
+    	if(!empty($userProfile)) {
 			$userEducation = $this->model->getUserEducation($userId);
 			$userExperience = array_reverse($this->model->getUserExperience($userId));
 			$userLanguages = $this->model->getUserLanguages($userId);
 			$userSkills = $this->model->getUserSkills($userId);
-			$userSoftSkills = $this->model->getUserSoftSkills($userId);
-	    	
-	    	// Setting page title
-	    	$this->setPageTitle($userProfile['fullName']);
-	    	
-	    	$this->view->showProfilePage($userProfile, $userEducation, $userExperience, $userLanguages, $userSkills, $userSoftSkills);
+			$userSoftSkills = $this->model->getUserSoftSkills($userId);	    	
+    		// Setting page title
+    		$this->setPageTitle($userProfile['fullName']);
+    	
+    		$this->view->showProfilePage($userProfile, $userEducation, $userExperience, $userLanguages, $userSkills, $userSoftSkills);
     	} else {
-    		// Show not found page
-    		$this->delegateNotFound();
+	    	// Showing not found page
+			$this->delegateNotFound();
     	}
-    }
-    
-    
+    }        
 }
 
 ?>

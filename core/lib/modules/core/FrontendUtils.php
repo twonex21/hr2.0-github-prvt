@@ -906,8 +906,7 @@ class FrontendUtils
 	
 	private static function hrStringDecode($hashStr) {		
 		$count = count(self::$randChars);
-		$numbersStr = "";
-		$number = 0;
+		$numbersStr = '';
 	
 		$length = array_search($hashStr[strlen($hashStr) - 2], self::$randChars);
 		
