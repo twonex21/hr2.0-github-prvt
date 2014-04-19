@@ -54,8 +54,9 @@ class Response
  		}
     }
     
-    public static function setHeader($name, $value) {    
- 		   	header($name . ': ' . $value);
+    public static function setHeader($name, $value = '') {
+    		$headerStr = $name . (($value != '') ? ':' . $value : '');
+ 		   	header($headerStr);
     }
 }
 ?>

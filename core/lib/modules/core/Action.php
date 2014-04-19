@@ -27,6 +27,7 @@ class Action
    		$this->initialize($fc);   		
    	}
    	
+   	
    	private function initialize($fc) {
    		$this->namespace = $fc->getNamespace();
    		$this->controller = $fc->getController();
@@ -38,9 +39,9 @@ class Action
    		// Session, request, response handles   		
    		$this->session = &$fc->getSession();	
    		$this->request = &$fc->getRequest();
-   		$this->response = new Response();
+   		$this->response = $fc->getResponse();
    	}
-   	
+   	   	
    	
    	public function registerLayers() {
    		$this->qb = new QueryBuilder();

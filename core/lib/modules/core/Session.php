@@ -278,5 +278,5 @@ class Session
 	}
 	
 }
-//EOF
+
 ?>

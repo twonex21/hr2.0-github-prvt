@@ -13,7 +13,6 @@ RewriteRule ^([a-zA-Z0-9-_\,\']*)$ /index.php?query=$1 [L,QSA]
 
 #ErrorDocument 404 /index.php
 
-
 php_value upload_max_filesize 30M
 
 php_flag display_errors On

@@ -110,7 +110,7 @@ function showMessage() {
 	var $message = $('.message');
 	var isFlash = $message.attr('attr-flash');
 	
-	if($message.html() != '') {
+	if($message.children().size() > 1) {
 		setTimeout(function() {
 			$message.show().animate({'opacity' : 1}, 800, function() {
 				if(isFlash) {

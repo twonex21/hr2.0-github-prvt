@@ -46,69 +46,17 @@ class Request
         $this->cookies = new RequestWrapper($cookies);        
     }
     
-    
-    /**
-     * Parses the query parameters hidden in the url
-     */
-    public function parseParameters($parameters) {
-        $reqParameters = array();
-        $key = '';
-
-        if($parameters == '/' || $parameters == '') {
-            return null;
-        }
-
-        $parameters = str_replace(' ', '=', $parameters);
-
-        // Find seperator char first in the path
-        $position = strpos($parameters, '/t/');
-        if($position === false) {
-            //TODO handle error differently
-            //throw new BaseException('url manipulation','The URL was manipulated','403');
-            header("Location: /notfound");
-        }
-
-        $parameters = substr($parameters, 0, $position);
         
-        // Removing the first and the last /
-        if($paramsString = trim(str_replace('/', ' ', $parameters))) {
-            $tempArray = explode(' ', $paramsString);
-            // After splitting odd=key even=value
-            for($i = 0; $i < count($tempArray); $i++) {
-                // Build the array
-                if(($i % 2) == 0) {
-                    $key = $tempArray[$i];
-                } else {
-                    $reqParameters[$key] = $tempArray[$i];
-                }
-            }
-
-            return $reqParameters;
-        }
-
-        return null;        
-    }
-    
-    
     /**
      * Select the language based on tld and then on accept-language header
      */
-    public function selectLocale() {
-        global $localeArray;
-        $language = 'en_GB';     	
-    	
-        if(isset($_SESSION['curr_lang']) && isset($localeArray[$_SESSION['curr_lang']])) {
-            $language = $localeArray[$_SESSION['curr_lang']];
-        }
-
-        setlocale (LC_ALL,$language);
+    public function selectLocale($language = 'en_GB') {               
+        setlocale (LC_ALL, $language);
         // Setting the .po file
         putenv("LANG=".$language);
-        bindtextdomain('messages',$_SERVER['DOCUMENT_ROOT']."locale");
-        textdomain("messages");
-        bind_textdomain_codeset('messages', 'UTF-8');
-        
-        $this->locale = $language;
+        bindtextdomain('messages', $this->server->get('DOCUMENT_ROOT') . 'locale');
+        textdomain('messages');
+        bind_textdomain_codeset('messages', 'UTF-8');        
 
         return $language;
     }     

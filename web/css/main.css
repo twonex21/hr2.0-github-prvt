@@ -637,6 +637,14 @@ section.message .close {
 	cursor:pointer;
 }
 
+.not-found, .no-access {
+	width: 600px;
+	margin: 100px auto;
+	text-align: center;
+	font-size: 2.4rem;
+	line-height: 3.4rem;
+}
+
 .block-title {
 	font-size:3.1rem;
 	letter-spacing:-1px;

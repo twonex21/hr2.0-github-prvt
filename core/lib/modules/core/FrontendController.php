@@ -18,8 +18,9 @@ class FrontendController
 		self::QUERY_KEY
 	);	
 	
-	private $request;	
 	private $session;
+	private $request;
+	private $response;
 	
 	private $namespace;
 	private $controller;
@@ -27,15 +28,12 @@ class FrontendController
 	
 	private $locale;
 	
-	public function __construct() {
-		$this->request = new Request();
-				        
-        if ($this->locale == null) {
-            $this->locale = $this->request->selectLocale();
-        }
-        
+	public function __construct() {		
    		$this->session = new Session();
-   		$this->session->start();   		
+   		$this->session->start();   
+   		
+   		$this->request = new Request();   						                
+        $this->response = new Response();
 	}
 		
     /**
@@ -48,7 +46,7 @@ class FrontendController
         $parameters = null;
 
         if($this->request->query->has(self::PARAMETERS_KEY)) {
-            $parameters = $this->request->parseParameters($this->request->query->get(self::PARAMETERS_KEY));
+            $parameters = $this->parseParameters($this->request->query->get(self::PARAMETERS_KEY));
         }
         
         foreach($this->request->query->getParameters() as $key => $value) {
@@ -78,7 +76,6 @@ class FrontendController
         		}
         	} else {
         		$this->delegateNotFound();
-        		return;
         	}
 				
         } elseif(!$this->request->query->isNullOrEmpty(self::CONTROLLER_KEY) && !$this->request->query->isNullOrEmpty(self::ACTION_KEY)) {
@@ -100,6 +97,15 @@ class FrontendController
             throw new BaseException('Controller', 'No controller or no action');
         }
 
+        // Selecting locale        
+        if ($this->locale == null) {
+        	$localeArray = unserialize(HR_LOCALES);
+        	if($this->session->has('currentLang') && isset($localeArray[$this->session->get('currentLang')])) {
+	            $language = $localeArray[$this->session->get('currentLang')];
+	            $this->locale = $this->request->selectLocale($language);
+	        }            
+        }        
+        
         // Overriding query parameters
         $this->request->query->setParameters($queryParams);
         
@@ -128,7 +134,6 @@ class FrontendController
             require $filepath;
         else {
             $this->delegateNotFound();
-            return;
         }
         
         // Getting action namespace
@@ -150,44 +155,90 @@ class FrontendController
     }
     
     
-    public function delegateNotFound() {
+    public function delegateNotFound() {    	
+    	$this->response->setHeader($this->request->server->get('SERVER_PROTOCOL') . ' 404 Not Found');
     	$this->delegate('statics', 'page', array('p' => 'not-found'));
+    	exit;
     }
 
     
     public function delegateNoAccess() {
     	$this->delegate('statics', 'page', array('p' => 'no-access'));
+    	exit;
     }
 
     
     /**
      * True HTTP redirect
      */
-    public function redirect($targetController, $targetAction) {
+    public function redirect($targetController, $targetAction, $parameters) {
         if($targetController == '' || $targetAction == '') {
             return false;
         }
 
-        // The module that has handles our request
-        $controller = strtolower($targetController);
-        // The class that will perform the action requested
-        $action = strtolower($targetAction);
-
-        $target = sprintf('Location: http://%s/%s/%s/', $this->request->server->get('HTTP_HOST'), $controller, $action);
-        header($target);
+        $target = sprintf('http://%s/%s/%s/%s', $this->request->server->get('HTTP_HOST'), strtolower($targetController), strtolower($targetAction), $parameters);
+        $this->response->setHeader('Location', $target);
         exit;
     }  
+    
+    
+    /**
+     * Parses the query parameters hidden in the url
+     */
+    private function parseParameters($parameters) {
+        $reqParameters = array();
+        $key = '';
 
-    
-    public function &getRequest() {   
-  		return $this->request;  	
-    }
-    
-    
+        if($parameters == '/' || $parameters == '') {
+            return null;
+        }
+
+        $parameters = str_replace(' ', '=', $parameters);
+
+        // Find seperator char first in the path
+        $position = strpos($parameters, '/t/');
+        if($position === false) {
+            //TODO handle error differently
+            //throw new BaseException('url manipulation','The URL was manipulated','403');
+            $this->delegateNotFound();
+        }
+
+        $parameters = substr($parameters, 0, $position);
+        
+        // Removing the first and the last /
+        if($paramsString = trim(str_replace('/', ' ', $parameters))) {
+            $tempArray = explode(' ', $paramsString);
+            // After splitting odd=key even=value
+            for($i = 0; $i < count($tempArray); $i++) {
+                // Build the array
+                if(($i % 2) == 0) {
+                    $key = $tempArray[$i];
+                } else {
+                    $reqParameters[$key] = $tempArray[$i];
+                }
+            }
+
+            return $reqParameters;
+        }
+
+        return null;        
+    }        
+
+        
     public function &getSession() {
     	return $this->session;
     }
     
+    
+    public function &getRequest() {   
+  		return $this->request;  	
+    }
+        
+    
+    public function getResponse() {   
+  		return $this->response;  	
+    }
+        
     
     public function getNamespace() {
     	return $this->namespace;
@@ -209,5 +260,4 @@ class FrontendController
     }
 }
 
-//EOF
 ?>
