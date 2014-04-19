@@ -14,6 +14,7 @@ class Session
 	private $wrappers = array();
 	
 	private $attributeName;
+	private $messageName;
 	
 	
 	public function start() {
@@ -35,6 +36,10 @@ class Session
         $attributes = new SessionAttributes();
         $this->attributeName = $attributes->getKey();
         $this->registerWrapper($attributes);
+        
+        $message = new SessionMessage();
+        $this->messageName = $message->getKey();
+        $this->registerWrapper($message);
         
         $this->loadSession();
         
@@ -83,7 +88,44 @@ class Session
 		}
 	}
 	
-			
+	
+	
+	public function &getAttributes() {
+		if(!isset($this->wrappers[$this->attributeName])) {
+			return array();
+		}
+				
+		return $this->wrappers[$this->attributeName]->getAttributes();
+	}
+		
+	
+	public function hasMessage() {
+		if(!isset($this->wrappers[$this->messageName])) {
+			return false;
+		}
+		
+		return !$this->wrappers[$this->messageName]->isEmpty();
+	}
+
+	
+	public function getMessage() {
+		if(!isset($this->wrappers[$this->messageName])) {
+			return array();
+		}
+		
+		return $this->wrappers[$this->messageName]->getMessage();
+	}
+
+	
+	public function setMessage($type, $text, $isFlash) {
+		if(isset($this->wrappers[$this->messageName])) {			
+			$this->wrappers[$this->messageName]->setType($type);
+			$this->wrappers[$this->messageName]->setText($text);
+			$this->wrappers[$this->messageName]->setFlash($isFlash);
+		}
+	}
+	
+
 	public function regenerate($destroy = false) {
 		if($this->has(self::OBSOLETE_KEY)) {
 			return '';
@@ -112,17 +154,8 @@ class Session
         $this->remove(self::EXPIRE_KEY);
 
         return $newSessionId;
-	}
+	}	
 	
-	
-	public function &getAttributes() {
-		if(!isset($this->wrappers[$this->attributeName])) {
-			return array();
-		}
-				
-		return $this->wrappers[$this->attributeName]->getAttributes();
-	}
-		
 	
 	public function clear() {
 		foreach($this->wrappers as $wrapper) {			

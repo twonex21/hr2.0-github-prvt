@@ -36,5 +36,5 @@ class UserView extends View
         $this->finish();
     }
 }
-//EOF
+
 ?>

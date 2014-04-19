@@ -250,7 +250,9 @@ class CreateAction extends Action implements ActionInterface
     			$this->model->updateUserSoftSkills($currentUserId, $softSkills);
     		}
     		
-    		$this->redirect('user', 'profile');
+    		$this->setMessage(MSG_TYPE_SUCCESS);
+    		
+    		$this->fc->redirect('user', 'profile');
     	}
     }
 }

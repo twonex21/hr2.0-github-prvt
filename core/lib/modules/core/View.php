@@ -57,7 +57,13 @@ class View
         // Make sure we have the correct locale set
         setlocale(LC_ALL,$this->locale);
         
-        $this->assign('_HR_SESSION', $this->session);
+        $sessionAttributes = &$this->session->getAttributes();
+        $this->assign(TPL_SESSION, $sessionAttributes);
+        
+        if($this->session->hasMessage()) {
+        	$message = $this->session->getMessage();
+        	$this->assign(TPL_MESSAGE, $message);
+        }
                    
         if($block != null) {
             if(!isset($this->blocks[$block]))

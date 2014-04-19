@@ -18,24 +18,26 @@ class FrontendController
 		self::QUERY_KEY
 	);	
 	
-	protected $request;
+	private $request;	
+	private $session;
 	
-	protected $session;
+	private $namespace;
+	private $controller;
+	private $action;
 	
 	private $locale;
 	
 	public function __construct() {
 		$this->request = new Request();
+				        
+        if ($this->locale == null) {
+            $this->locale = $this->request->selectLocale();
+        }
+        
    		$this->session = new Session();
    		$this->session->start();   		
 	}
-	
-	
-	public function getRequest() {
-		return $this->request;
-	}
-	
-	
+		
     /**
      * Process a request, calls delegate to handle the request
      */
@@ -69,8 +71,7 @@ class FrontendController
         				foreach($directActions[$query][self::PARAMETERS_KEY] as $key => $value) {
         					$parameters[$key] = $value;
         				}
-        			}
-        			
+        			}        			
         		} else {
 	        		$controller = $directActions[$query];
 	        		$action = $query;
@@ -99,16 +100,19 @@ class FrontendController
             throw new BaseException('Controller', 'No controller or no action');
         }
 
+        // Overriding query parameters
+        $this->request->query->setParameters($queryParams);
+        
         // The module that handles our request
-        $targetController = ucfirst(strtolower($targetController));
+        $this->controller = ucfirst(strtolower($targetController));
         // The class that will perform the action requested
-        $targetAction = ucfirst(strtolower($targetAction));
+        $this->action = ucfirst(strtolower($targetAction));
 
         // Checking if user has access to the requested page
         $userSecuredActions = unserialize(USER_SECURED_ACTIONS);
         $companySecuredActions = unserialize(COMPANY_SECURED_ACTIONS); 
-        $isUserSecured = isset($userSecuredActions[$targetController]) && in_array($targetAction, $userSecuredActions[$targetController]);
-        $isCompanySecured = isset($companySecuredActions[$targetController]) && in_array($targetAction, $companySecuredActions[$targetController]);        
+        $isUserSecured = isset($userSecuredActions[$this->controller]) && in_array($this->action, $userSecuredActions[$this->controller]);
+        $isCompanySecured = isset($companySecuredActions[$this->controller]) && in_array($this->action, $companySecuredActions[$this->controller]);        
         
         if(($isUserSecured && !$this->session->isUserAuthorized()) || ($isCompanySecured && !$this->session->isCompanyAuthorized())) {
         	// Forced attempt to secured page
@@ -118,7 +122,7 @@ class FrontendController
         	return;
         }
         
-        $filepath = LIB_DIR.'modules/frontend/'.$targetController.'/'.$targetAction.'Action.php';
+        $filepath = LIB_DIR.'modules/frontend/' . $this->controller . '/' . $this->action . 'Action.php';
 		
         if(file_exists($filepath))
             require $filepath;
@@ -128,29 +132,18 @@ class FrontendController
         }
         
         // Getting action namespace
-        $actionNamespace = 'HR\\' . $targetController;
+        $this->namespace = 'HR\\' . $this->controller;
         
         // Getting action class name
-        $actionClass =  $actionNamespace . '\\' . $targetAction . 'Action';
+        $actionClass =  $this->namespace . '\\' . $this->action . 'Action';
         // Create an instance of action class
-        $actionInstance = new $actionClass();
-                
-        // Registering OOP encapsulated models for global variables   
-        $this->request->query->setParameters($queryParams);
-        $actionInstance->registerGlobals($this->request, $this->session);
-        
-        // Registering model, view and mail layers.
-        $actionInstance->registerLayers($actionNamespace);
-
+        $actionInstance = new $actionClass($this);                                
+        // Registering action model, view, mailer layers
+        $actionInstance->registerLayers();        
         // Setting some additional parameters        
         if($objectParams != null) {        	
         	$actionInstance->setParameters($objectParams);
-        }
-        
-        if ($this->locale == null) {
-            $this->locale = $this->request->selectLocale();
-        }
-		
+        }		
         // Call the perform method
         $actionInstance->perform();
         
@@ -183,7 +176,37 @@ class FrontendController
         $target = sprintf('Location: http://%s/%s/%s/', $this->request->server->get('HTTP_HOST'), $controller, $action);
         header($target);
         exit;
-    }       
+    }  
+
+    
+    public function &getRequest() {   
+  		return $this->request;  	
+    }
+    
+    
+    public function &getSession() {
+    	return $this->session;
+    }
+    
+    
+    public function getNamespace() {
+    	return $this->namespace;
+    }
+    
+    
+    public function getController() {
+    	return $this->controller;
+    }
+    
+    
+    public function getAction() {
+    	return $this->action;
+    }
+    
+    
+    public function getLocale() {
+    	return $this->locale;
+    }
 }
 
 //EOF

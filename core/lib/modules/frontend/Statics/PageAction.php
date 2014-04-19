@@ -11,7 +11,7 @@ class PageAction extends Action implements ActionInterface {
         if(!$this->request->query->isNullOrEmpty('p') && in_array($this->request->query->get('p'), $pagesArray)) {
         	$this->view->showStaticPage($this->request->query->get('p'));
         } else {
-        	$this->delegateNotFound();        	
+        	$this->fc->delegateNotFound();        	
         }
     }
 }

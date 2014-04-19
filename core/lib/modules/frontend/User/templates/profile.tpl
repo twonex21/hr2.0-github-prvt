@@ -1,9 +1,8 @@
 {literal}
 <script>
-	$(function() {
-		addCssFile('araks.css');
-		addCssFile('royal.css');
-
+	addCssFile('araks.css');	
+	
+	$(function() {		
 		initCarousel();		
 	});
 

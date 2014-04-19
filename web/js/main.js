@@ -2,6 +2,12 @@ var loadValues = {};
 
 $(document).ready(function() {
 	
+	showMessage();
+	
+	$('.message .close').click(function() {
+		closeMessage();
+	});
+	
 	/* Toggle search */
 	$('.searchbtn').click(function(){
 		if($(this).hasClass("sbtnactive")) 	$(this).removeClass('sbtnactive');	else  $('.searchbtn').addClass('sbtnactive');	

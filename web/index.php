@@ -12,21 +12,21 @@ if($_SERVER["APPLICATION_ENV"] == "development") {
 
 /**
  * This makes our life easier when dealing with paths. 
- * Everything is relative to the application root.
+ * Everything is relative to the file system root.
  */
-chdir(__DIR__);
+chdir(dirname(__DIR__));
 
 /**
  * Checking the case when script is executed via command line
  * 
  */ 
 if(strpos(php_sapi_name(), "cli") && isset($argv) && count($argv) > 3) {		
-	require 'core/config/main-shell.ini';
+	require '/core/config/main-shell.ini';
 	require PATH_DIR.'/frontend/configs/frontend-cli.ini';
 	
 	list($_GET["controller"], $_GET["action"], $_GET["parameters"]) = $argv;
 } else {    	
-	require 'core/config/main.ini';
+	require '/core/config/main.ini';
 	require PATH_DIR.'/frontend/configs/frontend.ini';
 }
 

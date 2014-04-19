@@ -79,7 +79,7 @@ function truncate(str, length) {
 }
 
 function initCarousel() {
-	$.getScript( "/js/jcarousel.js", function(data, textStatus, jqxhr) {
+	$.getScript( "/js/jquery.jcarousel.min.js", function(data, textStatus, jqxhr) {
 		$('.jcarousel').jcarousel();
 	
 	    $('.jcarousel-control-prev')
@@ -102,5 +102,30 @@ function initCarousel() {
 	        .jcarouselControl({
 	            target: '+=1'
 	        });
+	});
+}
+
+
+function showMessage() {	
+	var $message = $('.message');
+	var isFlash = $message.attr('attr-flash');
+	
+	if($message.html() != '') {
+		setTimeout(function() {
+			$message.show().animate({'opacity' : 1}, 800, function() {
+				if(isFlash) {
+					setTimeout(function() { 				
+						closeMessage();
+					}, 5000)
+				}
+			});
+		}, 400);
+	}
+}
+
+
+function closeMessage() {	
+	$('.message').animate({'opacity' : 0}, 800, function() {
+		$(this).css({'display' : 'none'});
 	});
 }

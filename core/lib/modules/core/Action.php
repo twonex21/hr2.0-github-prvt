@@ -1,42 +1,55 @@
 <?php
 namespace HR\Core;
 
-use HR\Core\Session;
-
-class Action extends FrontendController 
+class Action
 {
 	
 	protected $qb;
 	protected $logger;
 	
+	protected $fc;
 	protected $request;
 	protected $response;
 	protected $session;
+	
+	protected $namespace;
+	protected $controller;
+	protected $action;
 	
 	protected $model;
 	protected $view;
 	protected $mailer;
 	
 	protected $parameters;
-	protected $pageTitle;
+	protected $pageTitle;		
 	
-   	public function __construct() {   		
+   	public function __construct($fc) {
+   		$this->initialize($fc);   		
+   	}
+   	
+   	private function initialize($fc) {
+   		$this->namespace = $fc->getNamespace();
+   		$this->controller = $fc->getController();
+   		$this->action = $fc->getAction();
+   		
+   		// Frontend controller instance to control flow
+   		$this->fc = $fc;
+   		
+   		// Session, request, response handles   		
+   		$this->session = &$fc->getSession();	
+   		$this->request = &$fc->getRequest();
+   		$this->response = new Response();
+   	}
+   	
+   	
+   	public function registerLayers() {
    		$this->qb = new QueryBuilder();
-   		$this->logger = Logger::getInstance();   		
-   	}
-
-   	
-   	public function registerGlobals($request, $session) {
-   		$this->request = &$request;   		
-   		$this->session = &$session;
-   	}
-   	
-   	
-   	public function registerLayers($actionNamespace) {
-   		$parts = explode('\\', $actionNamespace);    	
-		$controller = $parts[count($parts) - 1];
-		$modelClass = $actionNamespace . '\\' . $controller . 'Model';
-		$viewClass = $actionNamespace . '\\' . $controller . 'View';
+		$this->mailer = new SendMail($this->namespace);				
+   		$this->logger = Logger::getInstance();
+   		
+   		// Model and View layers
+		$modelClass = $this->namespace . '\\' . $this->controller . 'Model';
+		$viewClass = $this->namespace . '\\' . $this->controller . 'View';
 		
 		if(class_exists($modelClass)) {
 			$this->model = new $modelClass();
@@ -44,23 +57,25 @@ class Action extends FrontendController
 		}
 		
 		if(class_exists($viewClass)) {
-			$attributes = &$this->session->getAttributes();   				
-			$this->view = new $viewClass($actionNamespace, $attributes);
-		}
-		
-		$this->response = new Response();
-		$this->mailer = new SendMail($actionNamespace);
-   	}
-   	
-   	
-   	public function setPageTitle($title) {
-   		$this->view->assign('_PAGE_TITLE', 'HR.am - ' . $title);
+			$this->view = new $viewClass($this->namespace, $this->session);
+		}   		
    	}
    	
    	
    	public function setParameters($parameters) {
    		$this->parameters = $parameters;
    	}
+   	
+   	
+   	protected function setPageTitle($title) {
+   		$this->view->assign('_PAGE_TITLE', 'HR.am - ' . $title);
+   	}
+   	
+   	
+   	protected function setMessage($type, $text = '', $isFlash = true) {
+   		$text = ($text !== '') ? $text : constant('MSG_' . strtoupper($this->controller) . '_' . strtoupper($this->action) . '_' . strtoupper($type));
+   		$this->session->setMessage($type, $text, $isFlash);
+   	}
 }
-//EOF
+
 ?>

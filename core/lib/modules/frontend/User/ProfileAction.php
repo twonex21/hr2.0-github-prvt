@@ -9,7 +9,7 @@ class ProfileAction extends Action implements ActionInterface
 {
     public function perform() {
     	$userId = 0;
-    	    	
+
     	if(!$this->request->query->isNullOrEmpty('uid')) {
     		// Taking get parameter
     		$userHash = $this->request->query->get('uid');
@@ -32,7 +32,7 @@ class ProfileAction extends Action implements ActionInterface
     		$this->view->showProfilePage($userProfile, $userEducation, $userExperience, $userLanguages, $userSkills, $userSoftSkills);
     	} else {
 	    	// Showing not found page
-			$this->delegateNotFound();
+			$this->fc->delegateNotFound();
     	}
     }        
 }

@@ -62,7 +62,10 @@
 			</div>
 		</header>
 		<!--End of Header-->
-		
+		<section class="message {$_HR_MESSAGE.type}" attr-flash="{$_HR_MESSAGE.isFlash}">
+			{$_HR_MESSAGE.text}
+			{if !$_HR_MESSAGE.isFlash}<div class="close"></div>{/if}
+		</section>
 		<!-- Start of Content -->
 		<section class="page-content">	
 			{$CONTENT}

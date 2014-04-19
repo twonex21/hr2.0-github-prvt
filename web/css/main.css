@@ -601,6 +601,41 @@ footer #footer-inner  .footermenu a:hover {
 	font-size: 1.6rem;
 }
 
+section.message {
+	display: none;	
+	position: relative;
+	width: 960px;
+	margin: 10px auto -20px;
+	padding: 10px 0;
+	text-align: center;
+	font-size: 100%;
+	font-size: 18px;
+	font-size: 1.6rem;
+	color: #FFF;
+	opacity: 0;
+	filter:alpha(opacity = 0);
+	-webkit-border-radius:7px;
+	-moz-border-radius:7px;	
+	border-radius:7px;
+}
+
+section.message.success {
+	background-color: #34AB00;
+}
+
+section.message.error {
+	background-color: #E22301;
+}
+
+section.message .close {
+	width: 20px;
+	height: 20px;
+	position:absolute;
+	right:10px;
+	top:10px;
+	background: url('../images/close.png') no-repeat;	
+	cursor:pointer;
+}
 
 .block-title {
 	font-size:3.1rem;
