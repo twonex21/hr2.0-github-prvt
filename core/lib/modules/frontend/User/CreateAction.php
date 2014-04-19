@@ -16,7 +16,7 @@ class CreateAction extends Action implements ActionInterface
     	$allLanguageLevels = array();
     	$allSoftSkills = array();
     	$allSoftSkillLevels = array();
-    	$userProfile = array();    	
+    	$userProfile = array();
     	$userEducation = array();
     	$userExperience = array();
     	$userLanguages = array();
@@ -76,7 +76,11 @@ class CreateAction extends Action implements ActionInterface
     		
     		// Bacic profile info
     		if(!$this->request->request->isNullOrEmpty('full-name') && FrontendUtils::isLatin($this->request->request->get('full-name'))) {
-    			list($firstName, $lastName) = explode(' ', $this->request->request->get('full-name'));
+    			if(strpos($this->request->request->get('full-name'), ' ')) {
+    				list($firstName, $lastName) = explode(' ', $this->request->request->get('full-name'));
+    			} else {
+    				$firstName = $this->request->request->get('full-name');
+    			}
     		}
     		
     		if(!$this->request->request->isNullOrEmpty('email') && FrontendUtils::isEmailAddress($this->request->request->get('email'))) {
