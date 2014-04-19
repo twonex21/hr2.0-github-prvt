@@ -8,7 +8,6 @@ use HR\Core\FrontendUtils;
 class CreateAction extends Action implements ActionInterface 
 {
     public function perform() {
-    	echo 'Some change here!';
     	$currentUserId = null;
     	$allUniversities = array();
     	$allUniverDegrees = array();
