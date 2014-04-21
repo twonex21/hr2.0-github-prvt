@@ -117,8 +117,8 @@ class FrontendController
         // Checking if user has access to the requested page
         $userSecuredActions = unserialize(USER_SECURED_ACTIONS);
         $companySecuredActions = unserialize(COMPANY_SECURED_ACTIONS); 
-        $isUserSecured = isset($userSecuredActions[$this->controller]) && in_array($this->action, $userSecuredActions[$this->controller]);
-        $isCompanySecured = isset($companySecuredActions[$this->controller]) && in_array($this->action, $companySecuredActions[$this->controller]);        
+        $isUserSecured = isset($userSecuredActions[$targetController]) && in_array($targetAction, $userSecuredActions[$targetController]);
+        $isCompanySecured = isset($companySecuredActions[$targetController]) && in_array($targetAction, $companySecuredActions[$targetController]);        
         
         if(($isUserSecured && !$this->session->isUserAuthorized()) || ($isCompanySecured && !$this->session->isCompanyAuthorized())) {
         	// Forced attempt to secured page
@@ -171,7 +171,7 @@ class FrontendController
     /**
      * True HTTP redirect
      */
-    public function redirect($targetController, $targetAction, $parameters) {
+    public function redirect($targetController, $targetAction, $parameters = '') {
         if($targetController == '' || $targetAction == '') {
             return false;
         }
