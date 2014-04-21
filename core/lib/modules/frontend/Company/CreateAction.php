@@ -12,6 +12,10 @@ class CreateAction extends Action implements ActionInterface
     	//echo "Company create page."; 
     	//Company create page.exit;
     	
+    	// Setting page title
+    	$this->setPageTitle('Company Page Creaton');
+    	
+    	
     	$this->view->showCreateProfilePage();
     }
 }
