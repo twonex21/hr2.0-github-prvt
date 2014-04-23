@@ -7,8 +7,8 @@ use HR\Core\FrontendUtils;
 class UserModel extends Model
 {    		    
 	public function getUserProfileById($userId) {
-    	$sql = "SELECT CONCAT(first_name, ' ', last_name) AS fullName, mail, location, linkedin AS linkedIn, 
-    				   birth_date AS birthDate, bio, picture_key AS pictureKey, resume_key AS resumeKey,
+    	$sql = "SELECT user_id AS userId, CONCAT(first_name, ' ', last_name) AS fullName, mail, location, linkedin AS linkedIn, 
+    				   DATE_FORMAT(birth_date, '%%d %%M, %%Y') AS birthDate, bio, picture_key AS pictureKey, resume_key AS resumeKey,
     				   YEAR(CURDATE()) - YEAR(birth_date) - (RIGHT(CURDATE(), 5) < RIGHT(birth_date, 5)) AS age
 				FROM hr_user
 				WHERE user_id=%d";
@@ -166,7 +166,7 @@ class UserModel extends Model
     }
     
 	
-	public function updateUserProfile($currentUserId, $firstName, $lastName, $mail, $location, $linkedIn, $newPassword, $birthDate, $profileBio, $pictureKey, $resumeKey) {
+	public function updateUserProfile($userId, $firstName, $lastName, $mail, $location, $linkedIn, $newPassword, $birthDate, $profileBio, $pictureKey, $resumeKey) {
     	$sql = "UPDATE hr_user SET first_name='%s', last_name='%s', mail='%s', location='%s', linkedin='%s', bio='%s', changed_at=NOW()";
     	$params = array($firstName, $lastName, $mail, $location, $linkedIn, $profileBio);
 
@@ -192,7 +192,7 @@ class UserModel extends Model
     	}
     	
     	$sql .= " WHERE user_id=%d";
-    	$params[] = $currentUserId;
+    	$params[] = $userId;
     	
     	// Since we're dealing with user input for the most security
     	// Executing prepared statements with parameter binding
@@ -201,13 +201,13 @@ class UserModel extends Model
     }
     
     
-    public function updateUserEducation($currentUserId, $education) {
+    public function updateUserEducation($userId, $education) {
     	$sql = "";
     	$params = array();
     	
     	// At first deleting all user education rows to be replaced with new ones
     	$sql = "DELETE FROM hr_user_education WHERE user_id=%d";
-    	$sql = $this->mysql->format($sql, array($currentUserId));
+    	$sql = $this->mysql->format($sql, array($userId));
     	$this->mysql->query($sql);
     	
     	// Inserting new values
@@ -215,7 +215,7 @@ class UserModel extends Model
     		$sql = "INSERT INTO hr_user_education (user_id, univer_id, faculty_id, degree, changed_at) VALUES";
     		foreach($education as $idx => $eduItem) {
     			$sql .= "(%d, %d, %d, '%s', NOW()),";
-    			array_push($params, $currentUserId, $eduItem['university']);
+    			array_push($params, $userId, $eduItem['university']);
     			
     			if(isset($eduItem['faculty'])) {
     				array_push($params, $eduItem['faculty']);
@@ -239,13 +239,13 @@ class UserModel extends Model
     }
     
     
-    public function updateUserExperience($currentUserId, $experience) {
+    public function updateUserExperience($userId, $experience) {
     	$sql = "";
     	$params = array();
     	
     	// At first deleting all user experience rows to be replaced with new ones
     	$sql = "DELETE FROM hr_user_experience WHERE user_id=%d";
-    	$sql = $this->mysql->format($sql, array($currentUserId));
+    	$sql = $this->mysql->format($sql, array($userId));
     	$this->mysql->query($sql);
     	
     	// Inserting new values
@@ -253,7 +253,7 @@ class UserModel extends Model
     		$sql = "INSERT INTO hr_user_experience (user_id, industry_id, spec_id, years, changed_at) VALUES";
     		foreach($experience as $idx => $expItem) {
     			$sql .= "(%d, %d, %d, '%s', NOW()),";
-    			array_push($params, $currentUserId, $expItem['industry']);
+    			array_push($params, $userId, $expItem['industry']);
     			
     			if(isset($expItem['spec'])) {
     				array_push($params, $expItem['spec']);
@@ -277,13 +277,13 @@ class UserModel extends Model
     }
     
     
-    public function updateUserLanguages($currentUserId, $languages) {
+    public function updateUserLanguages($userId, $languages) {
     	$sql = "";
     	$params = array();
     	
     	// At first deleting all user language rows to be replaced with new ones
     	$sql = "DELETE FROM hr_user_language WHERE user_id=%d";
-    	$sql = $this->mysql->format($sql, array($currentUserId));
+    	$sql = $this->mysql->format($sql, array($userId));
     	$this->mysql->query($sql);
     	
     	// Inserting new values
@@ -291,7 +291,7 @@ class UserModel extends Model
     		$sql = "INSERT INTO hr_user_language (user_id, language, level, changed_at) VALUES";
     		foreach($languages as $lang => $level) {
     			$sql .= "(%d, '%s', '%s', NOW()),";
-    			array_push($params, $currentUserId, $lang, $level);    			    			
+    			array_push($params, $userId, $lang, $level);    			    			
     		}
     		
     		$sql = trim($sql, ",");
@@ -303,13 +303,13 @@ class UserModel extends Model
     }
     
     
-    public function updateUserSkills($currentUserId, $skills) {
+    public function updateUserSkills($userId, $skills) {
     	$sql = "";
     	$params = array();
     	
     	// At first deleting all user language rows to be replaced with new ones
     	$sql = "DELETE FROM hr_user_skill WHERE user_id=%d";
-    	$sql = $this->mysql->format($sql, array($currentUserId));
+    	$sql = $this->mysql->format($sql, array($userId));
     	$this->mysql->query($sql);
     	
     	// Inserting new values
@@ -317,7 +317,7 @@ class UserModel extends Model
     		$sql = "INSERT INTO hr_user_skill (user_id, skill_id, years, changed_at) VALUES";
     		foreach($skills as $skill => $years) {
     			$sql .= "(%d, %d, '%s', NOW()),";
-    			array_push($params, $currentUserId, $skill, $years);    			
+    			array_push($params, $userId, $skill, $years);    			
     		}
     		
     		$sql = trim($sql, ",");
@@ -329,13 +329,13 @@ class UserModel extends Model
     }            
     
     
-    public function updateUserSoftSkills($currentUserId, $softSkills) {
+    public function updateUserSoftSkills($userId, $softSkills) {
     	$sql = "";
     	$params = array();
     	
     	// At first deleting all user language rows to be replaced with new ones
     	$sql = "DELETE FROM hr_user_soft_skill WHERE user_id=%d";
-    	$sql = $this->mysql->format($sql, array($currentUserId));
+    	$sql = $this->mysql->format($sql, array($userId));
     	$this->mysql->query($sql);
     	
     	// Inserting new values
@@ -343,7 +343,7 @@ class UserModel extends Model
     		$sql = "INSERT INTO hr_user_soft_skill (user_id, soft_id, level, changed_at) VALUES";
     		foreach($softSkills as $softSkillId => $level) {
     			$sql .= "(%d, %d, '%s', NOW()),";
-    			array_push($params, $currentUserId, $softSkillId, $level);
+    			array_push($params, $userId, $softSkillId, $level);
     		}
     		
     		$sql = trim($sql, ",");

@@ -56,9 +56,9 @@ function loadSkillsDropdown(expValues) {
         				}
         			}
 
-        			if(hideBlock) {
-        				// Hiding block
-        				$(this).closest('fieldset').addClass('hidden').find('select').attr('disabled', true);
+        			if(hideBlock && $('[name="skills[]"]').size() > 1) {        				        					
+    					// Hiding block
+    					$(this).closest('fieldset').addClass('hidden').find('select').attr('disabled', true);        				
         			} else {
         				// Showing block
         				$(this).closest('fieldset').removeClass('hidden').find('select').attr('disabled', false);
@@ -144,7 +144,7 @@ function ajaxUploadPicture() {
 }
 
 
-function ajaxUploadResume() {
+function ajaxUploadFile() {
 	jQuery.ajaxFileUpload ({
         url: '/support/ajaxupload/',
         secureuri: false,
@@ -155,21 +155,19 @@ function ajaxUploadResume() {
         	$('#upload_file').parents('fieldset').find('.file-error').remove();
         	
             if(json.status == 'SUCCESS') {
-            	$('#temp_resume').val(json.tempFile);
+            	$('#temp_file').val(json.tempFile);
             	
-            	var realFileName = json.tempFile.substring(json.tempFile.indexOf('_') + 1);
-            	$('#attached_resume').addClass('attach-resume').html(truncate(realFileName, 18)).attr('title', realFileName);
+            	var realFileName = json.tempFile.substring(json.tempFile.indexOf('_') + 1);            	
+            	$('#attached_file').addClass('attach-file').html(truncate(realFileName, 18)).attr('title', realFileName);
             	$('#fileaddbtn').html('remove file').addClass('file-remove').unbind('click').bind('click', function() {
-            		ajaxRemoveResume(json.tempFile, 'temp');
+            		ajaxRemoveFile(json.tempFile, 'temp');
             	});
             } else {
             	if(json.status == "FAIL") {            		
             		errorElement = document.createElement('div');
             		errorElement.innerHTML = json.message;
             		errorElement.className = 'file-error paddingright0';            		
-            		$('#upload_file').parents('fieldset').append(errorElement);
-            		
-            		//$('#upload_file').replaceWith($('#upload_file') = $('#upload_file').clone(true));
+            		$('#upload_file').parents('fieldset').append(errorElement);            		            		
             	}
             }
         },
@@ -210,8 +208,7 @@ function ajaxRemovePicture(fileName, type) {
 }
 
 
-
-function ajaxRemoveResume(fileName, type) {
+function ajaxRemoveFile(fileName, type) {
 	// TODO : Add confirmation dialog
 	jQuery.ajax({
         dataType: 'json',
@@ -221,16 +218,32 @@ function ajaxRemoveResume(fileName, type) {
 
         success: function(json) {
             if(json.status == 'SUCCESS') {
+            	var fileType = $('#fileaddbtn').attr('attr-type');
+            	var attachText = '';
+            	var uploadLabel = '';
+            	
+            	if(fileType == 'resume') {
+            		attachText = 'You can attach your resume if you already have one.';
+            		uploadLabel = 'upload resume';
+            	} else if(fileType == 'vacancy') {
+            		attachText = 'Attach additional file to the vacancy.';
+            		uploadLabel = 'upload file';
+            	}
+
             	// Clearing hidden value
-            	$('#temp_resume').val('');
+            	$('#temp_file').val('');
             	// Removing file name
-            	$('#attached_resume').removeClass('attach-resume').html('You can attach your resume if you already have one.').attr('title', '');
+            	$('#attached_file').removeClass('attach-file').html(attachText).attr('title', '');
             	// Changing button
-            	$('#fileaddbtn').html('upload resume').removeClass('file-remove').unbind('click').bind('click', function() {
+            	$('#fileaddbtn').html(uploadLabel).removeClass('file-remove').unbind('click').bind('click', function() {
             		$('#upload_file').trigger('click');
             	});
             } else {
-            	
+            	errorElement = document.createElement('div');
+        		errorElement.innerHTML = 'Error occured removing file';
+        		errorElement.className = 'file-error paddingright0';
+        		
+        		$('#upload_file').parents('fieldset').append(errorElement);
             }
         },
         error: function(json){} 

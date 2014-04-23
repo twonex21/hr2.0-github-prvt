@@ -34,9 +34,12 @@ function addBlock($btn) {
 		$clone = $fieldset.clone();	
 		// Clearing dynamically loaded data
 		$clone.find('select[attr-dynamic]').html('').attr('disabled', true).parents('label').addClass('inactive');
-		// Resetting all dropdown values		
-		$clone.find('select option.empty').attr('selected', true);		
-		$clone.find('select option:first-child').attr('selected', true);		
+		// Resetting all dropdown values
+		if($clone.find('select option.empty').size() > 0) {
+			$clone.find('select option.empty').attr('selected', true);
+		} else {
+			$clone.find('select option:first-child').attr('selected', true);
+		}
 		// Hiding remove block link		
 		$clone.find('.remove-block').css('visibility', 'hidden');		
 		// Adding new identical block
@@ -49,11 +52,15 @@ function addBlock($btn) {
 
 function removeBlock($btn) {
 	$parent = $btn.parents('fieldset');		
-	if($parent.siblings('fieldset').size() == 0) {
+	if($parent.siblings('fieldset').size() == 0) {console.log(111);
 		// The last block
-		$parent.find('select option:first-child').attr('selected', true);
+		if($parent.find('select option.empty').size() > 0) {
+			$parent.find('select option.empty').attr('selected', true);
+		} else {
+			$parent.find('select option:first-child').attr('selected', true);
+		}
 		$parent.find('select[attr-dynamic]').html('').attr('disabled', true).parent('label').addClass('inactive');
-		$btn.hide();
+		$btn.css('visibility', 'hidden');
 	} else {
 		$parent.remove();
 		arrangeSkillBlocks();

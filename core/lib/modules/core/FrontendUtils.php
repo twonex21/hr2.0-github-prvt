@@ -298,6 +298,11 @@ class FrontendUtils
     }
     
     
+    public static function isFutureDate($date) {    	
+	    return strtotime($date) > time();
+    }
+    
+    
     public static function isNumber($string) {
 	    if(strlen($string) == 0)
         	return false;        

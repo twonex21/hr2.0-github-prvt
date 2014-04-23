@@ -48,7 +48,7 @@
 
 .attach-ico {background:url(../images/form/attach_ico.png) no-repeat center left}
 
-.attach-resume {font-size:1.7rem !important;line-height:3.2rem !important;}
+.attach-file {font-size:1.7rem !important;line-height:3.2rem !important;}
 
 /*colors*/
 .green { color:#34ab00 }
@@ -186,23 +186,23 @@ table.tablesorter thead tr .headerSortDown span{background-image:url(../images/s
 	box-sizing:border-box;	
 }
 
-.add-education-btn, .add-experience-btn {
-	height:350px;
-	background-position: center 100px;
-	line-height:44.5rem;
-}
-
-.add-language-btn {
+.form-add-btn.thin {
 	height:72px;	
 	background-position: 25px center ;
 	background-size: 30px 30px;
 	line-height:7.2rem;
 }
 
-.add-skill-btn {
+.form-add-btn.middle {
 	height:238px;
 	background-position: center 60px;
 	line-height:35.5rem;
+}
+
+.form-add-btn.thick {
+	height:350px;
+	background-position: center 100px;
+	line-height:44.5rem;
 }
 
 .form-add-btn:hover {
@@ -221,7 +221,7 @@ table.tablesorter thead tr .headerSortDown span{background-image:url(../images/s
 	cursor: pointer;
 }
 
-#block_skills .remove-block {
+.remove-block.down {
 	margin: 10px 0 -15px !important;
 }
 
