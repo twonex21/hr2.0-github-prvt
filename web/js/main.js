@@ -166,6 +166,16 @@ $(document).ready(function() {
 		ajaxRemovePhoto(photoKey, 'user');
 	});
 	
+	//company page
+	$('#companylogofileaddbtn').click(function(e) { 
+		$('#upload_company_logo').trigger('click');
+	});
+	
+	$(document).on('change', '#upload_company_logo', function() {
+		ajaxUploadCompanyLogo();
+	});
+	//
+	
 	
 	/* Loading dropdown menu contents */
 	$(document).on('change', '[attr-load]', function() {

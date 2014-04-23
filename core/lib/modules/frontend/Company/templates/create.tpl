@@ -7,24 +7,20 @@
 
 <h1 class="page-title"><span>Company page creaton</span></h1>
     	<div class="block-title block-title-nobgr">General information</div>
-       	<form name="hrfrom" class="hr-form" action="file:///C:/Users/aaa/Desktop/hr_layout_1.0/company_page_creaton.html#" method="post" enctype="multipart/form-data">
+       	<form name="hrfrom" class="hr-form" action="" method="post" enctype="multipart/form-data">
            
             <div class="input-group-border padding28">
                	
                 <fieldset class="grid grid230">
                   <section class="filefield"> 
                     <div id="messages"></div>
-                    <div id="filedrag" class="grid" style="display: block;"></div>
-                    <div id="fileaddbtn" class="fileaddbtn">Add logo</div>
-                    <input type="file" id="upload_file" name="upload-file" class="fileselect">
-                    {literal}
-                    <script language="javascript">
-                    	document.querySelector('#fileaddbtn').addEventListener('click', function(e) {
-						  var fileInput = document.querySelector('#fileselect');
-						  fileInput.click();
-						}, false);
-                    </script>
-                    {/literal}
+                    <div id="filedrag" class="grid photo" style="display: block;"></div>
+                    {if $_companyProfile.logo_key}
+                    	<div id="companylogofileaddbtn" class="fileaddbtn">Remove logo</div>
+                    {else}
+                    	<div id="companylogofileaddbtn" class="fileaddbtn">Add logo</div>
+                    {/if}
+                    <input type="file" id="upload_company_logo" name="upload-picture" class="fileselect">
                   </section>   
                 </fieldset>
                 
@@ -32,7 +28,7 @@
                 <fieldset class="grid grid670">
                     <section>
                         <label for="comp_title" class="input marginbottom25"><span>Title</span>
-                            <input id="comp_title" name="comp_title" type="text" value="">
+                            <input id="comp_title" name="comp_title" type="text" value="{$_companyProfile.name}">
                             <b class="tooltip tooltip-bottom-left">Company officially registered name</b>
                         </label>
                         <label for="comp_ad_info" class="textarea "><span>Some additional information</span>
@@ -58,14 +54,8 @@
                                                 
 					<fieldset class="grid grid290">
                         <section>                         
-                            <label class="select">
-                                <select name="comp_offices[]">
-                                    <option value="">Select the town</option>
-                                    <option value="New York, United States">New York, United States</option>
-                                    <option value="Yerevan, Armenia">Yerevan, Armenia</option>
-                                    <option value="Barselona, Spain" selected="">Barselona, Spain</option>
-								</select>
-                                <i></i>
+                            <label class="input">
+                            	<input id="comp_offices" name="comp_offices" type="text" value="">
                             </label>
      					</section>
 	                </fieldset>                            
@@ -80,7 +70,7 @@
                     <fieldset class="grid grid290">
                         <section>
                             <label for="comp_email" class="input marginbottom25">Email to contact
-                                <input id="comp_email" name="comp_email" type="text" value="" placeholder="email@company.com">
+                                <input id="comp_email" name="comp_email" type="text" value="{$_companyProfile.mail}">
                                 <b class="tooltip tooltip-bottom-left">Company email address</b>
                             </label>
                             <label for="comp_linked" class="input marginbottom25">Linked in link

@@ -9,14 +9,23 @@ class CreateAction extends Action implements ActionInterface
 {
     public function perform() {
 
-    	//echo "Company create page."; 
-    	//Company create page.exit;
     	
     	// Setting page title
     	$this->setPageTitle('Company Page Creaton');
     	
+    	$currentCompanyId = $this->session->getCurrentCompanyId();
+
+    	if($this->request->request->isEmpty()) {
+    		
+    		// POST is empty, no input parameters yet
+    		
+    		$companyProfile = $this->model->getCompanyProfileById($currentCompanyId);
+    		
+    		$this->view->showCreateCompanyProfilePage($companyProfile);
+    	} else {
+    		
+    	}
     	
-    	$this->view->showCreateProfilePage();
     }
 }
 
