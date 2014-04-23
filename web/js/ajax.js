@@ -143,6 +143,43 @@ function ajaxUploadPicture() {
     return false;
 }
 
+function ajaxUploadCompanyLogo(){
+	jQuery.ajaxFileUpload ({
+        url: '/support/ajaxupload/',
+        secureuri: false,
+        fileElementId: 'upload_company_logo',
+        dataType: 'json',
+        success: function (json)
+        {
+        	$('#upload_company_logo').parents('fieldset').find('.file-error').remove();
+        	
+            if(json.status == 'SUCCESS') {
+            	$('#temp_picture').val(json.tempFile);
+            	// Showing temp picture
+            	$('.photo').html('<img src="/support/resizeimage/tmp/1/s/1/key/' + json.tempFile + '/t/">');
+            	// Chaging button
+            	$('#company_logo_addbtn').html('remove photo').addClass('logo-remove').unbind('click').bind('click', function() {
+            		ajaxRemovePicture(json.tempFile, 'temp');
+            	});
+            } else {
+            	if(json.status == "FAIL") {            		
+            		errorElement = document.createElement('div');
+            		errorElement.innerHTML = json.message;
+            		errorElement.className = 'file-error';
+            		
+            		$('#upload_company_logo').parents('fieldset').append(errorElement);
+            	}
+            }
+        },
+        error: function (json)
+        {
+         
+        }
+    })
+    
+    return false;
+}
+
 
 function ajaxUploadResume() {
 	jQuery.ajaxFileUpload ({

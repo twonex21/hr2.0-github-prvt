@@ -294,6 +294,9 @@ table.tablesorter thead tr .headerSortDown span{background-image:url(../images/s
 .filefield .profile-photo {	
 	background:url(../images/photo.png) no-repeat center !important;
 }
+.filefield .company-logo {	
+	background:url(../images/quest.png) no-repeat center !important;
+}
 
 #photoaddbtn {
 	position:absolute;
@@ -310,7 +313,27 @@ table.tablesorter thead tr .headerSortDown span{background-image:url(../images/s
 	text-transform:uppercase;	
 }
 
-#photoaddbtn.photo-remove, #fileaddbtn.file-remove {	
+.fileaddbtn {
+	position:absolute;
+	background-color:#34ab00;
+	background-image:url(images/form/lng_plus.png);
+	background-position:10px center;
+	background-repeat:no-repeat;
+	width:136px;
+	bottom:10px;
+	left:10px;
+	color:#FFF;
+	font-size:1.6rem;
+	padding:12px 0 12px 40px;
+	text-transform:uppercase;
+}
+
+.fileaddbtn:hover {
+	cursor:pointer;
+	opacity:.8;
+}
+
+.logo-remove, #photoaddbtn.photo-remove, #fileaddbtn.file-remove {	
 	background-color:red !important;	
 	background-image:url(../images/form/photo_remove.png) !important;
 	font-size:1.4rem;
