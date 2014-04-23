@@ -202,6 +202,9 @@ select.red  {
 	background: #fff;
 	box-shadow: 0 0 0 12px #fff;
 }
+.hr-form .select.label105 i {	
+	bottom: 50px;	
+}
 .hr-form .select i:after {
 	content: '';
 	position: absolute;

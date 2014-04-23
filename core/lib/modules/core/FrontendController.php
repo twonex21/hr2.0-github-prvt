@@ -1,8 +1,8 @@
 <?php
 namespace HR\Core;
 
-require PATH_DIR.'/frontend/configs/const.ini';
-require PATH_DIR.'/frontend/messages/properties.ini';
+require PATH_DIR.'/frontend/configs/const.php';
+require PATH_DIR.'/frontend/messages/messages.php';
 
 class FrontendController
 {	

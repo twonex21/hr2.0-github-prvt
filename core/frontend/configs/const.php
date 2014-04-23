@@ -20,64 +20,6 @@ define('JSON_ERROR_MESSAGES', 'messages');
 define('FAIL', 'FAIL');
 define('SUCCESS', 'SUCCESS');
 
-define('SESSION_USER_ATTRIBUTES',
-		serialize(
-			array('ID', 'mail', 'firstName', 'lastName', 'registrationDate')
-		)
-);
-
-define('SESSION_COMPANY_ATTRIBUTES',
-		serialize(
-			array('ID', 'mail', 'name', 'phone', 'contactPerson', 'registrationDate', 'numberOfVacancies')
-		)
-);
-
-// Array of controller => array(action1, action2, ...) entries representing pages available only after user authorization
-define('USER_SECURED_ACTIONS', 
-		serialize(
-			array(
-				'user' => array('create')
-			)
-		)
-);
-
-// Array of controller => array(action1, action2, ...) entries representing pages available only after company authorization
-define('COMPANY_SECURED_ACTIONS', 
-		serialize(
-			array(
-				'company' => array('create')
-			)
-		)
-);
-
-// Shortcuts - actions with shortened names to call directly http://hr.am/action
-define('DIRECT_ACTIONS', 
-		serialize(
-			array(
-				'tos' => array(
-					'controller' => 'static', 
-					'action' => 'page', 
-					'parameters' => array('p' => 'tos')
-				)
-			)
-		)
-);
-
-// Action not to be tracked
-define('NOT_TRACKABLE_ACTIONS', 
-		serialize(
-			array(
-				'api' => array(
-					 					
-				), 
-				
-				'auth' => array(
-					
-				)
-			)
-		)
-);
-
 // Template constants
 define('TPL_SESSION', '_HR_SESSION');
 define('TPL_MESSAGE', '_HR_MESSAGE');
