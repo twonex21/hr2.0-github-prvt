@@ -167,7 +167,7 @@ $(document).ready(function() {
 	});
 	
 	//company page
-	$('#companylogofileaddbtn').click(function(e) { 
+	$('#company_logo_addbtn').click(function(e) { 
 		$('#upload_company_logo').trigger('click');
 	});
 	

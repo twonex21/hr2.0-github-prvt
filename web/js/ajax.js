@@ -158,7 +158,7 @@ function ajaxUploadCompanyLogo(){
             	// Showing temp picture
             	$('.photo').html('<img src="/support/resizeimage/tmp/1/s/1/key/' + json.tempFile + '/t/">');
             	// Chaging button
-            	$('#companylogofileaddbtn').html('remove photo').addClass('photo-remove').unbind('click').bind('click', function() {
+            	$('#company_logo_addbtn').html('remove photo').addClass('logo-remove').unbind('click').bind('click', function() {
             		ajaxRemovePicture(json.tempFile, 'temp');
             	});
             } else {

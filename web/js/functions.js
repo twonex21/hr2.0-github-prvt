@@ -44,6 +44,23 @@ function addBlock($btn) {
 		// Arranging blocks
 		arrangeSkillBlocks();
 	}
+	
+	//inpute case
+	// Getting first block
+	var $fieldset = $btn.siblings('fieldset:not(.hidden)').last();
+	var $firstInput = $fieldset.find('input:first');
+	
+	// Checking if already has selected value before adding new block
+	if($firstInput.val() && $firstInput.val() != 0) {
+		// Creating clone
+		$clone = $fieldset.clone();	
+		//emptying
+		$clone.find('input').val("");
+		// Adding new identical block
+		$btn.before($clone);
+		//to breack line
+		$btn.before('<div class="clear"></div>');
+	}
 }
 
 

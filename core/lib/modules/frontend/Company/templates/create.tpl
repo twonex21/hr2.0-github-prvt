@@ -13,14 +13,18 @@
                	
                 <fieldset class="grid grid230">
                   <section class="filefield"> 
-                    <div id="messages"></div>
-                    <div id="filedrag" class="grid photo" style="display: block;"></div>
-                    {if $_companyProfile.logo_key}
-                    	<div id="companylogofileaddbtn" class="fileaddbtn">Remove logo</div>
+					<div id="company_logo" class="grid photo company-logo">
+						{if $_companyProfile.logoKey}
+							<img src="/support/resizeimage/tp/2/s/1/key/{$_companyProfile.logoKey}/t/">
+						{/if}
+					</div>
+                    {if $_companyProfile.logoKey}
+                    	<div id="company_logo_addbtn" class="fileaddbtn logo-remove" attr-picture-key='{$_companyProfile.logoKey}'>Remove Photo</div>
                     {else}
-                    	<div id="companylogofileaddbtn" class="fileaddbtn">Add logo</div>
+                    	<div id="company_logo_addbtn" class="fileaddbtn">Add logo</div>
                     {/if}
                     <input type="file" id="upload_company_logo" name="upload-picture" class="fileselect">
+                    <input type="hidden" id="temp_picture" name="temp-picture" value="">
                   </section>   
                 </fieldset>
                 
@@ -32,7 +36,7 @@
                             <b class="tooltip tooltip-bottom-left">Company officially registered name</b>
                         </label>
                         <label for="comp_ad_info" class="textarea "><span>Some additional information</span>
-                            <textarea id="comp_ad_info" name="comp_ad_info"></textarea>
+                            <textarea id="comp_ad_info" name="comp_ad_info">{$_companyProfile.additionalInfo}</textarea>
                             <b class="tooltip tooltip-bottom-left">About company</b>
                         </label>
                     </section>
@@ -50,23 +54,22 @@
             <div>
             	<div class="grid grid290 marginright40">
                    	<div class="block-title block-title-nobgr">Offices</div>
-                                                
-                                                
-					<fieldset class="grid grid290">
-                        <section>                         
-                            <label class="input">
-                            	<input id="comp_offices" name="comp_offices" type="text" value="">
-                            </label>
-     					</section>
-	                </fieldset>                            
-					
+                    {foreach from=$_companyOffices item=_companyOffice}
+	    				<fieldset class="grid grid290">
+	                        <section>                         
+	                            <label class="input">
+	                            	<input id="comp_offices" name="comp_offices[]" type="text" value="{$_companyOffice.name}">
+	                            </label>
+	     					</section>
+		                </fieldset>
+					{/foreach}                            
        	            <div class="clear"></div>
 					<div id="addlocation-btn" class="form-add-thin-btn">Add location</div>
                 </div>
                 
                 
                 <div class="grid grid290 marginright40">
-                   	<div class="block-title block-title-nobgr">Experience</div>
+                   	<div class="block-title block-title-nobgr">Contacts</div>
                     <fieldset class="grid grid290">
                         <section>
                             <label for="comp_email" class="input marginbottom25">Email to contact
@@ -74,15 +77,15 @@
                                 <b class="tooltip tooltip-bottom-left">Company email address</b>
                             </label>
                             <label for="comp_linked" class="input marginbottom25">Linked in link
-                                <input id="comp_linked" name="comp_linked" type="text" value="" placeholder="http://linkedin.com">
+                                <input id="comp_linked" name="comp_linked" type="text" value="{$_companyProfile.linkedIn}">
                                 <b class="tooltip tooltip-bottom-left">Company Linked in link</b>
                             </label>
                             <label for="comp_face" class="input marginbottom25">Facebook link
-                                <input id="comp_face" name="comp_face" type="text" value="" placeholder="http://facebook.com">
+                                <input id="comp_face" name="comp_face" type="text" value="{$_companyProfile.facebook}">
                                 <b class="tooltip tooltip-bottom-left">Company facebook link</b>
                             </label>
                             <label for="comp_twitter" class="input marginbottom25">twitter link
-                                <input id="comp_twitter" name="comp_twitter" type="text" value="" placeholder="http://twitter.com">
+                                <input id="comp_twitter" name="comp_twitter" type="text" value="{$_companyProfile.twitter}">
                                 <b class="tooltip tooltip-bottom-left">Company twitter link</b>
                             </label>                        
                         </section>
@@ -93,10 +96,10 @@
                 <div class="grid grid300">
                    	<div class="block-title block-title-nobgr">subscription</div>
                     <fieldset class="grid grid300 marginbottom25 margintop20 paddingright40">
-                       <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Allow users to subscribe for new vacancies</label>
+                       <label class="checkbox"><input type="checkbox" name="checkbox" {if $_companyProfile.newVacancies}checked{/if}><i></i>Allow users to subscribe for new vacancies</label>
                     </fieldset>
                     <fieldset class="grid grid300 marginbottom25 paddingright40">
-                        <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Allow users to subscribe for news</label>
+                        <label class="checkbox"><input type="checkbox" name="checkbox" {if $_companyProfile.subscribeForNews}checked{/if}><i></i>Allow users to subscribe for news</label>
                     </fieldset>
                 </div>   
 
@@ -113,12 +116,11 @@
                             <label class="select">amount of emploees
                                 <select name="comp_emp_count">
                                     <option value="">Select emploees count</option>
-                                    <option value="10+" selected="">10+</option>
-                                    <option value="100+">100+</option>
-                                    <option value="1,000+">1,000+</option>
-                                    <option value="10,000+">10,000+</option>
-                                    <option value="100,000+">100,000+</option>
-                                    <option value="200,000+">200,000+</option>
+                                    <option value="5+" {if $_companyProfile.amountOfEmploees == "5+"}selected=""{/if}>5+</option>
+                                    <option value="10+" {if $_companyProfile.amountOfEmploees ==  "10+"}selected=""{/if}>10+</option>
+                                    <option value="25+" {if $_companyProfile.amountOfEmploees ==  "25+"}selected=""{/if}>25+</option>
+                                    <option value="50+" {if $_companyProfile.amountOfEmploees ==  "50+"}selected=""{/if}>50+</option>
+                                    <option value="100+" {if $_companyProfile.amountOfEmploees ==  "100+"}selected=""{/if}>100+</option>
 								</select>
                                 <i></i>
                             </label>
@@ -127,12 +129,12 @@
                 </div>  
                 <div class="grid grid290 marginright40">
                     <fieldset class="grid grid300 marginbottom25 margintop30 paddingright40">
-                       <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>Show amount of views of the company page</label>
+                       <label class="checkbox"><input type="checkbox" name="checkbox" {if $_companyProfile.showAmountOfViews}checked{/if} ><i></i>Show amount of views of the company page</label>
                     </fieldset>
                 </div>
                 <div class="grid grid300">
                     <fieldset class="grid grid300 marginbottom25 margintop30 paddingright40">
-                       <label class="checkbox"><input type="checkbox" name="checkbox"><i></i>show amount users who applied for the positions of the company</label>
+                       <label class="checkbox"><input type="checkbox" name="checkbox" {if $_companyProfile.showAmountUsersApplied}checked{/if} ><i></i>show amount users who applied for the positions of the company</label>
                     </fieldset>
                 </div>                
    	            <div class="clear"></div>
