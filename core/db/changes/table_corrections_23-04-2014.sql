@@ -5,6 +5,8 @@ RENAME TABLE `hr_benefits` TO `hr_benefit`;
 
 /* No plurals */
 RENAME TABLE `hr_company_benefits` TO `hr_company_benefit`;
+/* Benefits won't be that many to make id field int(11). Changed to tinyint(4)*/
+ALTER TABLE `hr_benefit` CHANGE `benefit_id` `benefit_id` TINYINT(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 /* Let's use more specific names for ids to be used throughout whole database more effectively ('office_id' instead of just 'id')  */
 /* Changed 'name' to 'address' */
