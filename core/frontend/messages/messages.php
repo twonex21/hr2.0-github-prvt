@@ -5,7 +5,7 @@
 
 // Page Titles
 define('PT_EDIT_USER_PROFILE', 'Edit Profile');
-
+define('PT_EDIT_COMPANY_PROFILE', 'Edit Company Profile');
 define('PT_OPEN_VACANCY', 'Open Vacancy');
 
 // Validation

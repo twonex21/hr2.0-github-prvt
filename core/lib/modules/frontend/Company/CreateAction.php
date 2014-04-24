@@ -7,11 +7,9 @@ use HR\Core\FrontendUtils;
 
 class CreateAction extends Action implements ActionInterface 
 {
-    public function perform() {
-
-    	
+    public function perform() {    	
     	// Setting page title
-    	$this->setPageTitle('Company Page Creaton');
+    	$this->setPageTitle(PT_EDIT_COMPANY_PROFILE);
     	
     	$currentCompanyId = $this->session->getCurrentCompanyId();
 
@@ -19,15 +17,14 @@ class CreateAction extends Action implements ActionInterface
     		
     		// POST is empty, no input parameters yet
     		
-    		//collecting data if it exists and passing to template
+    		// Collecting data if it exists and passing to template
     		$companyProfile = $this->model->getCompanyProfileById($currentCompanyId);
     		$companyOffices = $this->model->getCompanyOfficesByCompanyId($currentCompanyId);
 
     		$this->view->showCreateCompanyProfilePage($companyProfile, $companyOffices);
     	} else {
     		
-    	}
-    	
+    	}    	
     }
 }
 
