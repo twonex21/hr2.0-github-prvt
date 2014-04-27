@@ -72,6 +72,10 @@
            	<div class="block-title block-title-nobgr">Contacts</div>
             <fieldset class="grid grid290">
                 <section>
+                    <label for="comp_phone" class="input marginbottom25">Contact Phone
+                        <input id="comp_phone" name="comp_phone" type="text" value="{$_companyProfile.phone}">
+                        <b class="tooltip tooltip-bottom-left">Company contact phone</b>
+                    </label>
                     <label for="comp_email" class="input marginbottom25">Email to contact
                         <input id="comp_email" name="comp_email" type="text" value="{$_companyProfile.mail}" attr-validate='isEmailAddress'>
                         <b class="tooltip tooltip-bottom-left">Company email address</b>
@@ -96,10 +100,10 @@
         <div class="grid grid300">
            	<div class="block-title block-title-nobgr">subscription</div>
             <fieldset class="grid grid300 marginbottom25 margintop20 paddingright40">
-               <label class="checkbox"><input type="checkbox" name="checkbox" {if $_companyProfile.newVacancies}checked{/if}><i></i>Allow users to subscribe for new vacancies</label>
+               <label class="checkbox"><input type="checkbox" name="subscribe_for_new_vacancies" value="1" {if $_companyProfile.newVacancies}checked{/if}><i></i>Allow users to subscribe for new vacancies</label>
             </fieldset>
             <fieldset class="grid grid300 marginbottom25 paddingright40">
-                <label class="checkbox"><input type="checkbox" name="checkbox" {if $_companyProfile.subscribeForNews}checked{/if}><i></i>Allow users to subscribe for news</label>
+                <label class="checkbox"><input type="checkbox" name="subscribe_for_news" value="1"  {if $_companyProfile.subscribeForNews}checked{/if}><i></i>Allow users to subscribe for news</label>
             </fieldset>
         </div>   
 
@@ -129,12 +133,12 @@
         </div>  
         <div class="grid grid290 marginright40">
             <fieldset class="grid grid300 marginbottom25 margintop30 paddingright40">
-               <label class="checkbox"><input type="checkbox" name="checkbox" {if $_companyProfile.showAmountOfViews}checked{/if} ><i></i>Show amount of views of the company page</label>
+               <label class="checkbox"><input type="checkbox" name="show_amount_of_views" value="1" {if $_companyProfile.showAmountOfViews}checked{/if} ><i></i>Show amount of views of the company page</label>
             </fieldset>
         </div>
         <div class="grid grid300">
             <fieldset class="grid grid300 marginbottom25 margintop30 paddingright40">
-               <label class="checkbox"><input type="checkbox" name="checkbox" {if $_companyProfile.showAmountUsersApplied}checked{/if} ><i></i>show amount users who applied for the positions of the company</label>
+               <label class="checkbox"><input type="checkbox" name="show_amount_users_applied" value="1" {if $_companyProfile.showAmountUsersApplied}checked{/if} ><i></i>show amount users who applied for the positions of the company</label>
             </fieldset>
         </div>                
    	            <div class="clear"></div>
@@ -150,7 +154,7 @@
 				<fieldset class="benefitsitem grid grid290">
                     <section>
                         <label class="select">
-                            <select name="comp_benefits">
+                            <select name="comp_benefits[]">
                             	{foreach from=$_allBenefits item=_benefit}
                             		<option value="{$_benefit.benefitId}" {if $_companyBenefit.benefitId == $_benefit.benefitId}selected=""{/if} >
                             			{$_benefit.name}

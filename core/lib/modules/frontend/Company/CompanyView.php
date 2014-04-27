@@ -18,6 +18,14 @@ class CompanyView extends View
         $this->render('create.tpl', 'CONTENT');
         $this->finish();
     }
+    
+	function showCompanyPage() {
+
+		//vars
+		
+        $this->render('company.tpl', 'CONTENT');
+        $this->finish();
+    }
 
 }
 

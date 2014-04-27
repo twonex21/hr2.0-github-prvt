@@ -292,7 +292,7 @@ class FrontendUtils
 	        return true;
 	    }
 	    
-        return  preg_match("|https?://(www\.)?twitter\.com/(#!/)?@?([^/]*)|", $url, $matches);
+        return  preg_match("|https?://(www\.)?twitter\.com(#!/)?@?([^/]*)|", $url, $matches);
     }
     
     public static function isLatin($string) {

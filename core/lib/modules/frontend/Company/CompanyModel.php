@@ -63,6 +63,27 @@ class CompanyModel extends Model
 		}
 		return $ret_result;
 	}
+	
+	public function updateCompanyInfo($currentCompanyId, $companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, $companyTwitter, $pictureKey, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, $showAmountUsersApplied) {
+		$sql = "UPDATE hr_company SET name='%s', additional_info='%s', phone='%s', mail='%s', linkedin='%s', facebook='%s', 
+				twitter='%s', new_vacancies='%s', subscribe_for_news='%s', amount_of_emploees='%s', 
+				show_amount_of_views='%s', show_amount_users_applied='%s', 
+				changed_at=NOW()";
+		
+		//setting default values
+		
+		$params = array($companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, 
+				        $companyTwitter, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, 
+				        $showAmountUsersApplied);
+	
+		if($pictureKey != '') {
+			$sql .= ", logo_key='%s'";
+			$params[] = $pictureKey;
+		}
+		
+		$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
+		$this->mysql->query($sql, SQL_PREPARED_QUERY);
+	}
     
 }
 
