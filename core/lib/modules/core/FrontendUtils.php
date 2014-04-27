@@ -277,6 +277,23 @@ class FrontendUtils
         return preg_match('/^((http|https):\/\/)?((www|\w{2})\.)?linkedin.com\/((in\/[^\/]+\/?)|(pub\/[^\/]+\/(\w+\/?){3}))$/i', $url);
     }
     
+    public static function isFacebook($url) {
+	    $url = trim($url);
+	    if($url == '') {
+	        return true;
+	    }
+
+	    return preg_match('#https?\://(?:www\.)?facebook\.com/(\d+|[A-Za-z0-9\.]+)/?#', $url);
+    }
+    
+	public static function isTwitter($url) {
+	    $url = trim($url);
+	    if($url == '') {
+	        return true;
+	    }
+	    
+        return  preg_match("|https?://(www\.)?twitter\.com/(#!/)?@?([^/]*)|", $url, $matches);
+    }
     
     public static function isLatin($string) {
     	$string = trim($string);
