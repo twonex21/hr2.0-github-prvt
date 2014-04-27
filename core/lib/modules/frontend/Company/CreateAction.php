@@ -22,8 +22,12 @@ class CreateAction extends Action implements ActionInterface
     		//collecting data if it exists and passing to template
     		$companyProfile = $this->model->getCompanyProfileById($currentCompanyId);
     		$companyOffices = $this->model->getCompanyOfficesByCompanyId($currentCompanyId);
+    		
+    		//Benefits
+    		$allBenefits = $this->model->getAllBenefits();
+    		$companyBenefits = $this->model->getCompanyBenefitsByCompanyId($currentCompanyId);
 
-    		$this->view->showCreateCompanyProfilePage($companyProfile, $companyOffices);
+    		$this->view->showCreateCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits);
     	} else {
     		
     	}

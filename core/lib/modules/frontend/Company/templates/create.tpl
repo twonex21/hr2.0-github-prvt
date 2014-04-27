@@ -145,39 +145,25 @@
             <div>
                	<div class="block-title block-title-nobgr">Benefits</div>
             	<div class="grid">
-                    <fieldset class="benefitsitem grid grid290">
-                        <section>
-                            <label class="select">
-                                <select name="comp_benefits">
-                                    <option value="business trips" selected="">business trips</option>
-                                    <option value="insurance">insurance</option>
-								</select>
-                                <i></i>
-                            </label>
-     					</section>
-	                </fieldset> 
-                    
-   					<fieldset class="benefitsitem grid grid290">
-                        <section>
-                            <label class="select">
-                                <select name="comp_benefits">
-                                    <option value="business trips" selected="">business trips</option>
-                                    <option value="insurance">insurance</option>
-								</select>
-                                <i></i>
-                            </label>
-     					</section>
-	                </fieldset><fieldset class="benefitsitem grid grid290">
-                        <section>
-                            <label class="select">
-                                <select name="comp_benefits">
-                                    <option value="business trips" selected="">business trips</option>
-                                    <option value="insurance">insurance</option>
-								</select>
-                                <i></i>
-                            </label>
-     					</section>
-	                </fieldset><div id="add-benefit-btn" class="form-add-thin-btn grid grid290">Add benefit</div>
+            	
+            		{foreach from=$_companyBenefits item=_companyBenefit}
+	    				<fieldset class="benefitsitem grid grid290">
+	                        <section>
+	                            <label class="select">
+	                                <select name="comp_benefits">
+	                                	{foreach from=$_allBenefits item=_benefit}
+	                                		<option value="{$_benefit.benefitId}" {if $_companyBenefit.benefitId == $_benefit.benefitId}selected=""{/if} >
+	                                			{$_benefit.name}
+	                                		</option>
+	                                	{/foreach}   
+									</select>
+	                                <i></i>
+	                            </label>
+	     					</section>
+		                </fieldset> 
+					{/foreach}        
+	                
+	                <div id="add-benefit-btn" class="form-add-thin-btn grid grid290">Add benefit</div>
 
                 </div>  
    	            <div class="clear"></div>
