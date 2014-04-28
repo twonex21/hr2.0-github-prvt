@@ -219,4 +219,7 @@ pip-log.txt
 ## Smarty
 #############
 templates_c/
-media/logs/
+#############
+## Media files
+#############
+media/

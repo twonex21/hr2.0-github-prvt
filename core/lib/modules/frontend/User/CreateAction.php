@@ -22,6 +22,7 @@ class CreateAction extends Action implements ActionInterface
     	$userLanguages = array();
     	$userSkills = array();
     	$userSoftSkills = array();
+    	
     	$firstName = '';
     	$lastName = '';
     	$mail = '';
@@ -48,8 +49,8 @@ class CreateAction extends Action implements ActionInterface
     	$softSkillLevels = array();
     	
     	// Setting page title
-    	$this->setPageTitle('Create Profile');
-    	
+    	$this->setPageTitle(PT_EDIT_USER_PROFILE);
+
     	// Getting authorized user
     	$currentUserId = $this->session->getCurrentUserId();
     	
@@ -74,7 +75,7 @@ class CreateAction extends Action implements ActionInterface
     	} else {
     		// Handling form input
     		
-    		// Bacic profile info
+    		// Basic profile info
     		if(!$this->request->request->isNullOrEmpty('full-name') && FrontendUtils::isLatin($this->request->request->get('full-name'))) {
     			if(strpos($this->request->request->get('full-name'), ' ')) {
     				list($firstName, $lastName) = explode(' ', $this->request->request->get('full-name'));
@@ -220,7 +221,6 @@ class CreateAction extends Action implements ActionInterface
     		}
     		
     		// Soft Skills
-    		// Languages
     		if(!$this->request->request->isNullOrEmpty('soft-skills') && $this->request->request->isArray('soft-skills')) {
     			$tmpSoftSkills = $this->request->request->get('soft-skills');
     			

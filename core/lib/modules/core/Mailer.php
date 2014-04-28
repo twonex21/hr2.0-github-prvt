@@ -1,8 +1,8 @@
 <?php
 namespace HR\Core;
 
-require PATH_DIR.'/config/smtp.ini';
-require LIB_DIR.'mail/class.phpmailer.php';
+require PATH_DIR . '/config/smtp.config.php';
+require LIB_DIR . 'mail/class.phpmailer.php';
 
 
 class Mailer

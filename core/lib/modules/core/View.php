@@ -110,7 +110,7 @@ class View
             foreach($template_array as $k => $template_value) {
                 $final_value .= $template_value;
             }
-            $this->smarty->assign($block,$final_value);
+            $this->smarty->assign($block, $final_value);
         }
 
         //display the output, use the main template        
@@ -137,7 +137,7 @@ class View
     }
     
     public function assign($name, $variable = null) {
-        $this->smarty->assign($name,$variable);
+        $this->smarty->assign($name, $variable);
     }
 
     public function setTemplate($templatePath) {

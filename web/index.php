@@ -5,9 +5,9 @@ header('Content-Type: text/html; charset=utf-8');
  * Display all errors when APPLICATION_ENV is development
  * 
  */ 
-if($_SERVER["APPLICATION_ENV"] == "development") {
+if($_SERVER['APPLICATION_ENV'] == 'development') {
 	error_reporting(E_ALL);
-	ini_set("display_errors", 1);
+	ini_set('display_errors', 1);
 }
 
 /**
@@ -20,14 +20,14 @@ chdir(dirname(__DIR__));
  * Checking the case when script is executed via command line
  * 
  */ 
-if(strpos(php_sapi_name(), "cli") && isset($argv) && count($argv) > 3) {		
-	require '/core/config/main-shell.ini';
-	require PATH_DIR.'/frontend/configs/frontend-cli.ini';
+if(strpos(php_sapi_name(), 'cli') && isset($argv) && count($argv) > 3) {		
+	require '/core/config/main-cli.config.php';
+	require PATH_DIR . '/frontend/configs/frontend-cli.config.php';
 	
-	list($_GET["controller"], $_GET["action"], $_GET["parameters"]) = $argv;
+	list($_GET['controller'], $_GET['action'], $_GET['parameters']) = $argv;
 } else {    	
-	require '/core/config/main.ini';
-	require PATH_DIR.'/frontend/configs/frontend.ini';
+	require '/core/config/main.config.php';
+	require PATH_DIR . '/frontend/configs/frontend.config.php';
 }
 
 // Autoloading files

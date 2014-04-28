@@ -99,7 +99,7 @@ $(document).ready(function() {
 	
 
 	/* education|experience add */
-	$('#addeducation-btn, #addexperience-btn, #addskill-btn, #addlanguage-btn, #addlocation-btn').click(function() {
+	$('#addeducation-btn, #addexperience-btn, #addskill-btn, #addlanguage-btn, #addlocation-btn, #addbenefit-btn').click(function() {
 		addBlock($(this));
 	});
 	
@@ -145,12 +145,13 @@ $(document).ready(function() {
 	});
 
 	$(document).on('change', '#upload_file', function() {
-		ajaxUploadResume();
+		ajaxUploadFile();
 	});
 	
 	$('#fileaddbtn.file-remove').click(function(e) {
-		var resumeKey = $(this).attr('attr-file-key');
-		ajaxRemoveResume(resumeKey, 'resume');
+		var fileKey = $(this).attr('attr-file-key');
+		var type = $(this).attr('attr-type');
+		ajaxRemoveFile(fileKey, type);
 	});
 	
 	$('#photoaddbtn:not(.photo-remove)').click(function(e) {
@@ -163,7 +164,7 @@ $(document).ready(function() {
 	
 	$('#photoaddbtn.photo-remove').click(function(e) {
 		var photoKey = $(this).attr('attr-picture-key');
-		ajaxRemovePhoto(photoKey, 'user');
+		ajaxRemovePicture(photoKey, 'user');
 	});
 	
 	//company page
@@ -178,7 +179,7 @@ $(document).ready(function() {
 	
 	
 	/* Loading dropdown menu contents */
-	$(document).on('change', '[attr-load]', function() {
+	$(document).on('change', '.hr-form select', function() {
 		var $menu = $(this).parents('.select').next('.select').children('select');
 		var parentId = $(this).val();
 		var type = $(this).attr('attr-load');
@@ -187,7 +188,9 @@ $(document).ready(function() {
 			$(this).closest('section').find('.remove-block').css('visibility', 'visible');
 		}
 
-		loadDropdown($menu, [parentId], type);				
+		if(typeof type != 'undefined') {
+			loadDropdown($menu, [parentId], type);				
+		}
 	});
 	
 	
@@ -236,8 +239,14 @@ $(document).ready(function() {
 $(window).load(function() {
 	/*datepicker*/
 	//http://glad.github.io/glDatePicker/#features
-	$('#vac_deadline, #birth_date').glDatePicker({
+	var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];;
+	$('#deadline, #birth_date').glDatePicker({
 		showAlways: false,
-		cssName: 'flatwhite'
+		cssName: 'flatwhite',
+		onClick: function(target, cell, date, data) {
+	        target.val( date.getDate() + ' ' +
+	                    monthNames[date.getMonth()] + ', ' +
+	                    date.getFullYear());	        
+	    }	    
 	});	
 });

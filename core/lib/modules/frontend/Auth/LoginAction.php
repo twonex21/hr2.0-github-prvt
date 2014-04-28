@@ -10,6 +10,7 @@ class LoginAction extends Action implements ActionInterface
     	$userId = null;
     	$companyId = null;
 
+    	
     	if($this->request->query->has('uid')) {
     		$userId = $this->request->query->getInt('uid');
     		$this->session->setCurrentUser($this->qb->getUserSessionDataById($userId));

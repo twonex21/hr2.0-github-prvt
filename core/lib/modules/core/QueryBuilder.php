@@ -8,21 +8,7 @@ class QueryBuilder extends Model
     	parent::__construct();
     }
     
-    
-    public function test() {
-    	$data = array();
-    	$sql = "SELECT tid, name, mail FROM hr_test LIMIT 1";
-    	
-    	$result = $this->mysql->query($sql);
-    	if($row = $this->mysql->getNextResult($result)) {
-			$data = $row;
-		}
-		
-		return $data;
-    }
-    
-    
-    
+      
     public function getUserSessionDataById($userId) {
     	$user = array();
     	
@@ -144,12 +130,20 @@ class QueryBuilder extends Model
     	return $skills;
     }
     
-        
-    public function resetUserFile($userId, $key) {
-    	$updated = false;
-    	$sql = "UPDATE hr_user SET picture_key='' WHERE user_id=%d AND picture_key='%s'";
+    
+    public function getBenefits() {    	    	
+    	$sql = "SELECT benefit_id AS benefitId, name FROM hr_benefit";    	
+    	$result = $this->mysql->query($sql);
     	
-    	$sql = $this->mysql->format($sql, array($userId, $key));
+    	return $this->mysql->getDataSet($result);
+    }        
+    
+            
+    public function resetUserFile($key) {
+    	$updated = false;
+    	$sql = "UPDATE hr_user SET picture_key='' WHERE picture_key='%s'";
+    	
+    	$sql = $this->mysql->format($sql, array($key));
     	$this->mysql->query($sql);
     	
     	// Picture key has been reset if query had affected rows
@@ -159,19 +153,42 @@ class QueryBuilder extends Model
     }
     
     
-    public function resetResumeFile($userId, $key) {
+    public function resetResumeFile($key) {
     	$updated = false;
-    	$sql = "UPDATE hr_user SET resume_key='' WHERE user_id=%d AND resume_key='%s'";
+    	$sql = "UPDATE hr_user SET resume_key='' WHERE resume_key='%s'";
     	
-    	$sql = $this->mysql->format($sql, array($userId, $key));
+    	$sql = $this->mysql->format($sql, array($key));
     	$this->mysql->query($sql);
     	
     	// Picture key has been reset if query had affected rows
     	$updated = ($this->mysql->getAffectedRows() > 0);
     	
     	return $updated;
+    }
+    
+    
+    public function resetVacancyFile($key) {
+    	$updated = false;
+    	$sql = "UPDATE hr_vacancy SET file_key='' WHERE file_key='%s'";
+    	
+    	$sql = $this->mysql->format($sql, array($key));
+    	$this->mysql->query($sql);
+    	
+    	// Picture key has been reset if query had affected rows
+    	$updated = ($this->mysql->getAffectedRows() > 0);
+    	
+    	return $updated;
+    }
+    
+    
+    public function vacancyExists($vacancyId) {    	
+    	$sql = "SELECT COUNT(*) AS count FROM hr_vacancy WHERE vacancy_id=%d";
+    	
+    	$sql = $this->mysql->format($sql, array($vacancyId));
+    	$result = $this->mysql->query($sql);
+    	
+    	return ($this->mysql->getField('count', $result) > 0);
     }
 }
 
-//EOF
 ?>
