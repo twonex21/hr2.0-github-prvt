@@ -32,7 +32,7 @@
         <fieldset class="grid grid670">
             <section>
                 <label for="comp_title" class="input marginbottom25"><span>Title</span>
-                    <input id="comp_title" name="comp_title" type="text" value="{$_companyProfile.name}" attr-validate="notEmpty, isLatin">
+                    <input id="comp_title" name="comp_title" type="text" value="{$_companyProfile.name}" attr-validate="notEmpty">
                     <b class="tooltip tooltip-bottom-left">Company officially registered name</b>
                 </label>
                 <label for="comp_ad_info" class="textarea "><span>Some additional information</span>
@@ -58,7 +58,7 @@
 				<fieldset class="grid grid290">
                     <section>                         
                         <label class="input">
-                        	<input id="comp_offices_{$_companyOffice.id}" name="comp_offices[]" type="text" value="{$_companyOffice.name}" attr-validate="isLatin">
+                        	<input id="comp_offices_{$_companyOffice.office_id}" name="comp_offices[]" type="text" value="{$_companyOffice.address}" attr-validate="isLatin">
                         </label>
  					</section>
                 </fieldset>
@@ -120,11 +120,11 @@
                     <label class="select">amount of emploees
                         <select name="comp_emp_count">
                             <option value="">Select emploees count</option>
-                            <option value="5+" {if $_companyProfile.amountOfEmploees == "5+"}selected=""{/if}>5+</option>
-                            <option value="10+" {if $_companyProfile.amountOfEmploees ==  "10+"}selected=""{/if}>10+</option>
-                            <option value="25+" {if $_companyProfile.amountOfEmploees ==  "25+"}selected=""{/if}>25+</option>
-                            <option value="50+" {if $_companyProfile.amountOfEmploees ==  "50+"}selected=""{/if}>50+</option>
-                            <option value="100+" {if $_companyProfile.amountOfEmploees ==  "100+"}selected=""{/if}>100+</option>
+                            <option value="5+" {if $_companyProfile.employeesCount == "5+"}selected=""{/if}>5+</option>
+                            <option value="10+" {if $_companyProfile.employeesCount ==  "10+"}selected=""{/if}>10+</option>
+                            <option value="25+" {if $_companyProfile.employeesCount ==  "25+"}selected=""{/if}>25+</option>
+                            <option value="50+" {if $_companyProfile.employeesCount ==  "50+"}selected=""{/if}>50+</option>
+                            <option value="100+" {if $_companyProfile.employeesCount ==  "100+"}selected=""{/if}>100+</option>
 						</select>
                         <i></i>
                     </label>
@@ -133,12 +133,12 @@
         </div>  
         <div class="grid grid290 marginright40">
             <fieldset class="grid grid300 marginbottom25 margintop30 paddingright40">
-               <label class="checkbox"><input type="checkbox" name="show_amount_of_views" value="1" {if $_companyProfile.showAmountOfViews}checked{/if} ><i></i>Show amount of views of the company page</label>
+               <label class="checkbox"><input type="checkbox" name="show_amount_of_views" value="1" {if $_companyProfile.showViewsCount}checked{/if} ><i></i>Show amount of views of the company page</label>
             </fieldset>
         </div>
         <div class="grid grid300">
             <fieldset class="grid grid300 marginbottom25 margintop30 paddingright40">
-               <label class="checkbox"><input type="checkbox" name="show_amount_users_applied" value="1" {if $_companyProfile.showAmountUsersApplied}checked{/if} ><i></i>show amount users who applied for the positions of the company</label>
+               <label class="checkbox"><input type="checkbox" name="show_amount_users_applied" value="1" {if $_companyProfile.showApplicantsCount}checked{/if} ><i></i>show amount users who applied for the positions of the company</label>
             </fieldset>
         </div>                
    	            <div class="clear"></div>

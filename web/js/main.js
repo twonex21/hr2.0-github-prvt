@@ -168,8 +168,12 @@ $(document).ready(function() {
 	});
 	
 	//company page
-	$('#company_logo_addbtn').click(function(e) { 
+	$('#company_logo_addbtn:not(.photo-remove)').click(function(e) { 
 		$('#upload_company_logo').trigger('click');
+	});
+	$('#company_logo_addbtn').click(function(e) { 
+		var photoKey = $(this).attr('attr-picture-key');
+		ajaxRemovePicture(photoKey, 'user');
 	});
 	
 	$(document).on('change', '#upload_company_logo', function() {

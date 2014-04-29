@@ -23,13 +23,13 @@ class CompanyModel extends Model
 	
 	
 	public function getCompanyOfficesById($companyId) {
-		$sql = "SELECT id, name
+		$sql = "SELECT office_id, address
 				FROM hr_company_office
 				WHERE company_id=%d";
 		 
-		$sql = $this->mysql->format($sql, array($companyId));
+		$sql = $this->mysql->format($sql, array($companyId)); 
 		$result = $this->mysql->query($sql);
-		 
+		
 		$ret_result = array();
 		while($data = $this->mysql->getRow($result)){
 			$ret_result[] = $data;
@@ -38,10 +38,10 @@ class CompanyModel extends Model
 	}
 	
 	public function getCompanyBenefitsByCompanyId($comapnyId) {
-		$sql = "SELECT hr_company_benefits.company_benefits_id AS companyBenefitsId, hr_benefits.benefit_id AS benefitId, hr_benefits.name
-				FROM hr_company_benefits
-				INNER JOIN hr_benefits ON hr_company_benefits.benefit_id = hr_benefits.benefit_id
-				WHERE hr_company_benefits.company_id=%d";
+		$sql = "SELECT hr_company_benefit.company_benefits_id AS companyBenefitsId, hr_benefit.benefit_id AS benefitId, hr_benefit.name
+				FROM hr_company_benefit
+				INNER JOIN hr_benefit ON hr_company_benefit.benefit_id = hr_benefit.benefit_id
+				WHERE hr_company_benefit.company_id=%d";
 
 		$sql = $this->mysql->format($sql, array($comapnyId));
 		$result = $this->mysql->query($sql);
@@ -54,8 +54,7 @@ class CompanyModel extends Model
 	}
 	
 	public function getAllBenefits() {
-		$sql = "SELECT benefit_id AS benefitId,name FROM hr_benefits";
-
+		$sql = "SELECT benefit_id AS benefitId,name FROM hr_benefit";
 		$result = $this->mysql->query($sql);
 		 
 		$ret_result = array();
@@ -67,8 +66,8 @@ class CompanyModel extends Model
 	
 	public function updateCompanyInfo($currentCompanyId, $companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, $companyTwitter, $pictureKey, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, $showAmountUsersApplied) {
 		$sql = "UPDATE hr_company SET name='%s', additional_info='%s', phone='%s', mail='%s', linkedin='%s', facebook='%s', 
-				twitter='%s', new_vacancies='%s', subscribe_for_news='%s', amount_of_emploees='%s', 
-				show_amount_of_views='%s', show_amount_users_applied='%s', 
+				twitter='%s', new_vacancies='%s', subscribe_for_news='%s', employees_count='%s', 
+				show_views_count='%s', show_amount_users_applied='%s', 
 				changed_at=NOW()";
 		
 		//setting default values
