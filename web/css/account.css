@@ -1,0 +1,133 @@
+@charset "utf-8";
+/* CSS Document */
+
+.create-account-sec	{
+	background: #FFF; 
+	max-width:800px; 
+	margin: 0 auto; 	
+	border-top:5px solid #c72b0f;
+}
+
+	.create-account-header {
+		height:120px;
+		background:#262626;	
+	}
+		.account-block-title {
+			font-size:1.5rem;
+			font-weight:600;
+			color:rgba(0,0,0, .8);
+			text-transform:uppercase;	
+			padding-bottom:20px;
+		}
+		
+		.account-block-title a {
+			color:#ff3000;	
+		}
+		
+		.account-title {
+			font-family: 'gothamlight';
+			font-size: 3rem;
+			color: #FFF;
+			text-align: center;
+			text-transform: uppercase;
+			padding: 30px 0 5px 0;	
+		}
+		
+		.account-title-sub {
+			font-size:1.3rem;
+			color:#FFF;
+			text-align:center;	
+		}
+		
+		.account-title-sub span {
+			font-family: 'gothamlight';
+			font-style:italic;	
+		}
+	
+		.account-title-sub a {
+			text-transform:uppercase;
+			font-weight:bold;
+			letter-spacing:0;
+			text-decoration:underline;
+			color:#FFF;	
+		}
+		
+		.account-title-sub a:hover {
+			color:#ff3000;	
+		}
+	
+	
+	.create-account-body {
+		min-height:400px;	
+	}
+	
+	.create-account-body .social-login {
+		border-bottom:1px solid #CCC; 
+		padding:20px 25px 20px 40px	
+	}
+	
+	.create-account-body  .login-from {		
+		min-height:335px;
+		padding:30px 0px 0px 20px	
+	}	
+
+	.tab-switch {
+		margin:20px 0 25px 0;
+		text-align:center;
+		font-size:1.6rem;
+	}
+		.tab-switch a {
+			color:#555;
+			border: 2px #FFF solid;
+			border-radius:16px;
+			display:inline-block;
+			padding:5px 10px;
+			cursor:pointer;
+		}
+
+		.tab-switch a:hover {
+			border-color:#d72e07;
+		}
+		
+		.tab-switch a.sel {
+			color:#FFF;
+			border-color:#d72e07;
+			background:#d72e07
+		}
+		
+.create-account-body .tab {	
+	min-height:470px;
+	opacity:0;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  	filter: alpha(opacity=0);
+}
+		
+
+#company {
+	padding:0 0 0 20px;	
+}
+		
+#company .grid, #user .grid {
+	width:44%;
+	padding:20px 20px 30px 20px !important;	
+}
+		
+
+#create-account-form input {
+	margin-bottom:20px;		
+}
+	
+#create-account-form label {
+	display:block;
+	font-size:1.4rem;
+	text-transform:uppercase;
+	color:rgba(0,0,0, .7);
+	padding-bottom:7px;	
+}
+
+	.connect-button {
+		padding-bottom:35px;
+		text-align:center;
+	}	
+
+	

@@ -116,26 +116,36 @@
     text-align: center;
     padding:55px 0px 70px 0px;            
 }
-    .vacancy-top{
-        width:625px; 
-        margin:0 auto;
-        font-style:italic;
-        font-size:1.5rem;
-        color:#474747;
-        text-align: left
-    }
-    .vacancy-top h1{
-        font-size:3.6rem;
-        color:#474747;
-        text-transform: uppercase;
-        height:32px
-    }
-    .vacancy-top span{
-        font-size:1.5rem;
-        color:#474747;
-        font-style:italic;
-        font-family:'gothamlight';
-    }
+.vacancy-top{
+    width:625px; 
+    margin:0 auto;
+    font-style:italic;
+    font-size:1.5rem;
+    color:#474747;
+    text-align: left
+}
+.vacancy-top .vacancy-top-text{
+	position:relative;
+	height:auto;
+	padding-bottom:10px;
+	line-height:3.6rem;
+    font-size:3.6rem;
+    color:#474747;
+    text-transform: uppercase;
+}
+.vacancy-top .vacancy-top-text div{ 
+	position:absolute;
+	right:0px;
+	bottom:-28px;
+	font-size:2.4rem;   
+    color:#C3C3C3;    
+}
+.vacancy-top i{
+    font-size:1.5rem;
+    color:#474747;
+    font-style:italic;
+    font-family:'gothamlight';
+}
     .margintop35{margin-top: 35px}
     
 
@@ -189,15 +199,26 @@
         padding:20px 0px;	
     }
 
-        .req-skills h1{
-            color:#ff3000;
-            font-size: 2.1rem;
-            text-transform: uppercase;
-            font-family:'gothamlight';                     
-            line-height: 35px;
-            margin-left: 60px;
-            background: url('../images/block_title_bgr_grey.png') no-repeat left bottom;        
-        }
+    .req-skills h1{
+        color:#ff3000;
+        font-size: 2.1rem;
+        text-transform: uppercase;
+        font-family:'gothamlight';                     
+        line-height: 35px;
+        margin-left: 60px;
+        background: url('../images/block_title_bgr_grey.png') no-repeat left bottom;        
+    }
+    
+	.req-skills-top h1.title{
+        color:#ff3000;
+        font-size: 2.1rem;
+        text-transform: uppercase;
+        font-family:'gothamlight';                     
+        line-height: 35px;        
+        background: url('../images/block_title_bgr_grey.png') no-repeat left bottom;
+		margin-bottom:20px;		        
+    }
+    
     .skills-block{
         float: left;
         width: 145px;
@@ -251,36 +272,48 @@
         color:#474747;                    
     }
 
-    .lang-block{ 
-        float:left;
-        margin: 0px 20px;
-        width:179px;
-        text-align:center;
-    }
-    .lang-block-div{ 
-        float:left;
-        color:#b5b5b5;
-        font-size:1.8rem;
-        text-transform: uppercase;
-        padding:20px 0px 0px 10px
-    }
-    .lang-block img{ 
-        float:left;
-        margin-top:8px !important;
-        margin-bottom: 18px !important;
-        margin-left:10px !important;;
-    }
-    .lang-block span{ 
-        font-size: 1.3rem;
-        text-transform: uppercase;
-        color:#474747;                    
-    }
-    .lang-block-text{
-        color:#424242;
-        font-size: 1.1rem;
-        font-family:'gothamlight'; 
-        font-style: italic
-    }
+.lang-block{ 
+    float:left;
+    margin: 0px 20px;
+    width:179px;
+    text-align:center;
+}
+.lang-block-div{ 
+    float:left;
+    color:#b5b5b5;
+    font-size:1.8rem;
+    text-transform: uppercase;
+    padding:20px 0px 0px 10px
+}
+.lang-block img{ 
+    float:left;
+    margin-top:8px !important;
+    margin-bottom: 18px !important;
+    margin-left:10px !important;;
+}
+.lang-block span{ 
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    color:#474747;                    
+}
+.lang-block-text{
+    color:#424242;
+    font-size: 1.1rem;
+    font-family:'gothamlight'; 
+    font-style: italic
+}
+.benefit-block{
+    float: left;
+    width: 179px;
+	margin: 0px 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    color:#474747;
+    text-transform: uppercase;
+}
+.benefit-block img{    
+    width: 130px;    
+}
 .block-title-red{
     font-size:3.2rem;
     font-family:'gothamlight'; 
@@ -292,31 +325,51 @@
     background:url('../images/block_title_bgr_grey.png') no-repeat left bottom;
 }        
 .vac-bot-block {
-        border:1px solid #e0e2e2;
-        padding:20px 30px;
-        margin: 35px 0px 28px 0px;
+	border:1px solid #e0e2e2;
+	padding:20px 30px;
+	margin: 35px 0px 28px 0px;
 }  
-    .vac-bot { 
-        position: relative; 
-        height: 104px;
-      }
+.vac-bot { 
+	position: relative; 
+	height: 104px;
+}
 
-    .vac-bot-center { 
-      position: absolute; 
-      top: 0px; 
-      height: 104px; 
-      display: table; 
-    }
+.vac-bot-block .matching {	
+    margin-right: 65px;
+    width: 310px;
+}
 
-        .vac-bot-center p {
-          display: table-cell; 
-          vertical-align: middle; 
-          text-align: left;
-          line-height: 1.5em;
-          text-transform: uppercase; 
-          font-size: 1.5rem; 
-          color:#737373;
-        }
+.vac-bot-block .matching .vac-bot-center {	
+    padding-left:135px;
+}
+
+.vac-bot-block .views {
+	background: url('../images/views_eye.png') no-repeat scroll right center rgba(0, 0, 0, 0);
+    margin-right: 65px;
+    width: 200px;
+}
+
+.vac-bot-block .applications {
+	background: url('../images/applyes.png') no-repeat scroll right center rgba(0, 0, 0, 0);
+    width: 230px;
+}
+
+.vac-bot-center { 
+	position: absolute; 
+	top: 0px; 
+	height: 104px; 
+	display: table; 
+}
+
+.vac-bot-center p {
+	display: table-cell; 
+	vertical-align: middle; 
+	text-align: left;
+	line-height: 1.5em;
+	text-transform: uppercase; 
+	font-size: 1.5rem; 
+	color:#737373;
+}
 
 
 .vacbutton {
@@ -414,12 +467,12 @@ a.share {
 .profile-spec{
     padding-top: 10px;
     color:#474747;
-    font-size: 3.3rem;
+    font-size: 2.8rem;
+	line-height:5rem;
     text-transform: uppercase;
 }
 .profile-spec span{
     color:#a3a3a3;
-    font-size: 3.3rem;
     font-family:'gothamlight';          
 }
 
@@ -449,4 +502,20 @@ a.prof-bot-links {
 }
 a.prof-bot-links:hover{
      background:#00a4f9 !important       
+}
+
+.login-txt {
+	float:left;
+	padding-top:10px;
+	font-family:'gothamlight';
+	font-style:italic;
+	font-size:1.8rem;
+}
+
+.login-txt a {
+	width:540px;
+	text-align:justify;
+	font-family:'gothammedium';
+	font-weight:bold;
+	color:#555;
 }

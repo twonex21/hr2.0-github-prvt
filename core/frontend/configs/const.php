@@ -6,10 +6,10 @@ define('HR_LOCALES', serialize(array('en' => 'en_GB')));
 define('NAVIGATE_DEFAULT_CONTROLLER', 'main');
 define('NAVIGATE_DEFAULT_ACTION', 'home');
 
-define('USER', 'user');
-define('COMPANY', 'company');
-define('RESUME', 'resume');
-define('VACANCY', 'vacancy');
+define('USER', 'USER');
+define('COMPANY', 'COMPANY');
+define('RESUME', 'RESUME');
+define('VACANCY', 'VACANCY');
 
 define('SQL_UNPREPARED_QUERY', 1);
 define('SQL_PREPARED_QUERY', 2);
@@ -53,6 +53,28 @@ define('UNIVER_DEGREES', serialize(array('Incomplete higher', 'Bachelor', 'Maste
 define('LANGUAGES', serialize(array('Armenian', 'Russian', 'English', 'French', 'German', 'Arabic', 'Turkish', 'Spanish', 'Italian', 'Georgian', 'Chinese')));
 define('LANGUAGE_LEVELS', serialize(array('Elementary', 'Intermediate', 'Advanced', 'Native')));
 define('SOFT_SKILL_LEVELS', serialize(array('Start', 'Average', 'Good', 'Advanced', 'Brilliant')));
+
+// Matching weights
+define('MATCHING_SKILLS_WEIGHT', 0.5);
+define('MATCHING_EXPERIENCE_WEIGHT', 0.25);
+define('MATCHING_EDUCATION_WEIGHT', 0.1);
+define('MATCHING_LANGUAGES_WEIGHT', 0.1);
+define('MATCHING_SOFTSKILLS_WEIGHT', 0.05);
+
+// Matching levels
+define('MATCHING_LEVELS', 
+		serialize(
+			array(
+				'30' => array('level' => 'low', 'text' => 'You might want to use vacancy search to find vacancies that suit you better'),
+				'50' => array('level' => 'average', 'text' => 'You might want to use vacancy search to find vacancies that suit you better'),
+				'75' => array('level' => 'good', 'text' => 'Rather big probability to get shortlisted if applied'),
+				'90' => array('level' => 'high', 'text' => 'We strongly encourage you to pay attention to this vacancy'),
+				'100' => array('level' => 'very high', 'text' => 'Seems like you\'ve finally found each other')
+	  		)
+  		)
+);
+
+define('MATCHING_APPLICATION_THRESHOLD', 50);
 
 // External API keys
 

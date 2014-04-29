@@ -44,6 +44,8 @@ define('MSG_USER_CREATE_SUCCESS', 'Your profile has been successfully updated!')
 define('MSG_USER_CREATE_ERROR', 'Ooops, seems like some problem occured updating your profile. Please try again later.');
 define('MSG_VACANCY_OPEN_SUCCESS', 'Vacancy has been successfully saved!');
 define('MSG_VACANCY_OPEN_ERROR', 'Ooops, seems like some problem occured saving vacancy. Please try again later.');
+define('MSG_VACANCY_APPLY_SUCCESS', 'You have successfully applied to this vacancy');
+define('MSG_VACANCY_APPLY_ERROR', 'Ooops, seems like some problem occured applying to this vacancy. Please try again later.');
 
 
 ?>

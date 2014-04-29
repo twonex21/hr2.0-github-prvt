@@ -12,14 +12,21 @@ function addScriptFile(src, async) {
 
 
 function addCssFile(href) {
+	$('html, body').hide();
+	
 	var link = document.createElement('link');
 	link.setAttribute('rel', 'stylesheet');
-	link.setAttribute('href', '/css/' + href);
+	link.setAttribute('href', '/css/' + href + '.css');
+	link.setAttribute('id', href + '_css');
 	
 	if(typeof link != 'undefined') {
 		var $lastLink = $('head link[rel=stylesheet]:last');
 		$lastLink.after(link);
 	}
+		
+    $('#' + href + '_css').on('load', function () {
+    	$('html, body').show();	        
+    });		
 }
 
 
@@ -134,7 +141,8 @@ function showMessage() {
 	var $message = $('.message');
 	var isFlash = $message.attr('attr-flash');
 	
-	if($message.children().size() > 1) {
+	// If there is a text, show the message
+	if($message.children('span').size() > 0) {
 		setTimeout(function() {
 			$message.show().animate({'opacity' : 1}, 800, function() {
 				if(isFlash) {

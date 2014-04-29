@@ -9,19 +9,9 @@ class CreateAction extends Action implements ActionInterface
 {
     public function perform() {
     	$currentUserId = null;
-    	$allUniversities = array();
-    	$allUniverDegrees = array();
-    	$allIndustries = array();    	
-    	$allLanguages = array();
-    	$allLanguageLevels = array();
-    	$allSoftSkills = array();
-    	$allSoftSkillLevels = array();
-    	$userProfile = array();
-    	$userEducation = array();
-    	$userExperience = array();
-    	$userLanguages = array();
-    	$userSkills = array();
-    	$userSoftSkills = array();
+    	$data = array();    	
+    	$user = array();
+    	$updatedUser = array();
     	
     	$firstName = '';
     	$lastName = '';
@@ -54,24 +44,24 @@ class CreateAction extends Action implements ActionInterface
     	// Getting authorized user
     	$currentUserId = $this->session->getCurrentUserId();
     	
-    	$allUniversities = $this->qb->getUniversities();
-    	$allUniverDegrees = unserialize(UNIVER_DEGREES);
-    	$allIndustries = $this->qb->getIndustries();
-    	$allLanguages = unserialize(LANGUAGES);
-    	$allLanguageLevels = unserialize(LANGUAGE_LEVELS);
-    	$allSoftSkills = $this->qb->getSoftSkills();
-    	$allSoftSkillLevels = unserialize(SOFT_SKILL_LEVELS);
+    	$data['universities'] = $this->qb->getUniversities();
+    	$data['univerDegrees'] = unserialize(UNIVER_DEGREES);
+    	$data['industries'] = $this->qb->getIndustries();
+    	$data['languages'] = unserialize(LANGUAGES);
+    	$data['languageLevels'] = unserialize(LANGUAGE_LEVELS);
+    	$data['softSkills'] = $this->qb->getSoftSkills();
+    	$data['softSkillLevels'] = unserialize(SOFT_SKILL_LEVELS);
     	
     	if($this->request->request->isEmpty()) {
     		// POST is empty, no input parameters yet
-    		$userProfile = $this->model->getUserProfileById($currentUserId);
-    		$userEducation = $this->model->getUserEducation($currentUserId);
-    		$userExperience = $this->model->getUserExperience($currentUserId);
-    		$userLanguages = $this->model->getUserLanguages($currentUserId);
-    		$userSkills = $this->model->getUserSkills($currentUserId);
-    		$userSoftSkills = $this->model->getUserSoftSkills($currentUserId);
+    		$user['profile'] = $this->model->getUserProfileById($currentUserId);
+    		$user['education'] = $this->model->getUserEducation($currentUserId);
+    		$user['experience'] = $this->model->getUserExperience($currentUserId);
+    		$user['languages'] = $this->model->getUserLanguages($currentUserId);
+    		$user['skills'] = $this->model->getUserSkills($currentUserId);
+    		$user['softSkills'] = $this->model->getUserSoftSkills($currentUserId);
     		
-    		$this->view->showCreateProfilePage($userProfile, $userEducation, $userExperience, $userLanguages, $userSkills, $userSoftSkills, $allUniversities, $allUniverDegrees, $allIndustries, $allLanguages, $allLanguageLevels, $allSoftSkills, $allSoftSkillLevels);
+    		$this->view->showCreateProfilePage($data, $user);
     	} else {
     		// Handling form input
     		
@@ -253,6 +243,10 @@ class CreateAction extends Action implements ActionInterface
     		if(!empty($softSkills)) {
     			$this->model->updateUserSoftSkills($currentUserId, $softSkills);
     		}
+    		
+    		// Updating session data as well
+    		$updatedUser = $this->qb->getUserSessionDataById($currentUserId);
+    		$this->session->setCurrentUser($updatedUser);
     		
     		$this->setMessage(MSG_TYPE_SUCCESS);
     		

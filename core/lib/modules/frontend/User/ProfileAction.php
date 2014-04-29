@@ -8,7 +8,8 @@ use HR\Core\FrontendUtils;
 class ProfileAction extends Action implements ActionInterface 
 {
     public function perform() {
-    	$userId = 0;
+    	$userId = null;
+    	$user = array();
 
     	if(!$this->request->query->isNullOrEmpty('uid')) {
     		// Taking get parameter
@@ -19,17 +20,17 @@ class ProfileAction extends Action implements ActionInterface
     		$userId = $this->session->getCurrentUserId();
     	}
     	
-    	$userProfile = $this->model->getUserProfileById($userId);
-    	if(!empty($userProfile)) {
-			$userEducation = $this->model->getUserEducation($userId);
-			$userExperience = array_reverse($this->model->getUserExperience($userId));
-			$userLanguages = $this->model->getUserLanguages($userId);
-			$userSkills = $this->model->getUserSkills($userId);
-			$userSoftSkills = $this->model->getUserSoftSkills($userId);	    	
+    	$user['profile'] = $this->qb->getUserProfileById($userId);
+    	if(!empty($user['profile'])) {
+			$user['education'] = $this->qb->getUserEducation($userId);
+			$user['experience'] = $this->qb->getUserExperience($userId);
+			$user['languages'] = $this->qb->getUserLanguages($userId);
+			$user['skills'] = $this->qb->getUserSkills($userId);
+			$user['softSkills'] = $this->qb->getUserSoftSkills($userId);	    	
     		// Setting page title
-    		$this->setPageTitle($userProfile['fullName']);
+    		$this->setPageTitle($user['profile']['fullName']);
     	
-    		$this->view->showProfilePage($userProfile, $userEducation, $userExperience, $userLanguages, $userSkills, $userSoftSkills);
+    		$this->view->showProfilePage($user);
     	} else {
 	    	// Showing not found page
 			$this->fc->delegateNotFound();

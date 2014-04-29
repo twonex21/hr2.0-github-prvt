@@ -18,13 +18,7 @@ class OpenAction extends Action implements ActionInterface
     	$allSoftSkillLevels = array();
     	$companyBenefits = array();
     	
-    	$vacancyInfo = array();
-    	$vacancyEducation = array();
-    	$vacancyExperience = array();
-    	$vacancyLanguages = array();
-    	$vacancySkills = array();
-    	$vacancySoftSkills = array();
-    	$vacancyBenefits = array();
+    	$vacancy = array();
     	
     	$isNew = false;
     	$title = '';
@@ -58,16 +52,16 @@ class OpenAction extends Action implements ActionInterface
     	// Getting authorized user
     	$currentCompanyId = $this->session->getCurrentCompanyId();
     	
-    	$allIndustries = $this->qb->getIndustries();
-    	$allUniverDegrees = unserialize(UNIVER_DEGREES);    	
-    	$allLanguages = unserialize(LANGUAGES);
-    	$allLanguageLevels = unserialize(LANGUAGE_LEVELS);
-    	$allSoftSkills = $this->qb->getSoftSkills();
-    	$allSoftSkillLevels = unserialize(SOFT_SKILL_LEVELS);
+    	$data['industries'] = $this->qb->getIndustries();
+    	$data['univerDegrees'] = unserialize(UNIVER_DEGREES);    	
+    	$data['languages'] = unserialize(LANGUAGES);
+    	$data['languageLevels'] = unserialize(LANGUAGE_LEVELS);
+    	$data['softSkills'] = $this->qb->getSoftSkills();
+    	$data['softSkillLevels'] = unserialize(SOFT_SKILL_LEVELS);
     	
-    	$companyBenefits = $this->model->getCompanyBenefits($currentCompanyId);
+    	$data['benefits'] = $this->qb->getCompanyBenefits($currentCompanyId);
     	if(empty($companyBenefits)) {
-    		$companyBenefits = $this->qb->getBenefits();
+    		$data['benefits'] = $this->qb->getBenefits();
     	}
     	    	
     	if(!$this->request->query->isNullOrEmpty('vid')) {
@@ -76,15 +70,16 @@ class OpenAction extends Action implements ActionInterface
     	
     	if($this->request->request->isEmpty()) {
     		// POST is empty, no input parameters yet
-    		$vacancyInfo = $this->model->getVacancyInfo($vacancyId);
-    		$vacancyEducation = $this->model->getVacancyEducation($vacancyId);
-    		$vacancyExperience = $this->model->getVacancyExperience($vacancyId);
-    		$vacancyLanguages = $this->model->getVacancyLanguages($vacancyId);
-    		$vacancySkills = $this->model->getVacancySkills($vacancyId);
-    		$vacancySoftSkills = $this->model->getVacancySoftSkills($vacancyId);
-    		$vacancyBenefits = $this->model->getVacancyBenefits($vacancyId);
+    		// TODO: Think about foreach loop if all functions keep receiving only id
+    		$vacancy['info'] = $this->model->getVacancyInfo($vacancyId);
+    		$vacancy['education'] = $this->model->getVacancyEducation($vacancyId);
+    		$vacancy['experience'] = $this->model->getVacancyExperience($vacancyId);
+    		$vacancy['languages'] = $this->model->getVacancyLanguages($vacancyId);
+    		$vacancy['skills'] = $this->model->getVacancySkills($vacancyId);
+    		$vacancy['softSkills'] = $this->model->getVacancySoftSkills($vacancyId);
+    		$vacancy['benefits'] = $this->model->getVacancyBenefits($vacancyId);
     		
-    		$this->view->showOpenVacancyPage($allIndustries, $allUniverDegrees, $allLanguages, $allLanguageLevels, $allSoftSkills, $allSoftSkillLevels, $companyBenefits, $vacancyInfo, $vacancyEducation, $vacancyExperience, $vacancyLanguages, $vacancySkills, $vacancySoftSkills, $vacancyBenefits);
+    		$this->view->showOpenVacancyPage($data, $vacancy);
     	} else {
     		// Handling form input
     		// Basic profile info

@@ -714,5 +714,12 @@ section.message .close {
 }
 	
 	
+.svg-circle {
+	width: 111px;
+	height: 111px;
+}
 	
+.svg-circle text {
+	font-size: 2.0rem;
+}
 	

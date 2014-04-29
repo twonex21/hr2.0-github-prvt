@@ -630,10 +630,10 @@ class FrontendUtils
     
     
 	public static function getFilePath($key, $type = RESUME) { 
-    	$picturePath = constant(strtoupper($type) . '_PATH');
+    	$filePath = constant(strtoupper($type) . '_PATH');
     	foreach(unserialize(HR_FILE_EXTENSIONS) as $extension) {
-	    	if(file_exists(sprintf($picturePath, $key, $extension))) {
-	    		return sprintf($picturePath, $key, $extension);
+	    	if(file_exists(sprintf($filePath, $key, $extension))) {
+	    		return sprintf($filePath, $key, $extension);
 	    	}
     	}    	
     	
@@ -1122,5 +1122,128 @@ class FrontendUtils
 		return $array;
 	}
 	
-}
+	
+	public static function calculateMatching($user, $vacancy) {
+		$matching = array(			
+			'skills' => 0, 
+			'experience' => 0, 
+			'education' => 0, 
+			'languages' => 0, 
+			'softSkills' => 0			
+		);
+		
+		
+		// Skills matching
+		if(!empty($user['skills']) && !empty($vacancy['skills'])) {
+			$share = 100 / count($vacancy['skills']);
+			foreach($vacancy['skills'] as $vacancySkill) {				
+				foreach($user['skills'] as $userSkill) {
+					if($vacancySkill['name'] == $userSkill['name']) {
+						$matching['skills'] += $share;
+						// If skill experience is less than required, substracting from total matching
+						if((int)$vacancySkill['years'] > (int)$userSkill['years']) {
+							$matching['skills'] -= (((int)$vacancySkill['years'] - (int)$userSkill['years']) / 10) * $share;
+						}
+						break; 
+					}
+				}
+			}												
+		}
+		
+		// Experience matching
+		if(!empty($user['experience']) && !empty($vacancy['experience'])) {
+			$share = 100 / count($vacancy['experience']);
+			$handledIndustries = array();
+			foreach($vacancy['experience'] as $vacancyExp) {
+				foreach($user['experience'] as $userExp) {
+					if($vacancyExp['industryId'] == $userExp['industryId'] && !in_array($vacancyExp['industryId'], $handledIndustries)) {
+						// Same industry as of required specialization
+						$matching['experience'] += 0.3 * $share;
+					}
+					
+					if($vacancyExp['specId'] == $userExp['specId']) {
+						// Same specialization as required
+						$matching['experience'] += 0.7 * $share;
+						
+						if((int)$vacancyExp['years'] > (int)$userExp['years']) {
+							$matching['experience'] -= (((int)$vacancyExp['years'] - (int)$userExp['years']) / 10) * $share;
+						}
+						
+						break;
+					}																				
+				}
+				// Considering same industry only once for each user previous job
+				$handledIndustries[] = $vacancyExp['industryId'];
+			}				
+		}
+		
+		// Education matching		
+		if(!empty($user['education']) && !empty($vacancy['education'])) {
+			$univerDegrees = unserialize(UNIVER_DEGREES);
+			
+			foreach($vacancy['education'] as $vacancyEdu) {
+				foreach($user['education'] as $userEdu) {
+					if(array_search($vacancyEdu['degree'], $univerDegrees) <= array_search($userEdu['degree'], $univerDegrees)) {
+						// Fully matching education
+						$matching['education'] = 100;
+						break 2;						
+					} else {
+						if(100 * array_search($userEdu['degree'], $univerDegrees) / array_search($vacancyEdu['degree'], $univerDegrees) > $matching['education']) {
+							$matching['education'] = 100 * array_search($userEdu['degree'], $univerDegrees) / array_search($vacancyEdu['degree'], $univerDegrees);
+						}
+					}							
+				}
+			}			
+		}
+		
+		// Language matching
+		if(!empty($user['languages']) && !empty($vacancy['languages'])) {
+			$langLevels = unserialize(LANGUAGE_LEVELS);				
+			$share = 100 / count($vacancy['languages']);
+			
+			foreach($vacancy['languages'] as $vacancyLang) {
+				foreach($user['languages'] as $userLang) {					
+					if($vacancyLang['language'] == $userLang['language']) {
+						$matching['languages'] += $share;
+						
+						if(array_search($vacancyLang['level'], $langLevels) > array_search($userLang['level'], $langLevels)) {
+							// User level is worse than required, substracting from total matching
+							$matching['languages'] -= $share * ((array_search($vacancyLang['level'], $langLevels) - array_search($userLang['level'], $langLevels)) / 4);
+							break;
+						}
+					}										
+				}
+			}	
+		}
+		
+		// Soft skills matching
+		if(!empty($user['softSkills']) && !empty($vacancy['softSkills'])) {
+			$softLevels = unserialize(SOFT_SKILL_LEVELS);
+			$share = 100 / count($vacancy['softSkills']);
+				
+			foreach($vacancy['softSkills'] as $vacancySoft) {
+				foreach($user['softSkills'] as $userSoft) {
+					if($vacancySoft['softId'] == $userSoft['softId']) {
+						$matching['softSkills'] += $share;
+								
+						if(array_search($vacancySoft['level'], $softLevels) > array_search($userSoft['level'], $softLevels)) {
+							// User level is worse than required, substracting from total matching
+							$matching['softSkills'] -= $share * ((array_search($vacancySoft['level'], $softLevels) - array_search($userSoft['level'], $softLevels)) / 5);
+							break;
+						}
+					}
+				}
+			}			
+		}
+
+		$matchingLevel = 0;
+		foreach($matching as $criteria => $match) {
+			$matchingLevel += constant('MATCHING_' . strtoupper($criteria) . '_WEIGHT') * $match;
+		}		
+		
+		$matching['total'] = ceil($matchingLevel);		
+		
+		return $matching;
+	}
+}	
 ?>

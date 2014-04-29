@@ -1,6 +1,6 @@
 {literal}
 <script>
-	addCssFile('glDatePicker.flatwhite.css');
+	addCssFile('glDatePicker.flatwhite');
 	addScriptFile('ajax.js', true);
 	
 	$(function() {		
@@ -16,10 +16,10 @@
     	<div class="block-title block-title-nobgr grid grid400">General information</div>
         <div class="grid grid440 marginleft120">
         	<div class="paddingtop60">
-        		{if $_userProfile.resumeKey}
-	           		<div class="note paddingleft40 attach-ico grid grid180 margintop15 paddingright20 attach-resume" id="attached_file" title="{$_userProfile.resumeKey}">{$_userProfile.resumeKey|substr:5|truncate:20:"...":true}</div>
+        		{if $_user.profile.resumeKey}
+	           		<div class="note paddingleft40 attach-ico grid grid180 margintop15 paddingright20 attach-resume" id="attached_file" title="{$_user.profile.resumeKey}">{$_user.profile.resumeKey|substr:5|truncate:20:"...":true}</div>
 	                <fieldset class="grid grid200">
-	                    <div class="margintop10 file-remove" id="fileaddbtn" attr-file-key="{$_userProfile.resumeKey}" attr-type="resume">Remove File</div>
+	                    <div class="margintop10 file-remove" id="fileaddbtn" attr-file-key="{$_user.profile.resumeKey}" attr-type="resume">Remove File</div>
 	                	<input type="file" id="upload_file" name="upload-file" class="fileselect">
 	                    <input type="hidden" id="temp_file" name="temp-resume" value="">
 	               	</fieldset>
@@ -40,9 +40,9 @@
 	    	<fieldset class="grid grid230">	
 				<section class="filefield">
 					<div id="profile_photo" class="grid photo profile-photo">
-						{if $_userProfile.pictureKey}<img src="/support/resizeimage/tp/1/s/1/key/{$_userProfile.pictureKey}/t/">{/if}
+						{if $_user.profile.pictureKey}<img src="/support/resizeimage/tp/1/s/1/key/{$_user.profile.pictureKey}/t/">{/if}
 					</div>
-					{if $_userProfile.pictureKey}<div id="photoaddbtn" class="photo-remove" attr-picture-key="{$_userProfile.pictureKey}">Remove Photo</div>{else}<div id="photoaddbtn">Add Photo</div>{/if}
+					{if $_user.profile.pictureKey}<div id="photoaddbtn" class="photo-remove" attr-picture-key="{$_user.profile.pictureKey}">Remove Photo</div>{else}<div id="photoaddbtn">Add Photo</div>{/if}
 					<input type="file" id="upload_picture" class="fileselect" name="upload-picture">
 					<input type="hidden" id="temp_picture" name="temp-picture" value="">
 				</section>
@@ -50,15 +50,15 @@
 	        <fieldset class="grid grid290 marginright30">
 	            <section>
 	                <label for="fullname" class="input label105">First name and last name *
-	                    <input id="fullname" name="full-name" type="text" value="{$_userProfile.fullName}" attr-validate="notEmpty, isLatin">
+	                    <input id="fullname" name="full-name" type="text" value="{$_user.profile.fullName}" attr-validate="notEmpty, isLatin">
 	                    <b class="tooltip tooltip-bottom-left for-input">Only latin characters</b>
 	                </label>                
 	                <label for="email" class="input label105">E-mail *
-	              		<input id="email" name="email" type="text" value="{$_userProfile.mail}" attr-validate="notEmpty, isEmailAddress">
+	              		<input id="email" name="email" type="text" value="{$_user.profile.mail}" attr-validate="notEmpty, isEmailAddress">
 	              		<b class="tooltip tooltip-bottom-left for-input">Your sign-in e-mail</b>
 	                </label>
 	                <label for="location" class="input label105">Location *
-	              		<input id="location" name="location" type="text" value="{$_userProfile.location}" attr-validate="notEmpty, isLatin">
+	              		<input id="location" name="location" type="text" value="{$_user.profile.location}" attr-validate="notEmpty, isLatin">
 	                    <b class="tooltip tooltip-bottom-left for-input">City, Country</b>
 	                </label>
 	            </section>
@@ -66,7 +66,7 @@
 	        <fieldset class="grid grid290">
 	        	<section>
 	                <label for="linkedin" class="input label105">Linked in profile link
-	              		<input id="linkedin" name="linkedin" type="text" value="{$_userProfile.linkedIn}" attr-validate='isLinkedIn'>
+	              		<input id="linkedin" name="linkedin" type="text" value="{$_user.profile.linkedIn}" attr-validate='isLinkedIn'>
 	                </label>
 	                <label for="password" class="input label105">New password
 	              		<input id="password" name="password" type="password" value="" attr-validate="isPasswordLength">
@@ -74,7 +74,7 @@
 	                </label>
 	                <label for="birth_date" class="input label105">Birth date
 	                    <i class="icon-append icon-calendar"></i>
-	              		<input id="birth_date" name="birth-date" type="text" value="{$_userProfile.birthDate}" attr-validate="isDate">
+	              		<input id="birth_date" name="birth-date" type="text" value="{$_user.profile.birthDate}" attr-validate="isDate">
 	                </label>
 				</section>
 	        </fieldset>
@@ -83,13 +83,13 @@
     </div>
     <div id="block_education">    	
        	<div class="block-title block-title-nobgr">Education</div>
-       	{foreach from=$_userEducation item=eduItem}
+       	{foreach from=$_user.education item=eduItem}
 	        <fieldset class="block-item grid grid310 input-group-border padding20 paddingbottom0 boxsizing">
 	            <section>
 	                <label class="select marginbottom30">UNIVERSITY
 	                    <select name="universities[]" attr-load="faculties">
 	                        <option value="0" class="empty">-- Not set --</option>
-	                        {foreach from=$_universities item=university}
+	                        {foreach from=$_data.universities item=university}
 	                        	<option value="{$university.univerId}" {if $eduItem && $university.univerId == $eduItem.univerId}selected{/if}>{$university.name}</option>
 	                    	{/foreach}
 	                    </select>
@@ -107,7 +107,7 @@
 	                </label>                            
 	                <label class="select marginbottom30">Degree
 	                    <select name="university-degrees[]">
-	                        {foreach from=$_univerDegrees item=degree}
+	                        {foreach from=$_data.univerDegrees item=degree}
 	                        	<option value="{$degree}" {if $eduItem && $degree == $eduItem.degree}selected{/if}>{$degree}</option>
 	                    	{/foreach}
 	                    </select>	                    
@@ -122,13 +122,13 @@
     </div>
     <div id="block_experience">
        	<div class="block-title block-title-nobgr">Experience</div>
-       	{foreach from=$_userExperience item=expItem}
+       	{foreach from=$_user.experience item=expItem}
 	        <fieldset class="block-item grid grid310 input-group-border padding20 paddingbottom0 boxsizing">
 	            <section>
 	                <label class="select marginbottom30">Scope of activity
 	                    <select name="exp-industries[]" attr-load="specializations" attr-type="industry">
 	                        <option value="0" class="empty">-- Not set --</option>
-	                        {foreach from=$_industries item=industry}
+	                        {foreach from=$_data.industries item=industry}
 	                        	<option value="{$industry.industryId}" {if $expItem && $industry.industryId == $expItem.industryId}selected{/if}>{$industry.name}</option>
 	                    	{/foreach}
 	                    </select>
@@ -166,13 +166,13 @@
 	       	<div class="block-title block-title-nobgr">Languages</div>
 	        <div class="note paddingbottom10">Choose languages you know and estimate your level of knowledge</div>
         </div>
-        {foreach from=$_userLanguages item=langItem}
+        {foreach from=$_user.languages item=langItem}
 	        <fieldset class="block-item grid grid310 input-group-border padding10 paddingtop0 boxsizing">
 	            <section>
 	                <label class="select col col-55p marginright9">
 	                    <select name="langs[]">
 	                    	<option value="" class="empty">-- Not set --</option>
-	                   		{foreach from=$_languages item=lang}
+	                   		{foreach from=$_data.languages item=lang}
 	                   			<option value="{$lang}" {if $langItem && $lang == $langItem.language}selected{/if}>{$lang}</option>
 	                   		{/foreach}
 	                    </select>
@@ -180,7 +180,7 @@
 	                </label>
 	                <label class="select col col-5">
 	                    <select name="lang-levels[]">
-	                        {foreach from=$_languageLevels item=level}
+	                        {foreach from=$_data.languageLevels item=level}
 	                   			<option value="{$level}" {if $langItem && $level == $langItem.level}selected{/if}>{$level}</option>
 	                   		{/foreach}
 	                    </select>
@@ -195,13 +195,13 @@
     <!--Skills-->
     <div id="block_skills">
     	<div class="block-title block-title-nobgr">Skills</div>
-    	{foreach from=$_userSkills.userSkills item=skillItem}
+    	{foreach from=$_user.skills.userSkills item=skillItem}
 	        <fieldset class="skill-item grid grid310 input-group-border padding20 boxsizing">
 	        	<section>
 					<label class="select marginbottom30 {if !$skillItem}inactive{/if}">Choose skill
 	                    <select name="skills[]" {if !$skillItem}disabled{/if}>
 	                    	{assign var=parentName value=``}	                    		                    
-	                    	{foreach from=$_userSkills.allSkills item=skill}
+	                    	{foreach from=$_user.skills.allSkills item=skill}
 		                    	{if $parentName != $skill.parentName}
 			        				{if parentName != ''}</optgroup>{/if}
 			        				{assign var=parentName value=$skill.parentName}
@@ -235,13 +235,13 @@
 	       	<div class="block-title block-title-nobgr">Soft Skills</div>
 	        <div class="note paddingbottom10">Choose soft skills that describe you the best</div>
         </div>
-        {foreach from=$_userSoftSkills item=softItem}
+        {foreach from=$_user.softSkills item=softItem}
 	        <fieldset class="block-item grid grid310 input-group-border padding10 paddingtop0 boxsizing">
 	            <section>
 	                <label class="select col col-55p marginright9">
 	                    <select name="soft-skills[]">
 	                    	<option value="0" class="empty">-- Not set --</option>
-	                   		{foreach from=$_softSkills item=skill}
+	                   		{foreach from=$_data.softSkills item=skill}
 	                   			<option value="{$skill.softId}" {if $softItem && $skill.softId == $softItem.softId}selected{/if}>{$skill.name}</option>
 	                   		{/foreach}
 	                    </select>
@@ -249,7 +249,7 @@
 	                </label>
 	                <label class="select col col-5">
 	                    <select name="soft-levels[]">
-	                        {foreach from=$_softSkillLevels item=level}
+	                        {foreach from=$_data.softSkillLevels item=level}
 	                   			<option value="{$level}" {if $softItem && $level == $softItem.level}selected{/if}>{$level}</option>
 	                   		{/foreach}
 	                    </select>
@@ -266,7 +266,7 @@
         <fieldset>
             <section>
                 <label for="profile-bio" class="textarea marginbottom30"><span>Write a bit about yourself</span>
-                    <textarea id="profile_bio" name="profile-bio" style="height:150px"/>{$_userProfile.bio}</textarea>                    
+                    <textarea id="profile_bio" name="profile-bio" style="height:150px"/>{$_user.profile.bio}</textarea>                    
                 </label>
             </section>
         </fieldset>

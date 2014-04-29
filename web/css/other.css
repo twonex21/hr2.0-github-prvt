@@ -105,11 +105,13 @@ table.tablesorter thead tr .headerSortDown span{background-image:url(../images/s
 	 a.linkedin {
 		padding-left:45px; 
 		background:#005988 url(../images/linkedin.png)  10px center no-repeat;	
+	 	margin-right:12px;
 	 }
 	 
 	 a.face {
 		padding-left:45px; 
 		background:#3c5a95 url(../images/face.png)  10px center no-repeat;	
+	 	margin-right:12px;
 	 }
 	 
 	 a.twitter {

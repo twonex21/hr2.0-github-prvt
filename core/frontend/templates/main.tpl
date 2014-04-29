@@ -22,6 +22,7 @@
 		<link rel="stylesheet" href="/css/main.css?v={$smarty.server.VERSION}" />		
 		<link rel="stylesheet" href="/css/other.css?v={$smarty.server.VERSION}" />		
 		<link rel="stylesheet" href="/css/form.css?v={$smarty.server.VERSION}" />
+		<link rel="stylesheet" href="/css/magnific.css?v={$smarty.server.VERSION}" />
 		
 		<!-- JS Includes -->
 		<script src="/js/jquery-1.8.1.min.js"></script>			
@@ -47,7 +48,7 @@
 					</nav>
 					<div class="grid account">
 						<div>
-							<a href="#" class="create-account">create account</a> 
+							<a href="/auth/signup/" class="popup">create account</a> 
 							<span>or</span> <a href="#">log in</a>
 						</div>
 					</div>
@@ -63,7 +64,7 @@
 		</header>
 		<!--End of Header-->
 		<section class="message {$_HR_MESSAGE.type}" attr-flash="{$_HR_MESSAGE.isFlash}">
-			{$_HR_MESSAGE.text}
+			{if $_HR_MESSAGE.text}<span>{$_HR_MESSAGE.text}</span>{/if}
 			{if !$_HR_MESSAGE.isFlash}<div class="close"></div>{/if}
 		</section>
 		<!-- Start of Content -->

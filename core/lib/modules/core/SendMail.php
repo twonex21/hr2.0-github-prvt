@@ -22,13 +22,19 @@ class SendMail
         return self::$_instance;
     }
     
-    public function test($data) {
-    	$this->view->assign("_data", $data);
+    public function sendApplicationMessage($vacancy, $applicantName, $resumePath) {
+    	$this->view->assign("_vacancy", $vacancy);
+    	$this->view->assign("_applicantName", $applicantName);
 
-		$text_message = $this->view->fetch('emails/test.tpl');    	
-		$message_in_html = $this->view->fetch('emails/test.tpl');    	
+		$text_message = $this->view->fetch('emails/application_text.tpl');    	
+		$message_in_html = $this->view->fetch('emails/application.tpl');    	
 
-    	$this->mailer->send($data['mail'], 'Testing', $text_message, $message_in_html, 'noreply@hr.am');
+		if($resumePath != '') {
+			// Attaching user CV here as well
+			$this->mailer->addAttachment($resumePath);
+		}
+				
+    	$this->mailer->send($vacancy['companyMail'], 'New Applicant', $text_message, $message_in_html, 'noreply@hr.am');
     }
 
     

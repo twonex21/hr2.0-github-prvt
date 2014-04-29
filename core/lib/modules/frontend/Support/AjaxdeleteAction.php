@@ -31,6 +31,7 @@ class AjaxDeleteAction extends Action implements ActionInterface
 					if($this->qb->$resetMethod($key)) {
 						// Physically deleting file(s)
 						$this->deleteFile($type, $key);
+						$this->response->jsonSetStatus(SUCCESS);
 					}
 				}
 			}												
@@ -54,9 +55,7 @@ class AjaxDeleteAction extends Action implements ActionInterface
     		} else if($filePath != '') {
     			FrontendUtils::deleteFile($filePath);
     		}
-    	}
-    	
-    	$this->response->jsonSetStatus(SUCCESS);
+    	}    	    	
     }
 }
 

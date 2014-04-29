@@ -1,6 +1,6 @@
 {literal}
 <script>
-	addCssFile('glDatePicker.flatwhite.css');
+	addCssFile('glDatePicker.flatwhite');
 	addScriptFile('ajax.js', true);
 </script>
 {/literal}

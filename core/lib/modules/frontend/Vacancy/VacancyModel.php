@@ -5,26 +5,12 @@ use HR\Core\Model;
 use HR\Core\FrontendUtils;
 
 class VacancyModel extends Model
-{   
-	public function getCompanyBenefits($companyId) {
-		$sql = "SELECT cb.benefit_id AS benefitId, b.name as benefitName
-				FROM hr_company_benefit cb
-				INNER JOIN hr_benefit b ON b.benefit_id=cb.benefit_id
-				WHERE cb.company_id=%d";
-		 
-		$sql = $this->mysql->format($sql, array($companyId));
-		$result = $this->mysql->query($sql);
-		 
-		$benefits = $this->mysql->getRow($result);		
-		
-		return $benefits;
-	}	
-	
+{   	
 	public function getVacancyInfo($vacancyId) {
-    	$sql = "SELECT vacancy_id AS vacancyId, title, company_id AS companyId, location, info AS additionalInfo, DATE_FORMAT(deadline, '%%d %%M, %%Y') AS deadline, status, file_key AS fileKey,
-    				   show_applicants_count AS showApplicantsCount, show_viewers_count AS showViewersCount, show_wanttowork_count AS showWantToWorkCount    				    
-				FROM hr_vacancy
-				WHERE vacancy_id=%d";
+    	$sql = "SELECT v.vacancy_id AS vacancyId, v.title, v.location, v.info AS additionalInfo, DATE_FORMAT(v.deadline, '%%d %%M, %%Y') AS deadline, v.status, v.file_key AS fileKey,
+    				   v.show_applicants_count AS showApplicantsCount, v.show_viewers_count AS showViewersCount, v.show_wanttowork_count AS showWantToWorkCount    				    
+				FROM hr_vacancy v
+				WHERE v.vacancy_id=%d";
     	
     	$sql = $this->mysql->format($sql, array($vacancyId));
     	$result = $this->mysql->query($sql);
@@ -37,14 +23,10 @@ class VacancyModel extends Model
     
     public function getVacancyEducation($vacancyId) {    	
     	$vacancyEducation = array();
-    	$sql = "SELECT ved.industry_id AS industryId, i.name AS industryName, ved.degree
+    	$sql = "SELECT ved.industry_id AS industryId, ved.degree
     			FROM hr_vacancy_education ved
-    			INNER JOIN hr_industry i ON i.industry_id=ved.industry_id
     			WHERE ved.vacancy_id=%d";
-    	
-    	$sql = $this->mysql->format($sql, array($vacancyId));
-    	$result = $this->mysql->query($sql);
-    	
+    	    	
     	$sql = $this->mysql->format($sql, array($vacancyId));
     	$result = $this->mysql->query($sql);
     	
@@ -61,10 +43,8 @@ class VacancyModel extends Model
     
     public function getVacancyExperience($vacancyId) {
     	$vacancyExperience = array();
-    	$sql = "SELECT vex.industry_id AS industryId, i.name AS industryName, s.name AS specName, vex.spec_id AS specId, vex.years
-    			FROM hr_vacancy_experience vex
-    			INNER JOIN hr_industry i ON i.industry_id=vex.industry_id
-    			INNER JOIN hr_specialization s ON s.spec_id=vex.spec_id
+    	$sql = "SELECT vex.industry_id AS industryId, vex.spec_id AS specId, vex.years
+    			FROM hr_vacancy_experience vex    			
     			WHERE vex.vacancy_id=%d";
     	
     	$sql = $this->mysql->format($sql, array($vacancyId));
@@ -149,9 +129,8 @@ class VacancyModel extends Model
     
     public function getVacancySoftSkills($vacancyId) {
     	$softSkills = array();
-    	$sql = "SELECT vss.soft_id AS softId, ss.name, vss.level
-    			FROM hr_vacancy_soft_skill vss
-    			INNER JOIN hr_soft_skill ss ON ss.soft_id=vss.soft_id
+    	$sql = "SELECT vss.soft_id AS softId, vss.level
+    			FROM hr_vacancy_soft_skill vss    			
     			WHERE vss.vacancy_id=%d";
     	
     	$sql = $this->mysql->format($sql, array($vacancyId));
@@ -388,6 +367,21 @@ class VacancyModel extends Model
 	    	$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
 	    	$this->mysql->query($sql, SQL_PREPARED_QUERY);
     	}
+    }
+    
+    
+    public function addVacancyView($vacancyId) {
+    	$sql = "UPDATE hr_vacancy SET views=views+1 WHERE vacancy_id=%d";
+    	$sql = $this->mysql->format($sql, array($vacancyId));
+    	$this->mysql->query($sql);
+    }
+    
+    
+    public function storeVacancyView($vacancyId, $userRole, $userId) {
+    	$sql = "INSERT INTO hr_vacancy_view (vacancy_id, role, role_user_id, created_at)
+    			VALUES (%d, '%s', %d, NOW())";
+    	$sql = $this->mysql->format($sql, array($vacancyId, $userRole, $userId));
+    	$this->mysql->query($sql);
     }
 }
 

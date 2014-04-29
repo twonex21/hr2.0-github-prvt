@@ -49,18 +49,18 @@ $(document).ready(function() {
 		usePreloader: true
 	});	
 	
-	/* sign-in */
-	$('.create-account').magnificPopup({
+	/* sign-in */	
+	$('.popup').magnificPopup({
 		type: 'ajax',
 		overflowY: 'auto',
 		removalDelay: 100,
 		showCloseBtn: true,
 		closeBtnInside: false,
 		closeOnContentClick: false,
-		closeOnBgClick: true,
+		closeOnBgClick: false,
 		preloader: true,
 		mainClass: 'my-mfp-zoom-in',
-		fixedContentPos: false,
+		fixedContentPos: true,
 		fixedBgPos: true,
 		ajax: {
 		  settings:  {cache:false},
@@ -231,7 +231,11 @@ $(document).ready(function() {
     });
     
     
-    //$('.jcarousel').jcarousel();
+    $('.vacbutton').click(function(e) {
+    	var vacancyId = $(this).attr('attr-id');
+    	applyToVacancy(vacancyId);
+    	e.preventDefault();
+    });
 	
 });
 

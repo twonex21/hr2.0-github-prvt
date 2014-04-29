@@ -41,7 +41,8 @@ define('SESSION_COMPANY_ATTRIBUTES',
 define('USER_SECURED_ACTIONS',
 	serialize(
 		array(
-			'user' => array('create')
+			'user' => array('create'),
+			'vacancy' => array('apply')
 		)
 	)
 );

@@ -7,9 +7,8 @@ use HR\Core\FrontendUtils;
 class UserModel extends Model
 {    		    
 	public function getUserProfileById($userId) {
-    	$sql = "SELECT user_id AS userId, CONCAT(first_name, ' ', last_name) AS fullName, mail, location, linkedin AS linkedIn, 
-    				   DATE_FORMAT(birth_date, '%%d %%M, %%Y') AS birthDate, bio, picture_key AS pictureKey, resume_key AS resumeKey,
-    				   YEAR(CURDATE()) - YEAR(birth_date) - (RIGHT(CURDATE(), 5) < RIGHT(birth_date, 5)) AS age
+    	$sql = "SELECT CONCAT(first_name, ' ', last_name) AS fullName, mail, location, linkedin AS linkedIn, 
+    				   DATE_FORMAT(birth_date, '%%d %%M, %%Y') AS birthDate, bio, picture_key AS pictureKey, resume_key AS resumeKey
 				FROM hr_user
 				WHERE user_id=%d";
     	
@@ -24,10 +23,8 @@ class UserModel extends Model
     
     public function getUserEducation($userId) {    	
     	$userEducation = array();
-    	$sql = "SELECT ue.univer_id AS univerId, u.name AS univerName, ue.faculty_id AS facultyId, f.name AS facultyName, ue.degree
-    			FROM hr_user_education ue
-    			INNER JOIN hr_university u ON u.univer_id=ue.univer_id
-    			INNER JOIN hr_university_faculty f ON f.faculty_id=ue.faculty_id
+    	$sql = "SELECT ue.univer_id AS univerId, ue.faculty_id AS facultyId, ue.degree
+    			FROM hr_user_education ue    	
     			WHERE ue.user_id=%d";
     	
     	$sql = $this->mysql->format($sql, array($userId));
@@ -59,10 +56,8 @@ class UserModel extends Model
     
     public function getUserExperience($userId) {
     	$userExperience = array();
-    	$sql = "SELECT ue.industry_id AS industryId, i.name AS industryName, s.name AS specName, ue.spec_id AS specId, ue.years
-    			FROM hr_user_experience ue
-    			INNER JOIN hr_industry i ON i.industry_id=ue.industry_id
-    			INNER JOIN hr_specialization s ON s.spec_id=ue.spec_id
+    	$sql = "SELECT ue.industry_id AS industryId, ue.spec_id AS specId, ue.years
+    			FROM hr_user_experience ue    			
     			WHERE ue.user_id=%d";
     	
     	$sql = $this->mysql->format($sql, array($userId));
@@ -71,7 +66,7 @@ class UserModel extends Model
     	$industryIds = array();
     	while($row = $this->mysql->getNextResult($result)) {
     		$industryIds[] = $row['industryId'];
-    		$userExperience[] = $row;    		
+    		$userExperience[] = $row;		
     	}
 
     	if(!empty($userExperience)) {
@@ -114,7 +109,7 @@ class UserModel extends Model
     
     public function getUserSkills($userId) {
     	$userSkills = array();
-    	$sql = "SELECT sk.industry_id AS industryId, sk.spec_id AS specId, sk.name, usk.skill_id AS skillId, usk.years
+    	$sql = "SELECT sk.industry_id AS industryId, sk.spec_id AS specId, sk.name, usk.years
     			FROM hr_user_skill usk
     			INNER JOIN hr_skill sk ON sk.skill_id=usk.skill_id
     			WHERE usk.user_id=%d";
@@ -147,9 +142,8 @@ class UserModel extends Model
     
     public function getUserSoftSkills($userId) {
     	$softSkills = array();
-    	$sql = "SELECT uss.soft_id AS softId, ss.name, uss.level
-    			FROM hr_user_soft_skill uss
-    			INNER JOIN hr_soft_skill ss ON ss.soft_id=uss.soft_id
+    	$sql = "SELECT uss.soft_id AS softId, uss.level
+    			FROM hr_user_soft_skill uss    			
     			WHERE uss.user_id=%d";
     	
     	$sql = $this->mysql->format($sql, array($userId));

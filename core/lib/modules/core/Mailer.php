@@ -44,7 +44,7 @@ class Mailer
     
     function addAttachment($attachment_path) {
     	if(isset($attachment_path)) {
-            	$this->mail->AddAttachment($attachment_path);         	
+            $this->mail->AddAttachment($attachment_path);         	
         }
     }
 

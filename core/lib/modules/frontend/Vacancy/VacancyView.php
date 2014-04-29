@@ -5,25 +5,24 @@ use HR\Core\View;
 
 class VacancyView extends View
 {	
-	function showOpenVacancyPage($allIndustries, $allUniverDegrees, $allLanguages, $allLanguageLevels, $allSoftSkills, $allSoftSkillLevels, $companyBenefits, $vacancyInfo, $vacancyEducation, $vacancyExperience, $vacancyLanguages, $vacancySkills, $vacancySoftSkills, $vacancyBenefits) {
-		$this->assign('_industries', $allIndustries);
-		$this->assign('_univerDegrees', $allUniverDegrees);	
-		$this->assign('_languages', $allLanguages);
-		$this->assign('_languageLevels', $allLanguageLevels);
-		$this->assign('_softSkills', $allSoftSkills);
-		$this->assign('_softSkillLevels', $allSoftSkillLevels);
-		$this->assign('_benefits', $companyBenefits);
-		$this->assign('_vacancyInfo', $vacancyInfo);
-		$this->assign('_vacancyEducation', $vacancyEducation);
-		$this->assign('_vacancyExperience', $vacancyExperience);
-		$this->assign('_vacancyLanguages', $vacancyLanguages);
-		$this->assign('_vacancySkills', $vacancySkills);
-		$this->assign('_vacancySoftSkills', $vacancySoftSkills);
-		$this->assign('_vacancyBenefits', $vacancyBenefits);
+	public function showOpenVacancyPage($data, $vacancy) {
+		$this->assign('_data', $data);		
+		$this->assign('_vacancy', $vacancy);
 		
         $this->render('open.tpl', 'CONTENT');
         $this->finish();
-    }    
+    }
+	
+    
+    public function showVacancyPage($vacancy, $matching, $requiredExperience, $canApply) {    	
+    	$this->assign('_vacancy', $vacancy);
+    	$this->assign('_matching', $matching);
+    	$this->assign('_requiredExperience', $requiredExperience);
+    	$this->assign('_canApply', $canApply);
+    
+    	$this->render('view.tpl', 'CONTENT');
+    	$this->finish();
+    }
 }
 
 ?>

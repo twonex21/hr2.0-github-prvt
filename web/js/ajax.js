@@ -340,3 +340,23 @@ function ajaxValidateForm() {
 	    });
 	}
 }
+
+
+
+function applyToVacancy(vacancyId) {
+	jQuery.ajax({
+        dataType: 'json',
+        url: '/vacancy/apply/',
+        type: 'POST',
+        data: {'vacancyId' : vacancyId},
+
+        success: function(json) {
+            if(json.status == 'SUCCESS') {
+            	document.location.href = document.location.href;
+            } else {
+            	
+            }
+        },
+        error: function(json){} 
+    });
+}

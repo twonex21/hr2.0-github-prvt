@@ -1,6 +1,6 @@
 {literal}
 <script>
-	addCssFile('glDatePicker.flatwhite.css');
+	addCssFile('glDatePicker.flatwhite');
 	addScriptFile('ajax.js', true);
 	
 	$(function() {		
@@ -16,10 +16,10 @@
     	<div class="block-title block-title-nobgr grid grid400">General information</div>        
         <div class="grid grid440 marginleft120">
         	<div class="paddingtop60">
-        		{if $_vacancyInfo.fileKey}
-	           		<div class="note paddingleft40 attach-ico grid grid180 margintop15 paddingright20 attach-file" id="attached_file" title="{$_vacancyInfo.fileKey}">{$_vacancyInfo.fileKey|substr:5|truncate:20:"...":true}</div>
+        		{if $_vacancy.info.fileKey}
+	           		<div class="note paddingleft40 attach-ico grid grid180 margintop15 paddingright20 attach-file" id="attached_file" title="{$_vacancy.info.fileKey}">{$_vacancy.info.fileKey|substr:5|truncate:20:"...":true}</div>
 	                <fieldset class="grid grid200">
-	                    <div class="margintop10 file-remove" id="fileaddbtn" attr-file-key="{$_vacancyInfo.fileKey}" attr-type="vacancy">Remove File</div>
+	                    <div class="margintop10 file-remove" id="fileaddbtn" attr-file-key="{$_vacancy.info.fileKey}" attr-type="vacancy">Remove File</div>
 	                	<input type="file" id="upload_file" name="upload-file" class="fileselect">
 	                    <input type="hidden" id="temp_file" name="temp-file" value="">
 	               	</fieldset>
@@ -50,10 +50,10 @@
 	        <fieldset class="grid grid290 marginright30">
 	            <section>
 	                <label for="fullname" class="input label105">Vacancy Title *
-	                    <input id="title" name="title" type="text" value="{$_vacancyInfo.title}" attr-validate="notEmpty">
+	                    <input id="title" name="title" type="text" value="{$_vacancy.info.title}" attr-validate="notEmpty">
 	                </label>                                
 	                <label for="location" class="input label105">Location *
-	              		<input id="location" name="location" type="text" value="{$_vacancyInfo.location}" attr-validate="notEmpty, isLatin">
+	              		<input id="location" name="location" type="text" value="{$_vacancy.info.location}" attr-validate="notEmpty, isLatin">
 	                    <b class="tooltip tooltip-bottom-left for-input">City, Country</b>
 	                </label>
 	            </section>
@@ -63,13 +63,13 @@
 	                <label for="status" class="select label105">Status
 						<select name="status">
 	                        <option value="Active">Active</option>
-	                        <option value="Inactive" {if $_vacancyInfo.status == 'INACTIVE'}selected{/if}>Not Active</option>                        
+	                        <option value="Inactive" {if $_vacancy.info.status == 'INACTIVE'}selected{/if}>Not Active</option>                        
 	                    </select>
 	                    <i></i>
 	                </label>
 	                <label for="deadline" class="input label105">Deadline *
 	                    <i class="icon-append icon-calendar"></i>
-	              		<input id="deadline" name="deadline" type="text" value="{$_vacancyInfo.deadline}" attr-validate="notEmpty, isDate, isFutureDate">
+	              		<input id="deadline" name="deadline" type="text" value="{$_vacancy.info.deadline}" attr-validate="notEmpty, isDate, isFutureDate">
 	                </label>
 				</section>
 	        </fieldset>
@@ -78,13 +78,13 @@
     </div>
     <div id="block_education">    	
        	<div class="block-title block-title-nobgr">Education</div>
-       	{foreach from=$_vacancyEducation item=eduItem}
+       	{foreach from=$_vacancy.education item=eduItem}
 	        <fieldset class="block-item grid grid310 input-group-border padding20 boxsizing">
 	            <section>
 	                <label class="select marginbottom30">Industry
 	                    <select name="edu-industries[]">
 	                        <option value="0" class="empty">-- Not set --</option>
-	                        {foreach from=$_industries item=industry}
+	                        {foreach from=$_data.industries item=industry}
 	                        	<option value="{$industry.industryId}" {if $eduItem && $industry.industryId == $eduItem.industryId}selected{/if}>{$industry.name}</option>
 	                    	{/foreach}
 	                    </select>
@@ -92,7 +92,7 @@
 	                </label>                            
 	                <label class="select">Degree
 	                    <select name="edu-degrees[]">
-	                        {foreach from=$_univerDegrees item=degree}
+	                        {foreach from=$_data.univerDegrees item=degree}
 	                        	<option value="{$degree}" {if $eduItem && $degree == $eduItem.degree}selected{/if}>{$degree}</option>
 	                    	{/foreach}
 	                    </select>	                    
@@ -107,13 +107,13 @@
     </div>
     <div id="block_experience">
        	<div class="block-title block-title-nobgr">Experience</div>
-       	{foreach from=$_vacancyExperience item=expItem}
+       	{foreach from=$_vacancy.experience item=expItem}
 	        <fieldset class="block-item grid grid310 input-group-border padding20 paddingbottom0 boxsizing">
 	            <section>
 	                <label class="select marginbottom30">Scope of activity
 	                    <select name="exp-industries[]" attr-load="specializations" attr-type="industry">
 	                        <option value="0" class="empty">-- Not set --</option>
-	                        {foreach from=$_industries item=industry}
+	                        {foreach from=$_data.industries item=industry}
 	                        	<option value="{$industry.industryId}" {if $expItem && $industry.industryId == $expItem.industryId}selected{/if}>{$industry.name}</option>
 	                    	{/foreach}
 	                    </select>
@@ -145,19 +145,19 @@
         <div id="addexperience-btn" class="form-add-btn thick grid">Add Experience</div>
 		<div class="clear"></div>
     </div> 
-    <div id="block_languages">
+    <div id="block_data.languages">
     	<!-- Wrapped in additional div to have only one child before the fieldset (to make 3n+1 logic work) -->
     	<div>
 	       	<div class="block-title block-title-nobgr">Languages</div>
 	        <div class="note paddingbottom10">Choose languages you know and estimate your level of knowledge</div>
         </div>
-        {foreach from=$_vacancyLanguages item=langItem}
+        {foreach from=$_vacancy.languages item=langItem}
 	        <fieldset class="block-item grid grid310 input-group-border padding10 paddingtop0 boxsizing">
 	            <section>
 	                <label class="select col col-55p marginright9">
 	                    <select name="langs[]">
 	                    	<option value="" class="empty">-- Not set --</option>
-	                   		{foreach from=$_languages item=lang}
+	                   		{foreach from=$_data.languages item=lang}
 	                   			<option value="{$lang}" {if $langItem && $lang == $langItem.language}selected{/if}>{$lang}</option>
 	                   		{/foreach}
 	                    </select>
@@ -165,7 +165,7 @@
 	                </label>
 	                <label class="select col col-5">
 	                    <select name="lang-levels[]">
-	                        {foreach from=$_languageLevels item=level}
+	                        {foreach from=$_data.languageLevels item=level}
 	                   			<option value="{$level}" {if $langItem && $level == $langItem.level}selected{/if}>{$level}</option>
 	                   		{/foreach}
 	                    </select>
@@ -180,13 +180,13 @@
     <!--Skills-->
     <div id="block_skills">
     	<div class="block-title block-title-nobgr">Skills</div>
-    	{foreach from=$_vacancySkills.vacancySkills item=skillItem}
+    	{foreach from=$_vacancy.skills.vacancySkills item=skillItem}
 	        <fieldset class="skill-item grid grid310 input-group-border padding20 boxsizing">
 	        	<section>
 					<label class="select marginbottom30 {if !$skillItem}inactive{/if}">Choose skill
 	                    <select name="skills[]" {if !$skillItem}disabled{/if}>
 	                    	{assign var=parentName value=``}	                    		                    
-	                    	{foreach from=$_vacancySkills.allSkills item=skill}
+	                    	{foreach from=$_vacancy.skills.allSkills item=skill}
 		                    	{if $parentName != $skill.parentName}
 			        				{if parentName != ''}</optgroup>{/if}
 			        				{assign var=parentName value=$skill.parentName}
@@ -220,13 +220,13 @@
 	       	<div class="block-title block-title-nobgr">Soft Skills</div>
 	        <div class="note paddingbottom10">Choose soft skills that describe you the best</div>
         </div>
-        {foreach from=$_vacancySoftSkills item=softItem}
+        {foreach from=$_vacancy.softSkills item=softItem}
 	        <fieldset class="block-item grid grid310 input-group-border padding10 paddingtop0 boxsizing">
 	            <section>
 	                <label class="select col col-55p marginright9">
 	                    <select name="soft-skills[]">
 	                    	<option value="0" class="empty">-- Not set --</option>
-	                   		{foreach from=$_softSkills item=skill}
+	                   		{foreach from=$_data.softSkills item=skill}
 	                   			<option value="{$skill.softId}" {if $softItem && $skill.softId == $softItem.softId}selected{/if}>{$skill.name}</option>
 	                   		{/foreach}
 	                    </select>
@@ -234,7 +234,7 @@
 	                </label>
 	                <label class="select col col-5">
 	                    <select name="soft-levels[]">
-	                        {foreach from=$_softSkillLevels item=level}
+	                        {foreach from=$_data.softSkillLevels item=level}
 	                   			<option value="{$level}" {if $softItem && $level == $softItem.level}selected{/if}>{$level}</option>
 	                   		{/foreach}
 	                    </select>
@@ -248,13 +248,13 @@
     </div>
     <div>
 		<div class="block-title block-title-nobgr">Benefits</div>
-		{foreach from=$_vacancyBenefits item=benefitItem}
+		{foreach from=$_vacancy.benefits item=benefitItem}
 		<fieldset class="block-item grid grid310 input-group-border padding10 paddingtop0 boxsizing">
 			<section>
 				<label class="select">
 					<select name="benefits[]">
 						<option value="0" class="empty">-- Not set --</option>
-					{foreach from=$_benefits item=benefit}
+					{foreach from=$_data.benefits item=benefit}
                            <option value="{$benefit.benefitId}" {if $benefitItem && $benefit.benefitId == $benefitItem.benefitId}selected{/if}>{$benefit.name}</option>
 					{/foreach}
 					</select>
@@ -271,18 +271,18 @@
        	<fieldset>
 	       	<section>
 		       	<label for="vac_title" class="textarea marginbottom30">
-			       	<textarea id="additional_info" name="additional-info" style="height:150px"/>{$_vacancyInfo.additionalInfo}</textarea>			       	
+			       	<textarea id="additional_info" name="additional-info" style="height:150px"/>{$_vacancy.info.additionalInfo}</textarea>			       	
 		       	</label>
 	       	</section>
        	</fieldset>                
 		<fieldset class="grid grid300 paddingright20">
-			<label class="checkbox"><input type="checkbox" name="show-applicant-count" {if $_vacancyInfo.showApplicantsCount}checked{/if}><i></i>Show amount of people who applied to this vacancy</label>
+			<label class="checkbox"><input type="checkbox" name="show-applicant-count" {if $_vacancy.info.showApplicantsCount}checked{/if}><i></i>Show amount of people who applied to this vacancy</label>
        	</fieldset>
        	<fieldset class="grid grid300 paddingright20">
-       		<label class="checkbox"><input type="checkbox" name="show-viewer-count" {if $_vacancyInfo.showViewersCount}checked{/if}><i></i>Show amount of people who viewed this vacancy</label>
+       		<label class="checkbox"><input type="checkbox" name="show-viewer-count" {if $_vacancy.info.showViewersCount}checked{/if}><i></i>Show amount of people who viewed this vacancy</label>
        	</fieldset>
        	<fieldset class="grid grid300 paddingright20">
-       		<label class="checkbox"><input type="checkbox" name="show-wanttowork-count" {if $_vacancyInfo.showWantToWorkCount}checked{/if}><i></i>Show amount of people who wants to work in your company</label>
+       		<label class="checkbox"><input type="checkbox" name="show-wanttowork-count" {if $_vacancy.info.showWantToWorkCount}checked{/if}><i></i>Show amount of people who wants to work in your company</label>
 		</fieldset>
    	    <div class="clear"></div>
         <div style="padding:60px 0 150px 0"><a class="profbutton" style="width:100%; display:block">save and post vacancy</a></div>
