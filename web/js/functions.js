@@ -12,7 +12,7 @@ function addScriptFile(src, async) {
 
 
 function addCssFile(href) {
-	$('html, body').hide();
+	$('html, body').hide();		
 	
 	var link = document.createElement('link');
 	link.setAttribute('rel', 'stylesheet');
@@ -23,8 +23,8 @@ function addCssFile(href) {
 		var $lastLink = $('head link[rel=stylesheet]:last');
 		$lastLink.after(link);
 	}
-		
-    $('#' + href + '_css').on('load', function () {
+
+    $('#' + href.replace('.', '\\.') + '_css').on('load', function () {
     	$('html, body').show();	        
     });		
 }
