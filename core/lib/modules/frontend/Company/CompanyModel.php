@@ -30,40 +30,11 @@ class CompanyModel extends Model
 		$sql = $this->mysql->format($sql, array($companyId));
 		$result = $this->mysql->query($sql);
 		 
-		$ret_result = array();
-		while($data = $this->mysql->getRow($result)){
-			$ret_result[] = $data;
-		}
-		return $ret_result;
+		$offices = $this->mysql->getDataSet();
+		
+		return $offices;
 	}
-	
-	public function getCompanyBenefitsByCompanyId($comapnyId) {
-		$sql = "SELECT hr_company_benefits.company_benefits_id AS companyBenefitsId, hr_benefits.benefit_id AS benefitId, hr_benefits.name
-				FROM hr_company_benefits
-				INNER JOIN hr_benefits ON hr_company_benefits.benefit_id = hr_benefits.benefit_id
-				WHERE hr_company_benefits.company_id=%d";
-
-		$sql = $this->mysql->format($sql, array($comapnyId));
-		$result = $this->mysql->query($sql);
-		 
-		$ret_result = array();
-		while($data = $this->mysql->getRow($result)){
-			$ret_result[] = $data;
-		}
-		return $ret_result;
-	}
-	
-	public function getAllBenefits() {
-		$sql = "SELECT benefit_id AS benefitId,name FROM hr_benefits";
-
-		$result = $this->mysql->query($sql);
-		 
-		$ret_result = array();
-		while($data = $this->mysql->getRow($result)){
-			$ret_result[] = $data;
-		}
-		return $ret_result;
-	}
+		
 	
 	public function updateCompanyInfo($currentCompanyId, $companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, $companyTwitter, $pictureKey, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, $showAmountUsersApplied) {
 		$sql = "UPDATE hr_company SET name='%s', additional_info='%s', phone='%s', mail='%s', linkedin='%s', facebook='%s', 
