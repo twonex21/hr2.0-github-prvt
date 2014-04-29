@@ -30,9 +30,61 @@ class CompanyModel extends Model
 		$sql = $this->mysql->format($sql, array($companyId));
 		$result = $this->mysql->query($sql);
 		 
-		$companyInfo = $this->mysql->getDataSet($result);
+		$ret_result = array();
+		while($data = $this->mysql->getRow($result)){
+			$ret_result[] = $data;
+		}
+		return $ret_result;
+	}
+	
+	public function getCompanyBenefitsByCompanyId($comapnyId) {
+		$sql = "SELECT hr_company_benefits.company_benefits_id AS companyBenefitsId, hr_benefits.benefit_id AS benefitId, hr_benefits.name
+				FROM hr_company_benefits
+				INNER JOIN hr_benefits ON hr_company_benefits.benefit_id = hr_benefits.benefit_id
+				WHERE hr_company_benefits.company_id=%d";
 
-		return $companyInfo;
+		$sql = $this->mysql->format($sql, array($comapnyId));
+		$result = $this->mysql->query($sql);
+		 
+		$ret_result = array();
+		while($data = $this->mysql->getRow($result)){
+			$ret_result[] = $data;
+		}
+		return $ret_result;
+	}
+	
+	public function getAllBenefits() {
+		$sql = "SELECT benefit_id AS benefitId,name FROM hr_benefits";
+
+		$result = $this->mysql->query($sql);
+		 
+		$ret_result = array();
+		while($data = $this->mysql->getRow($result)){
+			$ret_result[] = $data;
+		}
+		return $ret_result;
+	}
+	
+	public function updateCompanyInfo($currentCompanyId, $companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, $companyTwitter, $pictureKey, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, $showAmountUsersApplied) {
+		$sql = "UPDATE hr_company SET name='%s', additional_info='%s', phone='%s', mail='%s', linkedin='%s', facebook='%s', 
+				twitter='%s', new_vacancies='%s', subscribe_for_news='%s', amount_of_emploees='%s', 
+				show_amount_of_views='%s', show_amount_users_applied='%s', 
+				changed_at=NOW()";
+		
+		//setting default values
+		
+		$params = array($companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, 
+				        $companyTwitter, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, 
+				        $showAmountUsersApplied);
+	
+		if($pictureKey != '') {
+			$sql .= ", logo_key='%s'";
+			$params[] = $pictureKey;
+		}
+		
+		$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
+		$this->mysql->query($sql, SQL_PREPARED_QUERY);
+
 	}
     
 }
