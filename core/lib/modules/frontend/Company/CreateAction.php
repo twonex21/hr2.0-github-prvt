@@ -22,8 +22,8 @@ class CreateAction extends Action implements ActionInterface
     		$companyOffices = $this->model->getCompanyOfficesById($currentCompanyId);
     		
     		//Benefits
-    		$allBenefits = $this->model->getAllBenefits(); 
-    		$companyBenefits = $this->model->getCompanyBenefitsByCompanyId($currentCompanyId);
+    		$allBenefits = $this->qb->getBenefits();
+    		$companyBenefits = $this->qb->getCompanyBenefits($currentCompanyId);
 
     		$this->view->showCreateCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits);
     	} else {
@@ -122,7 +122,7 @@ class CreateAction extends Action implements ActionInterface
 						    				$showAmountOfViews,
 						    				$showAmountUsersApplied);
     		
-    		$this->fc->redirect('Company', 'company');
+    		$this->fc->redirect('company', 'company');
     		
     	}
     	

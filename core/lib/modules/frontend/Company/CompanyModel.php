@@ -29,12 +29,9 @@ class CompanyModel extends Model
 		 
 		$sql = $this->mysql->format($sql, array($companyId)); 
 		$result = $this->mysql->query($sql);
+		$offices = $this->mysql->getDataSet();
 		
-		$ret_result = array();
-		while($data = $this->mysql->getRow($result)){
-			$ret_result[] = $data;
-		}
-		return $ret_result;
+		return $offices;
 	}
 	
 	public function getCompanyBenefitsByCompanyId($comapnyId) {
@@ -45,24 +42,19 @@ class CompanyModel extends Model
 
 		$sql = $this->mysql->format($sql, array($comapnyId));
 		$result = $this->mysql->query($sql);
-		 
-		$ret_result = array();
-		while($data = $this->mysql->getRow($result)){
-			$ret_result[] = $data;
-		}
-		return $ret_result;
+		$companyBenefits = $this->mysql->getDataSet();
+		
+		return $companyBenefits;
 	}
 	
 	public function getAllBenefits() {
 		$sql = "SELECT benefit_id AS benefitId,name FROM hr_benefit";
 		$result = $this->mysql->query($sql);
-		 
-		$ret_result = array();
-		while($data = $this->mysql->getRow($result)){
-			$ret_result[] = $data;
-		}
-		return $ret_result;
+		$benefits = $this->mysql->getDataSet();
+		
+		return $benefits;
 	}
+		
 	
 	public function updateCompanyInfo($currentCompanyId, $companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, $companyTwitter, $pictureKey, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, $showAmountUsersApplied) {
 		$sql = "UPDATE hr_company SET name='%s', additional_info='%s', phone='%s', mail='%s', linkedin='%s', facebook='%s', 
@@ -71,7 +63,6 @@ class CompanyModel extends Model
 				changed_at=NOW()";
 		
 		//setting default values
-		
 		$params = array($companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, 
 				        $companyTwitter, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, 
 				        $showAmountUsersApplied);
