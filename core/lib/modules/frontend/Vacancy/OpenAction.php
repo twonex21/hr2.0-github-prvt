@@ -221,7 +221,16 @@ class OpenAction extends Action implements ActionInterface
     		// Handled form data, now saving it in db
     		if($vacancyId == null) {
     			// Creating new vacancy
-    			$vacancyId = $this->model->createVacancy($currentCompanyId, $title, $location, $additionalInfo, $showApplicantsCount, $showViewersCount, $showWantToWorkCount, $fileKey, $deadline, $status);
+    			$vacancyId = $this->model->createVacancy($currentCompanyId, 
+    													 $title, 
+    													 $location, 
+    					 								 $additionalInfo, 
+    													 $showApplicantsCount, 
+    													 $showViewersCount, 
+    													 $showWantToWorkCount, 
+    													 $fileKey, 
+    													 $deadline, 
+    													 $status);
     			$isNew = true;
     		} 
     		

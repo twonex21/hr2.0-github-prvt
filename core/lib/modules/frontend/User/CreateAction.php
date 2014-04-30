@@ -227,7 +227,17 @@ class CreateAction extends Action implements ActionInterface
     		    		
     		
     		// Handled form data, now saving it in db
-    		$this->model->updateUserProfile($currentUserId, $firstName, $lastName, $mail, $location, $linkedIn, $newPassword, $birthDate, $profileBio, $pictureKey, $resumeKey);
+    		$this->model->updateUserProfile($currentUserId, 
+    										$firstName, 
+    										$lastName, 
+    										$mail, 
+    										$location, 
+    										$linkedIn, 
+    										$newPassword, 
+    										$birthDate, 
+    										$profileBio, 
+    										$pictureKey, 
+    										$resumeKey);
     		if(!empty($education)) {
     			$this->model->updateUserEducation($currentUserId, $education);
     		}

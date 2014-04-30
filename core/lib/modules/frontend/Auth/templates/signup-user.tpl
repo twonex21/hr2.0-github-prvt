@@ -6,27 +6,27 @@
 </div>
 <div class="login-from">
     <div class="account-block-title" style="margin-left:20px;">Create an <a href="#">HR.AM</a> Account</div>
-	<form id="create-account-form" class="hr-form">
+	<form id="create-account-form" class="hr-form" method="POST" action="/auth/usersignup/">
 		<div class="grid">
-			<label for="male" class="input">Your email
-            	<input id="firstname" name="email" type="text" value="" />
+			<label for="email" class="input label105">Your email
+            	<input id="email" name="email" type="text" value="" attr-validate="notEmpty, isEmailAddress, notAlreadyUsed">
             </label>
-            <label for="male" class="input">Password
-            	<input id="lastname" name="lastname" type="password" value="" />
+            <label for="password" class="input label105">Password
+            	<input id="password" name="password" type="password" value="" attr-validate="notEmpty, isPasswordLength">
         	</label>	        		
 		</div>
 		<div class="grid">
-			<label for="male" class="input">First name
-            	<input id="firstname" name="firstname" type="text" value="" />
+			<label for="firstname" class="input label105">First name
+            	<input id="firstname" name="firstname" type="text" value="" attr-validate="notEmpty, isLatin">
             </label>
-			<label for="male" class="input">Last name
-            	<input id="lastname" name="lastname" type="text" value="" />
+			<label for="lastname" class="input label105">Last name
+            	<input id="lastname" name="lastname" type="text" value="" attr-validate="notEmpty, isLatin">
             </label>
-            <label class="checkbox"><input type="checkbox" name="checkbox"><i style="top:0"></i>Agree with terms</label>			
+            <label class="checkbox"><input id="has_agreed" name="has-agreed" type="checkbox" attr-validate="hasAgreedWithTerms"><i style="top:0"></i>Agree with terms<br></label>			
 		</div>    	
 	</form>  
 </div>
 <div class="clear"></div>
 <div class="connect-button">
-	<a href="javascript:alert('submit form function here')" class="sbutton">SIGN UP</a>
+	<a href="" class="sbutton">SIGN UP</a>
 </div>

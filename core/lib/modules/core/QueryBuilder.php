@@ -8,6 +8,23 @@ class QueryBuilder extends Model
     	parent::__construct();
     }
     
+    
+    public function notAlreadyUsed($mail) {
+    	$sql = "SELECT COUNT(user_id) AS count FROM hr_user WHERE mail='%1\$s'
+    			UNION
+    			SELECT COUNT(company_id) AS count FROM hr_company WHERE mail='%1\$s'";
+    	
+    	$sql = $this->mysql->format($sql, array($mail));
+    	$result = $this->mysql->query($sql);
+    	
+    	while($row = $this->mysql->getRow($result)) {
+    		if($row['count'] > 0) {
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    }
       
     public function getUserSessionDataById($userId) {
     	$user = array();
@@ -132,7 +149,7 @@ class QueryBuilder extends Model
     }
     
     
-    public function getBenefits() {    	    	
+    public function getBenefits() {
     	$sql = "SELECT benefit_id AS benefitId, name FROM hr_benefit";    	
     	$result = $this->mysql->query($sql);
     	
@@ -143,7 +160,7 @@ class QueryBuilder extends Model
     public function getUserProfileById($userId) {
     	$sql = "SELECT user_id AS userId, CONCAT(first_name, ' ', last_name) AS fullName, mail, location, linkedin AS linkedIn,
     				   bio, picture_key AS pictureKey, resume_key AS resumeKey,
-    				   YEAR(CURDATE()) - YEAR(birth_date) - (RIGHT(CURDATE(), 5) < RIGHT(birth_date, 5)) AS age
+    				   IF(birth_date='0000-00-00', 0, YEAR(CURDATE()) - YEAR(birth_date) - (RIGHT(CURDATE(), 5) < RIGHT(birth_date, 5))) AS age
 				FROM hr_user
 				WHERE user_id=%d";
     	 

@@ -26,14 +26,17 @@ define("VALIDATION_MESSAGES",
 				array(
 					"notEmpty" => "This field is required", 
 					"isEmailAddress" => "Invalid e-mail format", 
+					"notAlreadyUsed" => "This e-mail has been already used", 
 					"isPasswordLength" => "Password is shorter than 6 characters", 
 					"passwordsMatch" => "Passwords don't match",
 					"isLatin" => "Only latin characters accepted",
 					"isDate" => "Invalid date format",
+					"isPhoneNumber" => "Invalid phone format",
 					"isLinkedIn" => "Invalid linkedIn link",
 					"isFacebook" => "Invalid facebook link",
 					"isTwitter" => "Invalid twitter link",
 					"isFutureDate" => "Please specify date in the future",
+					"hasAgreedWithTerms" => "You have to agree with our terms of service"
 				)
 		)
 );

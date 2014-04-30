@@ -25,7 +25,7 @@ function addCssFile(href) {
 	}
 
     $('#' + href.replace('.', '\\.') + '_css').on('load', function () {
-    	$('html, body').show();	        
+    	$('html, body').show();
     });		
 }
 

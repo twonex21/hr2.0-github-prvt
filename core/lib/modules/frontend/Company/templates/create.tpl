@@ -7,10 +7,9 @@
 
 <h1 class="page-title"><span>Company page creaton</span></h1>
 <div class="block-title block-title-nobgr">General information</div>
-   	<form name="hr-form" class="hr-form" action="" method="post" enctype="multipart/form-data">
-   
-    <div class="input-group-border padding28">
-       	
+   	<form name="hr-form" class="hr-form" action="" method="post" enctype="multipart/form-data">   
+   	<div class="note paddingbottom10">Fields denoted with * are required</div>
+    <div class="input-group-border padding28">       	
         <fieldset class="grid grid230">
           <section class="filefield"> 
 			<div id="company_logo" class="grid photo company-logo">
@@ -31,7 +30,7 @@
        
         <fieldset class="grid grid670">
             <section>
-                <label for="comp_title" class="input marginbottom25"><span>Title</span>
+                <label for="comp_title" class="input marginbottom25"><span>Title *</span>
                     <input id="comp_title" name="comp_title" type="text" value="{$_companyProfile.name}" attr-validate="notEmpty">
                     <b class="tooltip tooltip-bottom-left">Company officially registered name</b>
                 </label>
@@ -72,12 +71,12 @@
            	<div class="block-title block-title-nobgr">Contacts</div>
             <fieldset class="grid grid290">
                 <section>
-                    <label for="comp_phone" class="input marginbottom25">Contact Phone
-                        <input id="comp_phone" name="comp_phone" type="text" value="{$_companyProfile.phone}">
+                    <label for="comp_phone" class="input marginbottom25">Contact Phone *
+                        <input id="comp_phone" name="comp_phone" type="text" value="{$_companyProfile.phone}" attr-validate='notEmpty, isPhoneNumber'>
                         <b class="tooltip tooltip-bottom-left">Company contact phone</b>
                     </label>
-                    <label for="comp_email" class="input marginbottom25">Email to contact
-                        <input id="comp_email" name="comp_email" type="text" value="{$_companyProfile.mail}" attr-validate='isEmailAddress'>
+                    <label for="comp_email" class="input marginbottom25">Email to contact *
+                        <input id="comp_email" name="comp_email" type="text" value="{$_companyProfile.mail}" attr-validate='notEmpty, isEmailAddress'>
                         <b class="tooltip tooltip-bottom-left">Company email address</b>
                     </label>
                     <label for="comp_linked" class="input marginbottom25">Linked in link

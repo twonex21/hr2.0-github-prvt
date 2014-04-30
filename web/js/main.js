@@ -213,8 +213,9 @@ $(document).ready(function() {
 		loadSkillsDropdown(loadValues);
 	});		
 	
-	$('.profbutton').click(function() {
+	$(document).on('click', '.sbutton, .profbutton', function(e) {
 		ajaxValidateForm();
+		e.preventDefault();
 	});
 	
 	

@@ -1,0 +1,3 @@
+ALTER TABLE `hr_user` CHANGE `location` `location` VARCHAR(100) CHARSET utf8 COLLATE utf8_general_ci NULL;
+
+ALTER TABLE `hr_company` CHANGE `mail` `mail` VARCHAR(50) CHARSET utf8 COLLATE utf8_general_ci NOT NULL AFTER `name`, CHANGE `phone` `phone` VARCHAR(20) CHARSET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `contact_person` `contact_person` VARCHAR(60) CHARSET utf8 COLLATE utf8_general_ci NOT NULL, CHANGE `additional_info` `additional_info` TEXT CHARSET utf8 COLLATE utf8_general_ci NULL AFTER `twitter`, CHANGE `logo_key` `logo_key` VARCHAR(10) CHARSET utf8 COLLATE utf8_general_ci NULL AFTER `additional_info`;

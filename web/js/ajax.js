@@ -298,7 +298,11 @@ function ajaxValidateForm() {
 	$fields.each(function(i) {
 		currentField = {};
 		currentField.id = $(this).attr('id');
-		currentField.value = $(this).val();
+		if($(this).attr('type') == 'checkbox') {
+			currentField.value = $(this).is(':checked');
+		} else {
+			currentField.value = $(this).val();
+		}
 		// Validation criterias
 		criterias = $(this).attr('attr-validate').split(',');
 		criterias = criterias.map(jQuery.trim);

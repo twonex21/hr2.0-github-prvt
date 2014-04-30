@@ -320,11 +320,11 @@ class FrontendUtils
     }
     
     
-    public static function isNumber($string) {
+    public static function isPhoneNumber($string) {
 	    if(strlen($string) == 0)
         	return false;        
 
-    	return preg_match('/[0-9\.\-\ ]{6}/', $string);
+    	return preg_match('/^(\+)*[0-9\-\(\)\ ]{6,}$/', $string);
     }
     
     
@@ -343,6 +343,11 @@ class FrontendUtils
     	}
     	
     	return false;
+    }
+    
+    
+    public static function hasAgreedWithTerms($checked) {
+    	return ($checked === 'true');
     }
 
     

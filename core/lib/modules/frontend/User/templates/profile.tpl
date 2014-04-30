@@ -12,11 +12,11 @@
 <div class="grid profile-top-block">
     <img src="{if $_user.profile.pictureKey}/support/resizeimage/tp/1/s/1/key/{$_user.profile.pictureKey}/t/{else}/images/photo.png{/if}" alt="" class="grid user-photo">
     <div class="grid profile-top">
-        <div class="grid profile-top-text">{$_user.profile.fullName},&nbsp;<span>{$_user.profile.age}</span></div> 
-        <div class="grid profile-top-year">years<br /> old</div>
+        <div class="grid profile-top-text">{$_user.profile.fullName}{if $_user.profile.age > 0},&nbsp;<span>{$_user.profile.age}</span>{/if}</div> 
+        {if $_user.profile.age > 0}<div class="grid profile-top-year">years<br /> old</div>{/if}
         <div class="clear"></div>   
         <div class="profile-social">
-            <a class="button loc">{$_user.profile.location}</a>
+            {if $_user.location}<a class="button loc">{$_user.profile.location}</a>{/if}
             {if $_user.profile.linkedIn}<a class="button linkedin" href="{$_user.profile.linkedIn}" target="_blank">Show on linkedin</a>{/if}<br />
             <a class="button mail" href="mailto:{$_user.profile.mail}">Send e-mail</a>
             <a class="button share" href="mailto:mail@mail.com">Share this cv</a>

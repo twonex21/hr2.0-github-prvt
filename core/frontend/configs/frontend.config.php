@@ -27,13 +27,13 @@ define('BASE_POPUP_TEMPLATE', '');
 // Security configs
 define('SESSION_USER_ATTRIBUTES',
 	serialize(
-		array('ID', 'mail', 'firstName', 'lastName', 'registrationDate')
+		array('ID', 'mail', 'firstName', 'lastName', 'fullName', 'pictureKey', 'resumeKey', 'registrationDate')
 	)
 );
 
 define('SESSION_COMPANY_ATTRIBUTES',
 	serialize(
-		array('ID', 'mail', 'name', 'phone', 'contactPerson', 'registrationDate', 'numberOfVacancies')
+		array('ID', 'mail', 'name', 'phone', 'contactPerson', 'pictureKey', 'registrationDate', 'numberOfVacancies')
 	)
 );
 

@@ -27,6 +27,13 @@ class ValidateAction extends Action implements ActionInterface
 	    							$this->response->jsonErrorMessagesPush($field['id'], $validationMessages[$criteria]);    							
 	    							break;
 	    						}
+	    					} elseif(method_exists($this->qb, $criteria)) {
+	    						if(!$this->qb->$criteria($field['value'])) {
+	    							// Validation failed
+	    							$this->response->jsonSetStatus(FAIL);
+	    							$this->response->jsonErrorMessagesPush($field['id'], $validationMessages[$criteria]);
+	    							break;
+	    						}
 	    					}
 	    				}
     				}

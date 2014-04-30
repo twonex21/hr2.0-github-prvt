@@ -110,12 +110,7 @@
 #company .grid, #user .grid {
 	width:44%;
 	padding:20px 20px 30px 20px !important;	
-}
-		
-
-#create-account-form input {
-	margin-bottom:20px;		
-}
+}		
 	
 #create-account-form label {
 	display:block;
@@ -125,9 +120,7 @@
 	padding-bottom:7px;	
 }
 
-	.connect-button {
-		padding-bottom:35px;
-		text-align:center;
-	}	
-
-	
+.connect-button {
+	padding-bottom:25px;
+	text-align:center;
+}	
