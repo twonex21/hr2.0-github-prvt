@@ -9,7 +9,7 @@ class CompanyModel extends Model
 	public function getCompanyProfileById($companyId) {
 		$sql = "SELECT name, mail, phone, contact_person AS contactPerson, logo_key AS logoKey, created_at AS createdAt, changed_at AS changedAt,
 					   additional_info AS additionalInfo, new_vacancies AS newVacancies, subscribe_for_news AS subscribeForNews, linkedin AS linkedIn, facebook, twitter,
-					   employees_count AS employeesCount, show_views_count AS showViewsCount, show_applicants_count AS showApplicantsCount
+					   employees_count AS employeesCount, show_views_count AS showViewsCount, show_applicants_count AS showApplicantsCount, page_views AS pageViews
 				FROM hr_company
 				WHERE company_id=%d";
 		 
@@ -135,6 +135,12 @@ class CompanyModel extends Model
 		}
 	}
     
+	public function incrementPageViews($companyId){
+		$sql = "UPDATE hr_company SET page_views = page_views + 1 WHERE company_id=%d";
+		$sql = $this->mysql->format($sql, array($companyId));
+		$this->mysql->query($sql);
+	}
+	
 }
 
 ?>

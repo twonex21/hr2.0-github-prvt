@@ -21,7 +21,7 @@
     {if $_companyProfile.showViewsCount == 1}
     <div class="grid comp-stat-block views">
     	<h3>page views: </h3>
-        <p>1,543,354 - FIX</p>
+        <p>{$_companyProfile.pageViews}</p>
         <div class="vis">
         	<div class="vis-act" style="width:180px;"></div>
         </div>
