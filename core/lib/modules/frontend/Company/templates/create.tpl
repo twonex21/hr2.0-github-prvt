@@ -18,11 +18,11 @@
 				{/if}
 			</div>
             {if $_companyProfile.logoKey}
-            	<div id="company_logo_addbtn" class="fileaddbtn logo-remove" attr-picture-key='{$_companyProfile.logoKey}'>Remove Photo</div>
+            	<div id="photoaddbtn" class="fileaddbtn company_logo photo-remove" attr-picture-key='{$_companyProfile.logoKey}'>Remove Photo</div>
             {else}
-            	<div id="company_logo_addbtn" class="fileaddbtn">Add logo</div>
+            	<div id="photoaddbtn" class="fileaddbtn company_logo">Add logo</div>
             {/if}
-            <input type="file" id="upload_company_logo" name="upload-picture" class="fileselect">
+            <input type="file" id="upload_picture" name="upload-picture" class="fileselect">
             <input type="hidden" id="temp_picture" name="temp-picture" value="">
           </section>   
         </fieldset>

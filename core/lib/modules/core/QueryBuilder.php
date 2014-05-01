@@ -396,6 +396,20 @@ class QueryBuilder extends Model
     }
     
     
+    public function resetCompanyFile($key) {
+    	$updated = false;
+    	$sql = "UPDATE hr_company SET logo_key='' WHERE logo_key='%s'";
+    	
+    	$sql = $this->mysql->format($sql, array($key));
+    	$this->mysql->query($sql);
+    	
+    	// Picture key has been reset if query had affected rows
+    	$updated = ($this->mysql->getAffectedRows() > 0);
+    	
+    	return $updated;
+    }
+    
+    
     public function resetResumeFile($key) {
     	$updated = false;
     	$sql = "UPDATE hr_user SET resume_key='' WHERE resume_key='%s'";

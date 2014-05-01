@@ -23,7 +23,7 @@ class CreateAction extends Action implements ActionInterface
     		
     		//Benefits
     		$allBenefits = $this->qb->getBenefits();
-    		$companyBenefits = $this->qb->getCompanyBenefits($currentCompanyId);
+    		$companyBenefits = $this->model->getCompanyBenefitsByCompanyId($currentCompanyId);
 
     		$this->view->showCreateCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits);
     	} else {
@@ -48,7 +48,7 @@ class CreateAction extends Action implements ActionInterface
     			}
     		}
     		$companyTitle = "";
-    		if(!$this->request->request->isNullOrEmpty('comp_title') && FrontendUtils::isLatin($this->request->request->get('comp_title'))) {
+    		if(!$this->request->request->isNullOrEmpty('comp_title')) {
     			$companyTitle = $this->request->request->get('comp_title');
     		}
     		$companyAdditionalInfo="";

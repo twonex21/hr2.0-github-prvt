@@ -59,7 +59,7 @@ class CompanyModel extends Model
 	public function updateCompanyInfo($currentCompanyId, $companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, $companyTwitter, $pictureKey, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, $showAmountUsersApplied) {
 		$sql = "UPDATE hr_company SET name='%s', additional_info='%s', phone='%s', mail='%s', linkedin='%s', facebook='%s', 
 				twitter='%s', new_vacancies='%s', subscribe_for_news='%s', employees_count='%s', 
-				show_views_count='%s', show_amount_users_applied='%s', 
+				show_views_count='%s', 	show_applicants_count='%s', 
 				changed_at=NOW()";
 		
 		//setting default values

@@ -164,23 +164,13 @@ $(document).ready(function() {
 	
 	$('#photoaddbtn.photo-remove').click(function(e) {
 		var photoKey = $(this).attr('attr-picture-key');
-		ajaxRemovePicture(photoKey, 'user');
-	});
-	
-	//company page
-	$('#company_logo_addbtn:not(.photo-remove)').click(function(e) { 
-		$('#upload_company_logo').trigger('click');
-	});
-	$('#company_logo_addbtn').click(function(e) { 
-		var photoKey = $(this).attr('attr-picture-key');
-		ajaxRemovePicture(photoKey, 'user');
-	});
-	
-	$(document).on('change', '#upload_company_logo', function() {
-		ajaxUploadCompanyLogo();
-	});
-	//
-	
+		
+		if($(this).hasClass('company_logo')){
+			ajaxRemovePicture(photoKey, 'company');
+		}else{
+			ajaxRemovePicture(photoKey, 'user');
+		}
+	});	
 	
 	/* Loading dropdown menu contents */
 	$(document).on('change', '.hr-form select', function() {
