@@ -76,6 +76,64 @@ class CompanyModel extends Model
 		$this->mysql->query($sql, SQL_PREPARED_QUERY);
 
 	}
+	
+	public function updateCompanyOffices($currentCompanyId, $companyOffices){
+		
+		$sql = "";
+		$params = array();
+		 
+		// delete all old company offices
+		$sql = "DELETE FROM hr_company_office WHERE company_id=%d";
+		$sql = $this->mysql->format($sql, array($currentCompanyId));
+		$this->mysql->query($sql);
+		
+		// add new company offices
+		if(!empty($companyOffices)) {
+			
+			$sql = "INSERT INTO hr_company_office (company_id, address, changed_at) VALUES";
+			
+			foreach($companyOffices as $companyOfficeName) {
+				$sql .= "(%d, '%s', NOW()),";
+				array_push($params, $currentCompanyId);
+				array_push($params, $companyOfficeName);
+			}
+		
+			$sql = trim($sql, ",");
+		
+			// Executing prepared statements with parameter binding
+			$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
+			$this->mysql->query($sql, SQL_PREPARED_QUERY);
+		}
+	}
+	
+	public function updateCompanyBenefits($currentCompanyId, $companyBenefits){
+		
+		$sql = "";
+		$params = array();
+		 
+		// delete all old company benefits
+		$sql = "DELETE FROM hr_company_benefit WHERE company_id=%d";
+		$sql = $this->mysql->format($sql, array($currentCompanyId));
+		$this->mysql->query($sql);
+		
+		// add new company benefits
+		if(!empty($companyBenefits)) {
+			
+			$sql = "INSERT INTO hr_company_benefit (company_id, benefit_id, changed_at) VALUES";
+			
+			foreach($companyBenefits as $companyBenefit) {
+				$sql .= "(%d, %d, NOW()),";
+				array_push($params, $currentCompanyId);
+				array_push($params, $companyBenefit);
+			}
+		
+			$sql = trim($sql, ",");
+		
+			// Executing prepared statements with parameter binding
+			$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
+			$this->mysql->query($sql, SQL_PREPARED_QUERY);
+		}
+	}
     
 }
 

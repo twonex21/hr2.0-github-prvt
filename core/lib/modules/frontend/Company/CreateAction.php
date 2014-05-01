@@ -122,6 +122,10 @@ class CreateAction extends Action implements ActionInterface
 						    				$showAmountOfViews,
 						    				$showAmountUsersApplied);
     		
+    		$this->model->updateCompanyOffices($currentCompanyId, $companyOffices);
+    		
+    		$this->model->updateCompanyBenefits($currentCompanyId, $companyBenefits);
+    		
     		$this->fc->redirect('company', 'company');
     		
     	}
