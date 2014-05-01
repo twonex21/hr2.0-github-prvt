@@ -11,13 +11,16 @@ class CompanyAction extends Action implements ActionInterface
     	
     	$currentCompanyId = $this->session->getCurrentCompanyId();
     	
-    	// Collecting data if it exists and passing to template
+    	// Collecting data
     	$companyProfile = $this->model->getCompanyProfileById($currentCompanyId);
     	$companyOffices = $this->model->getCompanyOfficesById($currentCompanyId);
     	
     	//Benefits
     	$allBenefits = $this->qb->getBenefits();
     	$companyBenefits = $this->model->getCompanyBenefitsByCompanyId($currentCompanyId);
+    	
+    	// Setting page title
+    	$this->setPageTitle($companyProfile['name']);
     	
     	$this->view->showCompanyPage($companyProfile, $companyOffices, $allBenefits, $companyBenefits);
     }        

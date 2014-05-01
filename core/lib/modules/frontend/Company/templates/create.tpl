@@ -53,7 +53,7 @@
     <div>
     	<div class="grid grid290 marginright40">
            	<div class="block-title block-title-nobgr">Offices</div>
-            {foreach from=$_companyOffices item=_companyOffice}
+            	{foreach from=$_companyOffices item=_companyOffice}
 				<fieldset class="grid grid290">
                     <section>                         
                         <label class="input">

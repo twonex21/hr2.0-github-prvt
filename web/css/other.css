@@ -300,6 +300,10 @@ table.tablesorter thead tr .headerSortDown span{background-image:url(../images/s
 	background:url(../images/quest.png) no-repeat center !important;
 }
 
+.detail_page_company_logo{
+	margin-top: 60px;
+}
+
 #photoaddbtn {
 	position:absolute;
 	background-color:#34ab00;

@@ -498,10 +498,24 @@ header #search-result-inner {
 					background:url(../images/emp.png) repeat-x left center;	
 				}
 				
-				.emps .vis-act {
-					width:150px;
+				.emps .vis-act_5, .emps .vis-act_10, .emps .vis-act_25, .emps .vis-act_50, .emps .vis-act_100 {
 					height:80px;
 					background:url(../images/emp_act.png) repeat-x left center;	
+				}
+				.emps .vis-act_5 {
+					width:12px;
+				}
+				.emps .vis-act_10 {
+					width:24px;
+				}
+				.emps .vis-act_25 {
+					width:60px;
+				}
+				.emps .vis-act_50 {
+					width:120px;
+				}
+				.emps .vis-act_100 {
+					width:240px;
 				}
 			
 			.views {
