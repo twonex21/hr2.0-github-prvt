@@ -126,7 +126,7 @@ class CreateAction extends Action implements ActionInterface
     		
     		$this->model->updateCompanyBenefits($currentCompanyId, $companyBenefits);
     		
-    		$this->fc->redirect('company', 'company');
+    		$this->fc->redirect('company', 'profile', 'cid/'.$currentCompanyId."/t/");
     		
     	}
     	

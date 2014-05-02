@@ -141,6 +141,23 @@ class CompanyModel extends Model
 		$this->mysql->query($sql);
 	}
 	
+	public function logCompanyPageView($companyId, $roleId, $type){
+		
+		//checking if log record is present
+		$sql = "SELECT *
+				FROM hr_company_page_view
+				WHERE company_id=%d AND role_id=%d AND type='%s'";
+		$sql = $this->mysql->format($sql, array($companyId, $roleId, $type));
+		$result = $this->mysql->query($sql);
+		$row = $this->mysql->getRow($result);
+		
+		if(empty($row)){
+			$sql = "INSERT INTO hr_company_page_view (company_id, role_id, type, changed_at) VALUES (%d, %d, '%s', NOW())";
+			$sql = $this->mysql->format($sql, array($companyId, $roleId, $type));
+			$this->mysql->query($sql);
+		}
+	}
+	
 }
 
 ?>
