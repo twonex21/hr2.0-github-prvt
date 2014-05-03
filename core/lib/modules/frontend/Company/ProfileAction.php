@@ -11,7 +11,7 @@ class ProfileAction extends Action implements ActionInterface
     	
     	//getting detail page company id
 
-    	$companyId = $this->request->query->get('cid');
+    	$companyId = $this->request->query->get('cid', 0);
     	
     	//getting current user or company id
     	$currentCompanyId = $currentUserId = 0;
