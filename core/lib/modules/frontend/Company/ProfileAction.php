@@ -10,7 +10,7 @@ class ProfileAction extends Action implements ActionInterface
     public function perform() {
     	
     	//getting detail page company id
-    	$currentCompanyId = $this->request->query->get('cid');
+    	$currentCompanyId = $this->request->query->get('cid', 0);    	
     	
     	if(!is_numeric($currentCompanyId)){
     		//TODO redirect to error page;
@@ -38,7 +38,7 @@ class ProfileAction extends Action implements ActionInterface
     	
     	//Benefits
     	$allBenefits = $this->qb->getBenefits();
-    	$companyBenefits = $this->model->getCompanyBenefitsByCompanyId($currentCompanyId);
+    	$companyBenefits = $this->qb->getCompanyBenefits($currentCompanyId);
     	
     	// Setting page title
     	$this->setPageTitle($companyProfile['name']);

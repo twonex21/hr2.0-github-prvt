@@ -15,6 +15,7 @@ class View
     public $popupTemplate = BASE_POPUP_TEMPLATE;
         
     protected $templateDir = '';
+    protected $countroller = '';
     public $blocks = array();
 
     /**
@@ -29,9 +30,9 @@ class View
         
         if(!empty($namespace)) {
         	$parts = explode('\\', $namespace);    	
-    		$controller = $parts[count($parts) - 1];
-    		if(is_dir(FRONTEND_DIR . $controller . '/templates')) {
-    			$this->templateDir = '/modules/frontend/' . $controller . '/templates';
+    		$this->controller = end($parts);
+    		if(is_dir(FRONTEND_DIR . $this->controller . '/templates')) {
+    			$this->templateDir = '/modules/frontend/' . $this->controller . '/templates';
     		}
         }
         
@@ -57,13 +58,24 @@ class View
         // Make sure we have the correct locale set
         setlocale(LC_ALL,$this->locale);
         
+        $stylesheetMapping = unserialize(TPL_STYLESHEET_MAPPING);
+        $scriptMapping = unserialize(TPL_SCRIPT_MAPPING);
+        
+        if(array_key_exists($this->controller . '\\' . $templatefile, $stylesheetMapping)) {
+        	$this->assign(TPL_STYLESHEETS, $stylesheetMapping[$this->controller . '\\' . $templatefile]);
+        }
+        
+        if(array_key_exists($this->controller . '\\' . $templatefile, $scriptMapping)) {
+        	$this->assign(TPL_SCRIPTS, $scriptMapping[$this->controller . '\\' . $templatefile]);
+        }
+        
         $sessionAttributes = &$this->session->getAttributes();
         $this->assign(TPL_SESSION, $sessionAttributes);
         
         if($this->session->hasMessage()) {
         	$message = $this->session->getMessage();
         	$this->assign(TPL_MESSAGE, $message);
-        }
+        }                
                    
         if($block != null) {
             if(!isset($this->blocks[$block]))

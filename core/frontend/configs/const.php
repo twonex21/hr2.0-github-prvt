@@ -15,12 +15,14 @@ define('SQL_UNPREPARED_QUERY', 1);
 define('SQL_PREPARED_QUERY', 2);
 
 define('JSON_STATUS', 'status');
-define('JSON_ERROR_MESSAGE', 'message');
-define('JSON_ERROR_MESSAGES', 'messages');
+define('JSON_MESSAGE', 'message');
+define('JSON_MESSAGES', 'messages');
 define('FAIL', 'FAIL');
 define('SUCCESS', 'SUCCESS');
 
 // Template constants
+define('TPL_STYLESHEETS', '_HR_STYLESHEETS');
+define('TPL_SCRIPTS', '_HR_SCRIPTS');
 define('TPL_SESSION', '_HR_SESSION');
 define('TPL_MESSAGE', '_HR_MESSAGE');
 

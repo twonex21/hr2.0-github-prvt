@@ -24,15 +24,15 @@ class Response
     }
     
     public function jsonSetErrorMessage($message) {
- 		$this->jsonSet(JSON_ERROR_MESSAGE, $message);
+ 		$this->jsonSet(JSON_MESSAGE, $message);
     }
     
     public function jsonErrorMessagesPush($key, $value) {
-    	if(!key_exists(JSON_ERROR_MESSAGES, $this->jsonArray)) {
-    		$this->jsonSet(JSON_ERROR_MESSAGES, array());
+    	if(!key_exists(JSON_MESSAGES, $this->jsonArray)) {
+    		$this->jsonSet(JSON_MESSAGES, array());
     	}
     	
- 		$this->jsonArray[JSON_ERROR_MESSAGES][$key] = $value;
+ 		$this->jsonArray[JSON_MESSAGES][$key] = $value;
     }
     
     public function jsonSet($key, $value) {

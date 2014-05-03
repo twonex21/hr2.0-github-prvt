@@ -7,14 +7,33 @@ use HR\Core\FrontendUtils;
 
 class CreateAction extends Action implements ActionInterface 
 {
-    public function perform() {    	
+    public function perform() {
+    	$currentCompanyId = null;
+    	$companyProfile = array();
+    	$companyOffices = array();
+    	$allBenefits = array();
+    	$companyBenefits = array();
+    	$tmpPictureKey = '';
+    	$pictureKey = '';
+    	$companyTitle = '';
+    	$companyAdditionalInfo = '';
+    	$companyPhone = '';
+    	$companyEmail = '';
+    	$companyLinkedIn = '';
+    	$companyFacebook = '';
+    	$companyTwitter = '';
+    	$subscribeForNewVacancies = 0;
+    	$subscribeForNews = 0;
+    	$companyEmployeesCount = 0;
+    	$showAmountOfViews = 0;
+    	$showAmountUsersApplied = 0;
+    	
     	// Setting page title
     	$this->setPageTitle(PT_EDIT_COMPANY_PROFILE);
     	
     	$currentCompanyId = $this->session->getCurrentCompanyId();
 
-    	if($this->request->request->isEmpty()) {
-    		
+    	if($this->request->request->isEmpty()) {    		
     		// POST is empty, no input parameters yet
     		
     		// Collecting data if it exists and passing to template
@@ -28,9 +47,7 @@ class CreateAction extends Action implements ActionInterface
     		$this->view->showCreateCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits);
     	} else {
     		
-    		// Handling form input
-    		
-    		$pictureKey = "";
+    		// Handling form input    		    		
     		if(!$this->request->request->isNullOrEmpty('temp-picture')) {
     			// Stripping random 4 character prefix
     			$tmpPictureKey = $this->request->request->get('temp-picture');
@@ -47,64 +64,69 @@ class CreateAction extends Action implements ActionInterface
     				FrontendUtils::cropAndSaveImage($picturePath, $croppedPath, PICTURE_CROP_DIMENSION, PICTURE_CROP_DIMENSION, $extension);
     			}
     		}
-    		$companyTitle = "";
-    		if(!$this->request->request->isNullOrEmpty('comp_title')) {
-    			$companyTitle = $this->request->request->get('comp_title');
-    		}
-    		$companyAdditionalInfo="";
-    		if(!$this->request->request->isNullOrEmpty('comp_ad_info') && FrontendUtils::isLatin($this->request->request->get('comp_ad_info'))) {
-    			$companyAdditionalInfo = $this->request->request->get('comp_ad_info');
+    		
+    		if(!$this->request->request->isNullOrEmpty('comp-title')) {
+    			$companyTitle = $this->request->request->get('comp-title');
+    		} else {
+    			return;
     		}
     		
-    		$companyOffices = $this->request->request->get('comp_offices');
+    		if(!$this->request->request->isNullOrEmpty('comp-ad-info') && FrontendUtils::isLatin($this->request->request->get('comp-ad-info'))) {
+    			$companyAdditionalInfo = $this->request->request->get('comp-ad-info');
+    		}
+    		
+    		$companyOffices = $this->request->request->get('comp-offices', array());
     		foreach ($companyOffices as $key => $companyOffice){
     			if(empty($companyOffice) || !FrontendUtils::isLatin($companyOffice)) {
     				unset($companyOffices[$key]);
     			}
     		}
+    		    		
+    		if(!$this->request->request->isNullOrEmpty('comp-phone')) {
+    			$companyPhone = $this->request->request->get('comp-phone');
+    		} else {
+    			return;
+    		}
     		
-    		$companyPhone="";
-    		if(!$this->request->request->isNullOrEmpty('comp_phone')) {
-    			$companyPhone = $this->request->request->get('comp_phone');
+    		if(!$this->request->request->isNullOrEmpty('comp-email') && FrontendUtils::isEmailAddress($this->request->request->get('comp-email'))) {
+    			$companyEmail = $this->request->request->get('comp-email');
+    		} else {
+    			return;
     		}
-    		$companyEmail="";
-    		if(!$this->request->request->isNullOrEmpty('comp_email') && FrontendUtils::isEmailAddress($this->request->request->get('comp_email'))) {
-    			$companyEmail = $this->request->request->get('comp_email');
+    		
+    		if(!$this->request->request->isNullOrEmpty('comp-linked') && FrontendUtils::isLinkedIn($this->request->request->get('comp-linked'))) {
+    			$companyLinkedIn = $this->request->request->get('comp-linked');
     		}
-    		$companyLinkedIn="";
-    		if(!$this->request->request->isNullOrEmpty('comp_linked') && FrontendUtils::isLinkedIn($this->request->request->get('comp_linked'))) {
-    			$companyLinkedIn = $this->request->request->get('comp_linked');
+    		
+    		if(!$this->request->request->isNullOrEmpty('comp-face') && FrontendUtils::isFacebook($this->request->request->get('comp-face'))) {
+    			$companyFacebook = $this->request->request->get('comp-face');
     		}
-    		$companyFacebook="";
-    		if(!$this->request->request->isNullOrEmpty('comp_face') && FrontendUtils::isFacebook($this->request->request->get('comp_face'))) {
-    			$companyFacebook = $this->request->request->get('comp_face');
+
+    		if(!$this->request->request->isNullOrEmpty('comp-twitter') && FrontendUtils::isTwitter($this->request->request->get('comp-twitter'))) {
+    			$companyTwitter = $this->request->request->get('comp-twitter');
     		}
-    		$companyTwitter="";
-    		if(!$this->request->request->isNullOrEmpty('comp_twitter') && FrontendUtils::isTwitter($this->request->request->get('comp_twitter'))) {
-    			$companyTwitter = $this->request->request->get('comp_twitter');
-    		}
-    		$subscribeForNewVacancies=0;
-    		if($this->request->request->get('subscribe_for_new_vacancies') == 1) {
+    		
+    		if($this->request->request->get('subscribe-for-new-vacancies') == 1) {
     			$subscribeForNewVacancies = 1;
     		}
-    		$subscribeForNews=0;
-    		if($this->request->request->get('subscribe_for_news') == 1) {
+    		
+    		if($this->request->request->get('subscribe-for-news') == 1) {
     			$subscribeForNews = 1;
     		}
-    		$companyEmployeesCount=0;
-    		if($this->request->request->get('comp_emp_count') !== "") {
-    			$companyEmployeesCount = $this->request->request->get('comp_emp_count');
-    		}
-    		$showAmountOfViews=0;
-    		if($this->request->request->get('show_amount_of_views') == 1) {
-    			$showAmountOfViews = $this->request->request->get('show_amount_of_views');
-    		}
-    		$showAmountUsersApplied=0;
-    		if($this->request->request->get('show_amount_users_applied') == 1) {
-    			$showAmountUsersApplied = $this->request->request->get('show_amount_users_applied');
+    		
+    		if($this->request->request->get('comp-emp-count') !== "") {
+    			$companyEmployeesCount = $this->request->request->get('comp-emp-count');
     		}
     		
-    		$companyBenefits = $this->request->request->get('comp_benefits');
+    		if($this->request->request->get('show-amount-of-views') == 1) {
+    			$showAmountOfViews = $this->request->request->get('show-amount-of-views');
+    		}
+    		
+    		if($this->request->request->get('show-amount-users-applied') == 1) {
+    			$showAmountUsersApplied = $this->request->request->get('show-amount-users-applied');
+    		}
+    		
+    		$companyBenefits = $this->request->request->get('comp-benefits', array());
     		
     		//Saving values to db
     		$this->model->updateCompanyInfo($currentCompanyId, 
@@ -126,7 +148,7 @@ class CreateAction extends Action implements ActionInterface
     		
     		$this->model->updateCompanyBenefits($currentCompanyId, $companyBenefits);
     		
-    		$this->fc->redirect('company', 'profile', 'cid/'.$currentCompanyId."/t/");
+    		$this->fc->redirect('company', 'profile', 'cid/' . $currentCompanyId . '/t/');
     		
     	}
     	

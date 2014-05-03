@@ -1,8 +1,8 @@
 {literal}
-<script>
-	addCssFile('araks');		
-	// Loading and initializing carousel
-	loadScript('jquery.jcarousel.min', 'initCarousel');
+<script>		
+	$(function() {				
+		initCarousel();		
+	});
 </script>
 {/literal}
 

@@ -18,21 +18,23 @@ function loadScript(src, callback) {
 
 
 function addCssFile(href) {
-	$('html, body').hide();		
+	if($('#' + href.replace('.', '\\.') + '_css').size() == 0) {
+		$('.loaded').hide();		
+		
+		var link = document.createElement('link');
+		link.setAttribute('rel', 'stylesheet');
+		link.setAttribute('href', '/css/' + href + '.css');
+		link.setAttribute('id', href + '_css');
+		
+		if(typeof link != 'undefined') {
+			var $lastLink = $('head link[rel=stylesheet]:last');
+			$lastLink.after(link);
+		}
 	
-	var link = document.createElement('link');
-	link.setAttribute('rel', 'stylesheet');
-	link.setAttribute('href', '/css/' + href + '.css');
-	link.setAttribute('id', href + '_css');
-	
-	if(typeof link != 'undefined') {
-		var $lastLink = $('head link[rel=stylesheet]:last');
-		$lastLink.after(link);
+	    $('#' + href.replace('.', '\\.') + '_css').on('load', function () {
+	    	$('.loaded').show();
+	    });		
 	}
-
-    $('#' + href.replace('.', '\\.') + '_css').on('load', function () {
-    	$('html, body').show();
-    });		
 }
 
 
@@ -199,6 +201,27 @@ function showMessage() {
 			});
 		}, 400);
 	}
+}
+
+
+function setMessage() {
+	var type = arguments[0];
+	var messageText = arguments[1];
+	var isFlash = arguments[2];
+	
+	var $message = $('.message');
+	$message.addClass(type).attr('attr-flash', isFlash);
+	$message.children('span').remove()
+	$span = $('<span/>').html(messageText);
+	$message.prepend('<span>' + messageText + '</span>');
+	
+	if(isFlash) {
+		$message.children('.close').hide();
+	} else {
+		$message.children('.close').show();
+	}
+	
+	showMessage();
 }
 
 

@@ -24,6 +24,7 @@ class AjaxDeleteAction extends Action implements ActionInterface
 			
 			if($type == 'temp') {
 				$this->deleteFile($type, $key);
+				$this->response->jsonSetStatus(SUCCESS);
 			} else {
 				$resetMethod = 'reset' . ucfirst($type) . 'File';
 				if(method_exists($this->qb, $resetMethod)) {

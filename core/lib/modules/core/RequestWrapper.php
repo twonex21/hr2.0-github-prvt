@@ -9,7 +9,7 @@ class RequestWrapper
 	protected $parameters;
 	
 	public function __construct($parameters = array()) {
-		$this->parameters = $parameters;
+		$this->parameters = $parameters;		
 	}
 	
 	
@@ -33,8 +33,7 @@ class RequestWrapper
 	}
 	
 	
-	public function get($key, $deep = false, $default = null)
-    {
+	public function get($key, $default = null, $deep = false) {
         if (!$deep || false === $pos = strpos($key, '[')) {
             return array_key_exists($key, $this->parameters) ? $this->parameters[$key] : $default;
         }
@@ -98,8 +97,8 @@ class RequestWrapper
     }
     
     
-    public function getInt($key, $deep = false, $default = 0) {
-    	return (int) $this->get($key, $deep, $default);
+    public function getInt($key, $default = 0, $deep = false) {
+    	return (int) $this->get($key, $default, $deep);
     }
     
     

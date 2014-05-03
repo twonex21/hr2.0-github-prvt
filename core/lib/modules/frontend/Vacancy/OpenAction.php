@@ -62,11 +62,9 @@ class OpenAction extends Action implements ActionInterface
     	$data['benefits'] = $this->qb->getCompanyBenefits($currentCompanyId);
     	if(empty($companyBenefits)) {
     		$data['benefits'] = $this->qb->getBenefits();
-    	}
-    	    	
-    	if(!$this->request->query->isNullOrEmpty('vid')) {
-    		$vacancyId = $this->request->query->get('vid');
-    	}
+    	}    	    	    	
+
+    	$vacancyId = $this->request->query->get('vid');    	
     	
     	if($this->request->request->isEmpty()) {
     		// POST is empty, no input parameters yet
@@ -82,26 +80,32 @@ class OpenAction extends Action implements ActionInterface
     		$this->view->showOpenVacancyPage($data, $vacancy);
     	} else {
     		// Handling form input
-    		// Basic profile info
+    		// Basic vacancy info
     		if(!$this->request->request->isNullOrEmpty('title')) {    			
     			$title = $this->request->request->get('title');    			
+    		} else {
+    			return;
     		}
     		    		
     		if(!$this->request->request->isNullOrEmpty('location') && FrontendUtils::isLatin($this->request->request->get('location'))) {
     			$location = $this->request->request->get('location');
+    		} else {
+    			return;
     		}
     		    		
     		if(!$this->request->request->isNullOrEmpty('status') && in_array(strtoupper($this->request->request->get('status')), $statuses)) {
     			$status = strtoupper($this->request->request->get('status'));
+    		} else {
+    			return;
     		}
     		
     		if(!$this->request->request->isNullOrEmpty('deadline') && FrontendUtils::isDate($this->request->request->get('deadline'))) {
     			$deadline = $this->request->request->get('deadline');
+    		} else {
+    			return;
     		}
-    		
-    		if(!$this->request->request->isNullOrEmpty('additional-info')) {
-    			$additionalInfo = $this->request->request->get('additional-info');
-    		}
+    		    		
+    		$additionalInfo = $this->request->request->get('additional-info', '');    		
     		
     		if(!$this->request->request->isNullOrEmpty('temp-file')) {
     			$tmpFileKey = $this->request->request->get('temp-file');

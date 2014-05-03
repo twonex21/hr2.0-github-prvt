@@ -22,13 +22,23 @@
 		<link rel="stylesheet" href="/css/main.css?v={$smarty.server.VERSION}" />		
 		<link rel="stylesheet" href="/css/other.css?v={$smarty.server.VERSION}" />		
 		<link rel="stylesheet" href="/css/form.css?v={$smarty.server.VERSION}" />
-		<link rel="stylesheet" href="/css/magnific.css?v={$smarty.server.VERSION}" />
+		<link rel="stylesheet" href="/css/magnific.css?v={$smarty.server.VERSION}" />		
+		{if $_HR_STYLESHEETS}
+			{foreach from=$_HR_STYLESHEETS item=stylesheet}
+			<link rel="stylesheet" href="/css/{$stylesheet}.css?v={$smarty.server.VERSION}" />
+			{/foreach}
+		{/if}
 		
 		<!-- JS Includes -->
 		<script src="/js/jquery-1.8.1.min.js"></script>			
 		<script src="/js/functions.js?v={$smarty.server.VERSION}"></script>	
 		<script src="/js/lib.js?v={$smarty.server.VERSION}"></script>
-		<script src="/js/main.js?v={$smarty.server.VERSION}"></script> 			
+		<script src="/js/main.js?v={$smarty.server.VERSION}"></script>
+		{if $_HR_SCRIPTS}
+			{foreach from=$_HR_SCRIPTS item=script}
+			<script src="/js/{$script}.js?v={$smarty.server.VERSION}"></script>
+			{/foreach}
+		{/if} 			
 		
 		<title>{$_PAGE_TITLE}</title>
 	</head>	

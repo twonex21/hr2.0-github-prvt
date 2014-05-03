@@ -10,7 +10,7 @@ class MainView extends View
 		$this->assign("_vacancies", $recentVacancies);
 		$this->assign("_topCompanies", $topCompanies);
 		$this->assign("_topVacanciesCount", $topVacanciesCount);
-		$this->assign("_randomIndustry", $randomIndustry);
+		$this->assign("_randomIndustry", $randomIndustry);		
 		        
         $this->render('home.tpl', 'CONTENT');
         $this->finish();

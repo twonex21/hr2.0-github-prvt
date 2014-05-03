@@ -43,8 +43,8 @@ class FrontendController
     	$controller = NAVIGATE_DEFAULT_CONTROLLER;
         $action = NAVIGATE_DEFAULT_ACTION;
     	$query = null;        
-        $parameters = null;
-
+        $parameters = array();
+        
         if($this->request->query->has(self::PARAMETERS_KEY)) {
             $parameters = $this->parseParameters($this->request->query->get(self::PARAMETERS_KEY));
         }
@@ -54,7 +54,7 @@ class FrontendController
                 $parameters[$key] = $value;
             }                        
         }        
-        
+
         if(!$this->request->query->isNullOrEmpty(self::QUERY_KEY) && ($this->request->query->isNullOrEmpty(self::CONTROLLER_KEY) || $this->request->query->isNullOrEmpty(self::ACTION_KEY))) {
         	$directActions = unserialize(DIRECT_ACTIONS);
         	$query = strtolower($this->request->query->get(self::QUERY_KEY));        	          	
@@ -142,7 +142,8 @@ class FrontendController
         // Getting action class name
         $actionClass =  $this->namespace . '\\' . $this->action . 'Action';
         // Create an instance of action class
-        $actionInstance = new $actionClass($this);                                
+        $actionInstance = new $actionClass($this);    
+                                    
         // Registering action model, view, mailer layers
         $actionInstance->registerLayers();        
         // Setting some additional parameters        
@@ -190,7 +191,7 @@ class FrontendController
         $key = '';
 
         if($parameters == '/' || $parameters == '') {
-            return null;
+            return array();
         }
 
         $parameters = str_replace(' ', '=', $parameters);
@@ -221,7 +222,7 @@ class FrontendController
             return $reqParameters;
         }
 
-        return null;        
+        return array();        
     }        
 
         
@@ -230,7 +231,7 @@ class FrontendController
     }
     
     
-    public function &getRequest() {   
+    public function &getRequest() {
   		return $this->request;  	
     }
         

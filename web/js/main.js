@@ -15,7 +15,7 @@ $(document).ready(function() {
 			$('#search-input').val('').trigger('keyup');
 			$('#search-input').focus();
 		});
-	});
+	});	
 	
 	/* sign-in */	
 	$('.popup').magnificPopup({
@@ -37,10 +37,22 @@ $(document).ready(function() {
 		
 	});
 	
+	/* Sign-up tab switch */
+	$(document).on('click', '.tab-switch a', function() {
+		var userType = $(this).attr('title');
+
+		$(this).addClass('sel').siblings('a').removeClass('sel');
+		$('.create-account-body .tab').css('opacity', '0').load('/auth/' + userType + 'signup', function() {
+			$(this).attr('id', userType).animate({'opacity' : 1}, 800);
+		});
+		
+		return false;
+	});	
+	
 	/* vacancy - table sorter */
 	$(".tablesorter").tablesorter();
 	
-	$('.vac-slider .vac-item').click(function() {
+	$('.vac-slider .vac-item').click(function() {		
 		var containerTop = $('.vac-nav').offset().top;	
 		var containerHeight = $('.vac-nav').height();
 		var itemPositionTop = $(this).position().top;

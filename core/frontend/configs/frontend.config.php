@@ -86,6 +86,28 @@ define('NOT_TRACKABLE_ACTIONS',
 );
 
 
+define('TPL_STYLESHEET_MAPPING', 
+		serialize(
+			array(
+				'Main\home.tpl' => array('mCustomScrollbar'),
+				'Company\create.tpl' => array('glDatePicker.flatwhite'),
+				'User\create.tpl' => array('glDatePicker.flatwhite'),
+				'User\profile.tpl' => array('araks'),
+			)
+		)
+);
+
+define('TPL_SCRIPT_MAPPING',
+		serialize(
+			array(
+				'Main\home.tpl' => array('jquery.mCustomScrollbar.min', 'jquery.jcarousel.min', 'ajax'),
+				'Company\create.tpl' => array('ajax'),
+				'User\create.tpl' => array('ajax'),
+				'User\profile.tpl' => array('jquery.jcarousel.min'),
+			)
+		)
+);
+
 // File paths
 define('TEMP_FILE_PATH', TEMP_DIR . 'tmp_%s.%s');
 define('USER_PICTURE_PATH', MEDIA_DIR . 'user_pictures/usr_%s.%s');

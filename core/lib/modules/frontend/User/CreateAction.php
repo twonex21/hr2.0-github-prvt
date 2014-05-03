@@ -72,14 +72,20 @@ class CreateAction extends Action implements ActionInterface
     			} else {
     				$firstName = $this->request->request->get('full-name');
     			}
+    		} else {
+    			return;
     		}
     		
     		if(!$this->request->request->isNullOrEmpty('email') && FrontendUtils::isEmailAddress($this->request->request->get('email'))) {
     			$mail = $this->request->request->get('email');
+    		} else {
+    			return;
     		}
     		
     		if(!$this->request->request->isNullOrEmpty('location') && FrontendUtils::isLatin($this->request->request->get('location'))) {
     			$location = $this->request->request->get('location');
+    		} else {
+    			return;
     		}
     		
     		if(!$this->request->request->isNullOrEmpty('linkedin') && FrontendUtils::isLinkedIn($this->request->request->get('linkedin'))) {
@@ -88,15 +94,17 @@ class CreateAction extends Action implements ActionInterface
     		
     		if(!$this->request->request->isNullOrEmpty('password') && FrontendUtils::isPasswordLength($this->request->request->get('password'))) {
     			$newPassword = $this->request->request->get('password');
+    		} else {
+    			return;
     		}
     		
     		if(!$this->request->request->isNullOrEmpty('birth-date') && FrontendUtils::isDate($this->request->request->get('birth-date'))) {
     			$birthDate = $this->request->request->get('birth-date');
+    		} else {
+    			return;
     		}
-    		    		    		
-    		if(!$this->request->request->isNullOrEmpty('profile-bio')) {
-    			$profileBio = $this->request->request->get('profile-bio');
-    		}
+    		    		    		    		
+    		$profileBio = $this->request->request->get('profile-bio', '');
     		
     		if(!$this->request->request->isNullOrEmpty('temp-resume')) {    			
     			$tmpResumeKey = $this->request->request->get('temp-resume');

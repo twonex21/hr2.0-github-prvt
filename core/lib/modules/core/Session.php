@@ -66,12 +66,12 @@ class Session
 	}	
 
 	
-	public function get($key) {
+	public function get($key, $default = null) {
 		if(!isset($this->wrappers[$this->attributeName])) {
-			return '';
+			return $default;
 		}
 		
-		return $this->wrappers[$this->attributeName]->get($key);
+		return $this->wrappers[$this->attributeName]->get($key, $default);
 	}
 	
 	

@@ -16,11 +16,9 @@ class ViewAction extends Action implements ActionInterface
     	$user = array();	
     	$currentUserRole = null;
     	$requiredExperience = 0;
-
-    	if(!$this->request->query->isNullOrEmpty('vid')) {
-    		// Taking get parameter
-    		$vacancyId = $this->request->query->get('vid');    		
-    	}
+    	
+    	// Taking get parameter
+    	$vacancyId = $this->request->query->get('vid');
     	
     	$vacancy['info'] = $this->qb->getVacancyInfo($vacancyId);
     	if(!empty($vacancy['info'])) {			

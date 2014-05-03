@@ -249,7 +249,7 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($userId));
     	$result = $this->mysql->query($sql);
     	 
-    	$softSkills = $this->mysql->getDataSet();
+    	$softSkills = $this->mysql->getDataSet($result);
         	
     	return $softSkills;    	
     }
@@ -264,7 +264,7 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($companyId));
     	$result = $this->mysql->query($sql);
     		
-    	$benefits = $this->mysql->getRow($result);
+    	$benefits = $this->mysql->getDataSet($result);
     
     	return $benefits;
     }
@@ -296,7 +296,7 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($vacancyId));
     	$result = $this->mysql->query($sql);
     	 
-    	$vacancyEducation = $this->mysql->getDataSet();
+    	$vacancyEducation = $this->mysql->getDataSet($result);
         	
     	return $vacancyEducation;    	
     }
@@ -328,7 +328,7 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($vacancyId));
     	$result = $this->mysql->query($sql);
     	 
-    	$vacancyLanguages = $this->mysql->getDataSet();
+    	$vacancyLanguages = $this->mysql->getDataSet($result);
         	
     	return $vacancyLanguages;
     }
@@ -372,7 +372,7 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($vacancyId));
     	$result = $this->mysql->query($sql);
     	 
-    	$softSkills = $this->mysql->getDataSet();
+    	$softSkills = $this->mysql->getDataSet($result);
     
     	return $softSkills;
     }
@@ -388,7 +388,7 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($vacancyId));
     	$result = $this->mysql->query($sql);
     
-    	$vacancyBenefits = $this->mysql->getDataSet();
+    	$vacancyBenefits = $this->mysql->getDataSet($result);
     
     	return $vacancyBenefits;
     }    

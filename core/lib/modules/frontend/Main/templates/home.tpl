@@ -1,12 +1,10 @@
 {literal}
 <script>
-	addCssFile('mCustomScrollbar');
-	// Loading and initializing scroller
-	loadScript('jquery.mCustomScrollbar.min', 'initVacancyScroller');
-	// Loading and initializing carousel
-	loadScript('jquery.jcarousel.min', 'initCarousel');
-	// Loading ajax lib and showing first vacancy
-	loadScript('ajax', 'loadBriefVacancy', null);	
+	$(function() {		
+		initVacancyScroller();
+		initCarousel();
+		loadBriefVacancy(null);	
+	});	
 </script>
 {/literal}
 

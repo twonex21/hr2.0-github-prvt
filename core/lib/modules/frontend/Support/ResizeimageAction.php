@@ -25,10 +25,8 @@ class ResizeImageAction extends Action implements ActionInterface
         if($this->request->query->has('dim') && in_array($this->request->query->get('dim'), $dimensions)) {
             $dimension = $this->request->query->get('dim');
         }
-        
-        if(!$this->request->query->isNullOrEmpty('key')) {
-            $fileName = $this->request->query->get('key');
-        }
+                
+        $fileName = $this->request->query->get('key', '');        
         
         $square = !$this->request->query->isNullOrEmpty('sq');
         

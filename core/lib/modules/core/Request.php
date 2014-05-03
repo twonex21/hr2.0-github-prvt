@@ -38,7 +38,7 @@ class Request
     }
 	
     
-    private function initialize($request = array(), $query = array(), $server = array(), $files = array(), $cookies = array()) {
+    private function initialize($request = array(), $query = array(), $server = array(), $files = array(), $cookies = array()) {    	
     	$this->request = new RequestWrapper($request);
         $this->query = new RequestWrapper($query);
         $this->server = new RequestWrapper($server);
@@ -54,7 +54,7 @@ class Request
         setlocale (LC_ALL, $language);
         // Setting the .po file
         putenv("LANG=".$language);
-        bindtextdomain('messages', $this->server->get('DOCUMENT_ROOT') . 'locale');
+        //bindtextdomain('messages', $this->server->get('DOCUMENT_ROOT') . 'locale');
         textdomain('messages');
         bind_textdomain_codeset('messages', 'UTF-8');        
 
