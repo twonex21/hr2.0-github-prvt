@@ -23,7 +23,7 @@ class CreateAction extends Action implements ActionInterface
     		
     		//Benefits
     		$allBenefits = $this->qb->getBenefits();
-    		$companyBenefits = $this->model->getCompanyBenefitsByCompanyId($currentCompanyId);
+    		$companyBenefits = $this->qb->getCompanyBenefits($currentCompanyId);
 
     		$this->view->showCreateCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits);
     	} else {

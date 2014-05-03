@@ -34,27 +34,6 @@ class CompanyModel extends Model
 		return $offices;
 	}
 	
-	public function getCompanyBenefitsByCompanyId($comapnyId) {
-		$sql = "SELECT hr_company_benefit.company_benefits_id AS companyBenefitsId, hr_benefit.benefit_id AS benefitId, hr_benefit.name
-				FROM hr_company_benefit
-				INNER JOIN hr_benefit ON hr_company_benefit.benefit_id = hr_benefit.benefit_id
-				WHERE hr_company_benefit.company_id=%d";
-
-		$sql = $this->mysql->format($sql, array($comapnyId));
-		$result = $this->mysql->query($sql);
-		$companyBenefits = $this->mysql->getDataSet();
-		
-		return $companyBenefits;
-	}
-	
-	public function getAllBenefits() {
-		$sql = "SELECT benefit_id AS benefitId,name FROM hr_benefit";
-		$result = $this->mysql->query($sql);
-		$benefits = $this->mysql->getDataSet();
-		
-		return $benefits;
-	}
-		
 	
 	public function updateCompanyInfo($currentCompanyId, $companyTitle, $companyAdditionalInfo, $companyPhone, $companyEmail, $companyLinkedIn, $companyFacebook, $companyTwitter, $pictureKey, $subscribeForNewVacancies, $subscribeForNews, $companyEmployeesCount, $showAmountOfViews, $showAmountUsersApplied) {
 		$sql = "UPDATE hr_company SET name='%s', additional_info='%s', phone='%s', mail='%s', linkedin='%s', facebook='%s', 

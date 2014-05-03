@@ -42,10 +42,10 @@
 <div class="block-title">Benefits</div>
 <div class="comp-benifits">
 
-	{foreach from=$_companyBenefits item=_companyBenefit}
+	{foreach from=$_companyBenefits item=companyBenefit}
 		<div class="grid comp-benifits-item">
-			<img src="/images/benefits/{$_companyBenefit.benefitId}.png" width="130" height="130">
-			<h3>{$_companyBenefit.name}</h3>
+			<img src="/images/benefits/{$companyBenefit.benefitId}.png" width="130" height="130">
+			<h3>{$companyBenefit.name}</h3>
 		</div>
 	{/foreach} 
 	       
@@ -59,12 +59,12 @@
 <div class="comp-btns">
 	<div class="grid grid320">
     	<div class="block-title">Main offices</div>
-		{foreach from=$_companyOffices item=_companyOffice}
-			 <a class="button loc">{$_companyOffice.address}</a>
+		{foreach from=$_companyOffices item=companyOffice}
+			 <a class="button loc">{$companyOffice.address}</a>
 		{/foreach}  
     </div>
   	<div class="grid grid320">
-    	<div class="block-title">COntact</div>
+    	<div class="block-title">Contact</div>
         <a class="button mail" href="mailto:{$_companyProfile.mail}">Send e-mail</a>
         <a class="button linkedin" href="{$_companyProfile.linkedIn}">Follow on linkedin</a>
         <a class="button face" href="{$_companyProfile.facebook}">Follow on facebook</a>
@@ -73,7 +73,7 @@
    	<div class="grid grid320">
     	<div class="block-title">Subscribe</div>
     	{if $_companyProfile.newVacancies}
-        	<a class="button subscribe">SUBscribe for openings</a>
+        	<a class="button subscribe">Subscribe for openings</a>
         {/if}
         {if $_companyProfile.subscribeForNews}
         	<a class="button">SUBscribe for news</a>     
