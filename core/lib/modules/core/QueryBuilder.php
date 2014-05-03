@@ -334,18 +334,30 @@ class QueryBuilder extends Model
     }
     
     
-    public function getVacancySkills($vacancyId) {
+    public function getVacancySkills($vacancyId, $count = 0) {
     	$vacancySkills = array();
-    	$sql = "SELECT sk.name, vsk.years
+    	$sql = "SELECT sk.skill_id AS skillId, sk.industry_id AS industryId, sk.name, vsk.years
     			FROM hr_vacancy_skill vsk
     			INNER JOIN hr_skill sk ON sk.skill_id=vsk.skill_id
     			WHERE vsk.vacancy_id=%d";
+    	
+    	$params = array($vacancyId);
+    	
+    	if($count > 0) {
+    		$sql .= " LIMIT %d";
+    		$params[] = $count;
+    	}
     	 
-    	$sql = $this->mysql->format($sql, array($vacancyId));
+    	$sql = $this->mysql->format($sql, $params);
     	$result = $this->mysql->query($sql);
 
-    	$vacancySkills = $this->mysql->getDataSet($result);
+    	$skillLevelMatching = unserialize(SKILL_LEVEL_MAP);
     	
+    	while($row = $this->mysql->getNextResult($result)) {
+    		$row['map'] = $skillLevelMatching[$row['years']];
+    		$vacancySkills[] = $row;
+    	}
+    	    	
     	return $vacancySkills;
     }
     
@@ -482,6 +494,40 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($vacancyId, $userId), SQL_PREPARED_QUERY);
     	$this->mysql->query($sql, SQL_PREPARED_QUERY);
     }
+    
+    
+    public function getVacancyIndustryId($vacancyId) {
+    	$industry = array();
+    	$industryId = 0;
+    	
+    	$vacancySkills = $this->getVacancySkills($vacancyId);
+    	
+    	if(!empty($vacancySkills)) {
+    		$skillIndustries = array();
+    		foreach($vacancySkills as $skillItem) {
+    			if(!isset($skillIndustries[$skillItem['industryId']])) {
+    				$skillIndustries[$skillItem['industryId']] = 0;
+    			}
+    			$skillIndustries[$skillItem['industryId']]++;
+    		}
+    		
+    		$industryId = array_search(max($skillIndustries), $skillIndustries);    		    		
+    	} else {
+    		$vacancyExperience = $this->getVacancyExperience($vacancyId);
+    		     		
+			$expIndustries = array();
+    		foreach($vacancyExperience as $expItem) {
+    			if(!isset($expIndustries[$expItem['industryId']])) {
+    				$expIndustries[$expItem['industryId']] = 0;
+    			}
+    			$expIndustries[$expItem['industryId']]++;
+    		}
+    		
+    		$industryId = array_search(max($expIndustries), $expIndustries);    		
+    	}
+    	
+    	return $industryId;
+    } 
 }
 
 ?>

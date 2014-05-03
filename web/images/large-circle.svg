@@ -1,7 +1,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
   
-<svg xmlns="http://www.w3.org/2000/svg" id="svg-circle" width="111" height="111" style="display:none;">						
+<svg xmlns="http://www.w3.org/2000/svg" id="svg-circle" width="102" height="102" style="opacity:0;">						
 	<style><![CDATA[
 		@font-face {
 		    font-family: 'gothammedium';
@@ -16,21 +16,22 @@
 		}
 	]]></style>
 	
-	<circle id="core" fill="#FFF" r="0" cy="55" cx="55">
+	<circle id="core" fill="#FFF" r="0" cy="51" cx="51">
 		<animate attributeName="r" dur="0.5s" from="0" to="35" fill="freeze" />
 	</circle>
-	<circle id="large" r="50" cy="55" cx="55" fill="none" stroke-width="10" stroke-dashoffset="0" transform="rotate(270, 55, 55)">
+	<circle id="large" r="47" cy="51" cx="51" fill="none" stroke-width="8" stroke-dashoffset="0" transform="rotate(270, 51, 51)">
 		<animate id="large-animate" attributeName="stroke-dasharray" dur="0.5s" />
 	</circle>
-	<circle id="small" r="40" cy="55" cx="55" fill="none" stroke-width="10" stroke-dashoffset="0" transform="rotate(270, 55, 55)" style="opacity:0.1">
+	<circle id="small" r="39" cy="51" cx="51" fill="none" stroke-width="8" stroke-dashoffset="0" transform="rotate(270, 51, 51)" style="opacity:0.3">
 		<animate id="small-animate" attributeName="stroke-dasharray" dur="0.5s" />
 	</circle>
-	<text id="txt" x="34" y="62" fill="#FFF" style="font-family:'gothammedium';font-size:20px;"></text>			
+	<text id="txt" x="50" y="56" fill="#FFF" style="font-family:'gothammedium';font-size:20px;text-anchor:middle;"></text>			
 	
 	<script type="text/javascript"><![CDATA[
 		var params = document.defaultView.frameElement.getElementsByTagName('param');
 		var matching;
 		var color;
+		var text;
 		
 		if(params.hasOwnProperty('matching')) {
 			matching = params['matching'].value;
@@ -38,6 +39,10 @@
 		
 		if(params.hasOwnProperty('color')) {
 			color = params['color'].value;
+		}
+		
+		if(params.hasOwnProperty('text')) {
+			text = params['text'].value;
 		}
 		
 		var svg = document.getElementById('svg-circle');
@@ -68,7 +73,19 @@
 			}		
 		}
 		
-		txt.innerHTML = matching + '%';		
+		if(typeof text != 'undefined') {			
+			var fontSize = '10px';
+			if(text.length < 5) {
+				fontSize = '14px';
+			} else if(text.length < 9) {
+				fontSize = '11px'
+			}
+			
+			txt.innerHTML = text;
+			txt.style.fontSize = fontSize;
+		} else {
+			txt.innerHTML = matching + '%';		
+		}
 		core.setAttribute('fill', color);
 		large.setAttribute('stroke', color);
 		small.setAttribute('stroke', color);
@@ -80,7 +97,7 @@
 		smallAnimate.setAttribute('from', '0 ' + smallFullLength);
 		smallAnimate.setAttribute('to', smallLength + ' ' + smallFullLength);
 		
-		setTimeout(function() { svg.style.display = 'block'; }, 200);		
+		setTimeout(function() { svg.style.opacity = 1; }, 200);		
 		
 	]]></script>
 	

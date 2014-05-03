@@ -2,14 +2,10 @@
 <script>
 	addCssFile('araks');	
 	addCssFile('account');
-	
-	addScriptFile('ajax.js', true);	
-	
-	$(function() {		
-		initCarousel();		
-	});
-
-	
+	// Loading ajax lib
+	loadScript('ajax');		
+	// Loading and initializing carousel
+	loadScript('jquery.jcarousel.min', 'initCarousel');	
 </script>
 {/literal}
 

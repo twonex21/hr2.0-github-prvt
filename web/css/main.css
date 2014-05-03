@@ -227,13 +227,162 @@ header #search-result-inner {
 	background:url(../images/home_bgr.jpg) no-repeat center top;
 	min-height:	890px;
 }
-	.home-vac-cont	{
-		background:#323232;
-		max-width:960px;
-		min-height:635px;
-		margin:auto;	
-	}
-		
+.home-vac-cont	{
+	background:#323232;
+	max-width:960px;
+	min-height:635px;
+	margin:auto;	
+}
+.home-vac-cont .vac-slider {
+	position:relative;
+	width:100%;
+	height:638px;
+	padding:10px 0;
+}
+.home-vac-cont .vac-slider .vac-nav {
+	position:absolute;
+	left:0;
+	width:335px;
+	height:638px;
+	paddint:0;
+	overflow:hidden;
+}
+.home-vac-cont .vac-slider .vac-nav .vac-item {
+	float:left;
+	width:335px;
+	overflow:hidden;
+	cursor:pointer;	
+}
+.home-vac-cont .vac-slider .vac-nav .vac-item .vac-wrapper {
+	position:relative;
+	margin-right:20px;
+	padding:9px 20px;
+}
+.home-vac-cont .vac-slider .vac-nav .vac-item.vac-selected .vac-wrapper, 
+.home-vac-cont .vac-slider .vac-nav .vac-item:hover .vac-wrapper {
+	background-color: #DB421F;
+}
+.home-vac-cont .vac-slider .vac-nav .vac-item h5 {
+	color: rgba(255, 255, 255, 0.7);
+    font-size: 1.65rem;
+    text-align: right;
+    text-transform: uppercase;
+}
+.home-vac-cont .vac-slider .vac-nav .vac-item.vac-selected h5 {
+	color: #FFFFFF;    
+}
+.home-vac-cont .vac-slider .vac-nav .vac-item span {
+	display: block;
+    font-family: 'gothamlight';
+    text-align: right;
+	color: #DDDDDD;
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+}
+.home-vac-cont .vac-slider .vac-item.vac-selected .arrow , 
+.home-vac-cont .vac-slider .vac-item:hover .arrow {
+	position: absolute;
+    right: -20px;
+    top: 0;
+	width: 0;
+	height: 0;        
+	border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #DB411F;
+    border-style: solid;
+    border-width: 30px 0 30px 20px;    
+}
+.home-vac-cont .vac-slider .vac-content {
+	position:relative;
+	float:right;
+	width:625px;
+	height:635px;
+	overflow:hidden;
+}
+.home-vac-cont .vac-slider .vac-content .vac-wrapper {
+	position: absolute;	
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.5rem;
+    left: 3%;
+    text-align: center;
+    top: -98%;
+    width: 94%;
+	display: block;
+    opacity: 0;
+}
+.home-vac-cont .vac-slider .vac-wrapper h2 {
+	padding: 15px 100px 0;
+	color: rgba(255, 255, 255, 0.9);
+    font-size: 2.8rem;
+    line-height: 3.2rem;    
+    text-align: center;
+    text-transform: uppercase;
+}
+.home-vac-cont .vac-slider .vac-wrapper .deadline {
+	color: rgba(255, 255, 255, 0.8);
+    display: block;
+    font-family: 'gothamlight';
+    font-size: 1.3rem;
+}
+.home-vac-cont .vac-slider .vac-wrapper .vac-logo {
+	display: block;
+    padding: 20px 0;
+	height:60px;
+}
+.home-vac-cont .vac-slider .vac-wrapper .vac-info {
+	height:115px;
+	color: rgba(255, 255, 255, 0.8);
+    font-family: 'gothamlight';
+	font-weight:bold;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    padding: 0 50px;	
+}
+.home-vac-cont .vac-slider .vac-skills {
+	margin: 45px 15px;
+	overflow:auto;    
+}
+.home-vac-cont .vac-slider .vac-skills .skill {
+	float:left; 
+	width: 120px; 	
+	margin-right:25px;
+	color:rgba(255, 255, 255, 0.7);
+	text-align:center;
+}
+.home-vac-cont .vac-slider .vac-skills .skill:last-child {
+	margin-right:0px;
+}
+.home-vac-cont .vac-slider .vac-skills .skill .skill-name {
+	height:40px;
+	margin-bottom:10px;
+	text-transform:uppercase;	
+	font-size:1.5rem;
+	font-weight:bold;
+	position:relative;
+}
+.home-vac-cont .vac-slider .vac-skills .skill .skill-name span {
+	display:block;
+	width:100%;
+	text-align:center;
+	position:absolute;
+	bottom:0;	
+}
+.home-vac-cont .vac-slider .vac-skills .skill svg {
+	margin:0 auto;
+}
+.home-vac-cont .vac-slider .vac-skills .skill .skill-years {
+	padding-top:10px;
+	font-style:italic;
+	font-size:1.3rem;
+	
+}
+
+.home-top-comp .jcarousel-wrapper {
+	width:960px !important;
+}
+
+.companies-block {
+	width:960px;
+}
+
 		#top-comp-slider-cont {
 			width:960px;
 			height:400px;
@@ -290,7 +439,7 @@ header #search-result-inner {
 	background:#db421f;	
 }
 	.home-vac-count-inner {
-		width:600px;
+		width:730px;
 		height:100%;
 		margin:auto;	
 	}
@@ -311,21 +460,19 @@ header #search-result-inner {
 		}
 	
 	.vacs-on-top-comp-perc {
-		width:330px;
+		width:450px;
 	}
 		.comp-perc-graph {
 			width:70px;
 			height:110px;		
 		}
 		
-		.comp-perc-graph svg {
-			width:70px;
-			height:70px;
+		.comp-perc-graph object {			
 			margin-top:20px;
 		}
 		
 		.comp-perc-text {
-			width:230px;
+			width:360px;
 			padding-left:20px;
 			padding-top:37px;
 			font-size:1.5rem;

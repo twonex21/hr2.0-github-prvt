@@ -1,5 +1,14 @@
 // Site Ajax calls
 
+function loadBriefVacancy(vacancyId) {
+	if(vacancyId == null) {
+		vacancyId = $('.vac-nav .vac-item:first').attr('data-id');
+	}
+	
+	$('.vac-slider .vac-content').load('/main/loadvacancy', {'vacancyId' : vacancyId}, function() {
+		$('.vac-wrapper').animate({'opacity' : 1, 'top' : '2%'}, 500);
+	});
+}
 	
 function loadDropdown($menu, parentIds, type) {
 	jQuery.ajax({

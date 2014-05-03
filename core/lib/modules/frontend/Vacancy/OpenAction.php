@@ -259,6 +259,10 @@ class OpenAction extends Action implements ActionInterface
 	    			$this->model->updateVacancyBenefits($vacancyId, $benefits);
 	    		}
 	    		
+	    		// TODO: Think about adding new form fiield for industry
+	    		$industryId = $this->qb->getVacancyIndustryId($vacancyId);
+	    		$this->model->updateVacancyIndustryId($vacancyId, $industryId);
+	    		
 	    		$this->setMessage(MSG_TYPE_SUCCESS);
 	    		
 	    		$this->fc->redirect('vacancy', 'open', 'vid/' . $vacancyId . '/t/');

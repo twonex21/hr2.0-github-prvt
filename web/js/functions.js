@@ -1,13 +1,19 @@
 // Site function library
 
 
-function addScriptFile(src, async) {
-	var script = document.createElement('script');
-	script.setAttribute('async', async);
-	script.setAttribute("src", '/js/' + src)
-	
-	if (typeof script != 'undefined')
-		document.getElementsByTagName('body')[0].appendChild(script);
+function loadScript(src, callback) {	
+	// Getting callback function (must be always passed as second argument)
+	var callback = arguments[1];
+	// Getting callback arguments
+	var args = Array.prototype.slice.call(arguments, 2);		
+	$.getScript( "/js/" + src + ".js", function(data, textStatus, jqxhr) {
+		if(typeof callback != 'undefined') {
+			$(window).load(function(){
+				// Invoking callback ajax function with passed arguments
+				window[callback].apply(undefined, args);
+			});
+		}
+	});
 }
 
 
@@ -109,30 +115,70 @@ function truncate(str, length) {
 	}
 }
 
-function initCarousel() {
-	$.getScript( "/js/jquery.jcarousel.min.js", function(data, textStatus, jqxhr) {
-		$('.jcarousel').jcarousel();
-	
-	    $('.jcarousel-control-prev')
-	    	.on('jcarouselcontrol:active', function() {
-	            $(this).removeClass('inactive');
-	        }).on('jcarouselcontrol:inactive', function() {
-	            $(this).addClass('inactive');
-	        })
-	    	.jcarouselControl({
-	        	target: '-=1'
-	    	});
-	
-			$('.jcarousel-control-next')
-	        .on('jcarouselcontrol:active', function() {
-	            $(this).removeClass('inactive');
-	        })
-	        .on('jcarouselcontrol:inactive', function() {
-	            $(this).addClass('inactive');
-	        })
-	        .jcarouselControl({
-	            target: '+=1'
-	        });
+
+function loadAjaxLib(callback) {
+	// Getting callback function (must be always passed as first parameter)
+	var callback = arguments[0];
+	// Getting callback arguments
+	var args = Array.prototype.slice.call(arguments, 1);		
+	$.getScript( "/js/ajax.js", function(data, textStatus, jqxhr) {
+		// Invoking callback ajax function with passed arguments
+		window[callback].apply(undefined, args);
+	});
+}
+
+
+function initCarousel() {	
+	$('.jcarousel').jcarousel({
+		animation: {
+	        duration: 800,		        
+	    }
+	});
+
+    $('.jcarousel-control-prev')
+    	.on('jcarouselcontrol:active', function() {
+            $(this).removeClass('inactive');
+        }).on('jcarouselcontrol:inactive', function() {
+            $(this).addClass('inactive');
+        })
+    	.jcarouselControl({
+        	target: '-=1'
+    	});
+
+		$('.jcarousel-control-next')
+        .on('jcarouselcontrol:active', function() {
+            $(this).removeClass('inactive');
+        })
+        .on('jcarouselcontrol:inactive', function() {
+            $(this).addClass('inactive');
+        })
+        .jcarouselControl({
+            target: '+=1'
+        });
+		
+	$('.jcarousel-pagination')
+        .on('jcarouselpagination:active', 'a', function() {
+            $(this).addClass('active');
+        })
+        .on('jcarouselpagination:inactive', 'a', function() {
+            $(this).removeClass('active');
+        })
+        .on('click', function(e) {
+            e.preventDefault();
+        })
+        .jcarouselPagination({
+            perPage: 1,
+            item: function(page) {
+                return '<a href="#' + page + '">' + page + '</a>';
+            }
+        });	
+}
+
+
+function initVacancyScroller() {
+	$('.vac-nav').mCustomScrollbar({
+		theme: "dark",
+		mouseWheel: true
 	});
 }
 

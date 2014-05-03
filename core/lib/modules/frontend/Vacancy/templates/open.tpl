@@ -1,7 +1,7 @@
 {literal}
 <script>
 	addCssFile('glDatePicker.flatwhite');
-	addScriptFile('ajax.js', true);
+	loadScript('ajax');
 	
 	$(function() {		
 		arrangeSkillBlocks();	

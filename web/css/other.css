@@ -477,4 +477,29 @@ table.tablesorter thead tr .headerSortDown span{background-image:url(../images/s
     cursor: default;
 }
 	 
-	 
+.jcarousel-pagination {
+    bottom: 0px;
+    left: 50%;
+    margin: 0;
+    position: absolute;
+    transform: translate(-50%, 0px);
+}
+
+.jcarousel-pagination a {
+    background: none repeat scroll rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    color: #4E443C;
+    display: inline-block;
+    font-size: 11px;
+    height: 10px;
+    line-height: 10px;
+    margin-right: 10px;
+    text-decoration: none;
+    text-indent: -9999px;
+    width: 10px;
+}
+
+.jcarousel-pagination a.active {
+    background: none repeat scroll rgba(0, 0, 0, 0.45);
+    color: #FFFFFF;
+}

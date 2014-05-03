@@ -6,15 +6,23 @@ use HR\Core\View;
 class MainView extends View
 {	
 	
-	function test($encodedNumber, $data) {
-		$this->assign("_encodedNumber", $encodedNumber);
-		$this->assign("_data", $data);
-		
-        $this->render('test.tpl');
-        //$this->render('test.tpl', 'CONTENT');
-        //$this->finish();
+	function showHomePage($recentVacancies, $topCompanies, $topVacanciesCount, $randomIndustry) {
+		$this->assign("_vacancies", $recentVacancies);
+		$this->assign("_topCompanies", $topCompanies);
+		$this->assign("_topVacanciesCount", $topVacanciesCount);
+		$this->assign("_randomIndustry", $randomIndustry);
+		        
+        $this->render('home.tpl', 'CONTENT');
+        $this->finish();
 	}
 	
+	
+	function showBriefVacancy($vacancy) {
+		$this->assign("_vacancy", $vacancy);
+		
+		$this->render('vacancy.tpl');
+	}
+
 	
 	function testForm() {
 		$this->render('test-form.tpl');

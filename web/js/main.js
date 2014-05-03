@@ -16,38 +16,6 @@ $(document).ready(function() {
 			$('#search-input').focus();
 		});
 	});
-
-
-	/* top comp slider */	
-	$('#top-comp-slider').royalSlider({
-		autoHeight: false,
-		arrowsNav: false,
-		fadeinLoadedSlide: true,
-		controlNavigationSpacing: 0,
-		controlNavigation: 'bullets',
-		imageScaleMode: 'none',
-		loop: false,
-		loopRewind: true,
-		numImagesToPreload: 1,
-		keyboardNavEnabled: false,
-		usePreloader: true
-	});
-	
-	/* company page slider */	
-	$('#comp-slider').royalSlider({
-		autoHeight: false,
-		arrowsNav: true,
-		arrowsNavAutoHide: false,
-		fadeinLoadedSlide: true,
-		controlNavigationSpacing: 0,
-		controlNavigation: 'bullets',
-		imageScaleMode: 'none',
-		loop: false,
-		loopRewind: true,
-		numImagesToPreload: 2,
-		keyboardNavEnabled: true,
-		usePreloader: true
-	});	
 	
 	/* sign-in */	
 	$('.popup').magnificPopup({
@@ -72,32 +40,33 @@ $(document).ready(function() {
 	/* vacancy - table sorter */
 	$(".tablesorter").tablesorter();
 	
-	/* vacancy slider */
-	$('#vac-slider').royalSlider({
-		arrowsNav: false,
-		fadeinLoadedSlide: true,
-		controlNavigationSpacing: 0,
-		controlNavigation: 'thumbnails',
-		thumbs: {
-		  orientation: 'vertical',
-		  spacing: 0,
-		  paddingBottom: 0,
-		  arrows: false
-		},
-		navigateByClick:false,
-		keyboardNavEnabled: true,
-		transitionType: 'fade',
-		slidesSpacing: 0,
-		loop: false,
-		loopRewind: true,
-		autoScaleSlider: true, 
-		autoScaleSliderWidth: 960,     
-		autoScaleSliderHeight: 635,
-	
-
- 	});
-	
-
+	$('.vac-slider .vac-item').click(function() {
+		var containerTop = $('.vac-nav').offset().top;	
+		var containerHeight = $('.vac-nav').height();
+		var itemPositionTop = $(this).position().top;
+		var itemOffsetTop = $(this).offset().top - containerTop;
+		var itemHeight = $(this).height();
+		
+		var scrollTo;
+		if(itemOffsetTop < 0) {
+			scrollTo = itemPositionTop;			
+		} else if(itemOffsetTop < itemHeight) {
+			scrollTo = itemPositionTop - itemHeight;	
+		} else if(containerHeight - itemOffsetTop < itemHeight) {
+			scrollTo = itemHeight + itemPositionTop - containerHeight;
+		} else if(containerHeight - itemOffsetTop < 2 * itemHeight) {
+			scrollTo = 2 * itemHeight + itemPositionTop - containerHeight;
+		}
+		
+		if(typeof scrollTo != 'undefined') {
+			$('.vac-nav').mCustomScrollbar('scrollTo', scrollTo);
+		}		
+		
+		var vacancyId = $(this).attr('data-id');
+		$(this).addClass('vac-selected').siblings('.vac-item').removeClass('vac-selected');
+		loadBriefVacancy(vacancyId);
+	});
+				
 	/* education|experience add */
 	$('#addeducation-btn, #addexperience-btn, #addskill-btn, #addlanguage-btn, #addlocation-btn, #addbenefit-btn').click(function() {
 		addBlock($(this));
@@ -206,26 +175,8 @@ $(document).ready(function() {
 	$(document).on('click', '.sbutton, .profbutton', function(e) {
 		ajaxValidateForm();
 		e.preventDefault();
-	});
+	});	
 	
-	
-	$('.vac-slider').royalSlider({
-            autoHeight: false,
-            arrowsNav: true,
-            arrowsNavAutoHide: false,
-            fadeinLoadedSlide: true,
-            controlNavigationSpacing: 0,
-            controlNavigation: 'none',
-            imageScaleMode: 'none',
-            loop: false,
-            loopRewind: false,
-            numImagesToPreload: 2,
-            keyboardNavEnabled: true,
-            usePreloader: true,
-            sliderDrag: false
-    });
-    
-    
     $('.vacbutton').click(function(e) {
     	var vacancyId = $(this).attr('attr-id');
     	applyToVacancy(vacancyId);

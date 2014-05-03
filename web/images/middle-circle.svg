@@ -1,7 +1,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
   
-<svg xmlns="http://www.w3.org/2000/svg" id="svg-circle" width="55" height="55" style="opacity:0;">						
+<svg xmlns="http://www.w3.org/2000/svg" id="svg-circle" width="70" height="70" style="opacity:0;">						
 	<style><![CDATA[
 		@font-face {
 		    font-family: 'gothammedium';
@@ -16,16 +16,16 @@
 		}
 	]]></style>
 	
-	<circle id="core" fill="#FFF" r="0" cy="27.5" cx="27.5">
-		<animate attributeName="r" dur="0.5s" from="0" to="17.5" fill="freeze" />
+	<circle id="core" fill="#FFF" r="0" cy="35" cx="35">
+		<animate attributeName="r" dur="0.5s" from="0" to="23" fill="freeze" />
 	</circle>
-	<circle id="large" r="25" cy="27.5" cx="27.5" fill="none" stroke-width="4" stroke-dashoffset="0" transform="rotate(270, 27.5, 27.5)">
+	<circle id="large" r="32" cy="35" cx="35" fill="none" stroke-width="6" stroke-dashoffset="0" transform="rotate(270, 35, 35)">
 		<animate id="large-animate" attributeName="stroke-dasharray" dur="0.5s" />
 	</circle>
-	<circle id="small" r="20" cy="27.5" cx="27.5" fill="none" stroke-width="5" stroke-dashoffset="0" transform="rotate(270, 27.5, 27.5)" style="opacity:0.3">
+	<circle id="small" r="26" cy="35" cx="35" fill="none" stroke-width="5" stroke-dashoffset="0" transform="rotate(270, 35, 35)" style="opacity:0.3">
 		<animate id="small-animate" attributeName="stroke-dasharray" dur="0.5s" />
 	</circle>
-	<text id="txt" x="28" y="32" fill="#FFF" style="font-family:'gothammedium';font-size:11px;" text-anchor="middle"></text>
+	<text id="txt" x="34" y="40" fill="#FFF" style="font-family:'gothammedium';font-size:14px;" text-anchor="middle"></text>
 	
 	<script type="text/javascript"><![CDATA[
 		var params = document.defaultView.frameElement.getElementsByTagName('param');

@@ -28,6 +28,9 @@ define('TPL_MESSAGE', '_HR_MESSAGE');
 define('MSG_TYPE_ERROR', 'error');
 define('MSG_TYPE_SUCCESS', 'success');
 
+// Vacancy statuse
+define('VACANCY_STATUS_ACTIVE', 'ACTIVE');
+define('VACANCY_STATUS_INACTIVE', 'INACTIVE');
 
 define('SMALL_IMAGE_SIZE',  60);
 define('MIDDLE_IMAGE_SIZE', 100);
@@ -53,6 +56,18 @@ define('UNIVER_DEGREES', serialize(array('Incomplete higher', 'Bachelor', 'Maste
 define('LANGUAGES', serialize(array('Armenian', 'Russian', 'English', 'French', 'German', 'Arabic', 'Turkish', 'Spanish', 'Italian', 'Georgian', 'Chinese')));
 define('LANGUAGE_LEVELS', serialize(array('Elementary', 'Intermediate', 'Advanced', 'Native')));
 define('SOFT_SKILL_LEVELS', serialize(array('Start', 'Average', 'Good', 'Advanced', 'Brilliant')));
+define('SKILL_LEVEL_MAP', 
+		serialize(
+			array(
+				'1' => array('score' => 29, 'text' => 'Start Level'), 
+				'2' => array('score' => 49, 'text' => 'Satisfactory'), 
+				'3' => array('score' => 65, 'text' => 'Good'), 
+				'4' => array('score' => 74, 'text' => 'Advanced'), 
+				'5' => array('score' => 89, 'text' => 'Expert'), 
+				'5+' => array('score' => 95, 'text' => 'Expert'), 
+			)
+		)
+);
 
 // Matching weights
 define('MATCHING_SKILLS_WEIGHT', 0.5);
