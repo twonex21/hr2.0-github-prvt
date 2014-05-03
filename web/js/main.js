@@ -68,7 +68,7 @@ $(document).ready(function() {
 	});
 				
 	/* education|experience add */
-	$('#addeducation-btn, #addexperience-btn, #addskill-btn, #addlanguage-btn, #addlocation-btn, #addbenefit-btn').click(function() {
+	$('#addeducation-btn, #addexperience-btn, #addskill-btn, #addlanguage-btn, #addlocation-btn, #addbenefit-btn, #add-benefit-btn').click(function() {
 		addBlock($(this));
 	});
 	
@@ -87,13 +87,13 @@ $(document).ready(function() {
 	});	
 	
 	/* benefit add */
-	$('#add-benefit-btn').click(function(){
+	/*$('#add-benefit-btn').click(function(){
 		$(this).before(
 			'<fieldset class="benefitsitem grid grid290">'+
 			$(this).parent().find('fieldset').html()+
 			'</fieldset>'
 			);
-	});	
+	});	*/
 	
 	
 	/*search*/
@@ -182,6 +182,9 @@ $(document).ready(function() {
     	applyToVacancy(vacancyId);
     	e.preventDefault();
     });
+    
+    
+    $('#subscribe-for-openings-btn').click(function(){ subscribeForOpenings() });
 	
 });
 

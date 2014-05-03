@@ -42,11 +42,23 @@ class ProfileAction extends Action implements ActionInterface
     	$allBenefits = $this->qb->getBenefits();
     	$companyBenefits = $this->qb->getCompanyBenefits($companyId);
     	
+    	//Maximum pageviews count
+    	$maxPageViews = $this->model->getMaxPageViews();
+    	
+    	//users applyed count
+    	$usersApplyedCount = $this->model->getUsersApplyedCount($companyId);
+    	
     	// Setting page title
     	$this->setPageTitle($companyProfile['name']);
     	
-    	$this->view->showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits);
-    }        
+    	$this->view->showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, 
+    			                            $companyBenefits, $maxPageViews, $usersApplyedCount);
+    }       
+
+    
+     public function subscribeForOpenings(){
+     	echo 55;
+     }
 }
 
 ?>

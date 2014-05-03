@@ -335,3 +335,19 @@ function applyToVacancy(vacancyId) {
         error: function(json){} 
     });
 }
+
+
+
+function subscribeForOpenings(){
+	jQuery.ajax({
+        dataType: 'json',
+        url: '/company/subscribeforopenings/cid/'+companyId+'/t/',
+        type: 'POST',
+        success: function(json) {
+           //TODO show flash message
+        },
+        error: function(json){
+           //TODO show flash message
+        } 
+    });
+}

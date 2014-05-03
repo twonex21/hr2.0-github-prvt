@@ -7,7 +7,7 @@ use HR\Core\FrontendUtils;
 class CompanyModel extends Model
 {    		    
 	public function getCompanyProfileById($companyId) {
-		$sql = "SELECT name, mail, phone, contact_person AS contactPerson, logo_key AS logoKey, created_at AS createdAt, changed_at AS changedAt,
+		$sql = "SELECT company_id AS companyId, name, mail, phone, contact_person AS contactPerson, logo_key AS logoKey, created_at AS createdAt, changed_at AS changedAt,
 					   additional_info AS additionalInfo, new_vacancies AS newVacancies, subscribe_for_news AS subscribeForNews, linkedin AS linkedIn, facebook, twitter,
 					   employees_count AS employeesCount, show_views_count AS showViewsCount, show_applicants_count AS showApplicantsCount, page_views AS pageViews
 				FROM hr_company
@@ -135,6 +135,53 @@ class CompanyModel extends Model
 			$sql = $this->mysql->format($sql, array($companyId, $roleId, $type));
 			$this->mysql->query($sql);
 		}
+	}
+	
+	public function getMaxPageViews(){
+		$sql = "SELECT max(page_views) as maxPageViews FROM hr_company";
+		$result = $this->mysql->query($sql);
+		$row = $this->mysql->getRow($result);
+		
+		
+		//TODO move this 1000 to some config ?
+		if(!isset($row['maxPageViews']) || $row['maxPageViews'] < 1000){
+			return 1000;
+		}
+
+		return $row['maxPageViews'];
+	}
+	
+	public function getUsersApplyedCount($companyId){
+		$sql = "SELECT count(*) as count
+				FROM hr_vacancy_application AS va
+				INNER JOIN hr_vacancy AS v ON va.vacancy_id = v.vacancy_id
+				WHERE v.company_id = %d";
+		$sql = $this->mysql->format($sql, array($companyId));
+		$result = $this->mysql->query($sql);
+		$row = $this->mysql->getRow($result);
+		
+		return $row['count'];
+	}
+	
+	public function addSubscriptionForOpenings($companyId, $userId){
+		$sql = "SELECT *
+				FROM hr_company_subscription
+				WHERE company_id=%d AND user_id=%d";
+		$sql = $this->mysql->format($sql, array($companyId, $userId));
+		$result = $this->mysql->query($sql);
+		$row = $this->mysql->getRow($result);
+		
+		if(empty($row)){
+			$sql = "INSERT INTO hr_company_subscription (company_id, user_id, changed_at) VALUES (%d, %d, NOW())";
+			$sql = $this->mysql->format($sql, array($companyId, $userId));
+			$this->mysql->query($sql);
+			
+			return true;
+		}else{
+			//already present
+			return false;
+		}
+		
 	}
 	
 }

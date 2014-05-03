@@ -54,6 +54,15 @@
     <div>
     	<div class="grid grid290 marginright40">
            	<div class="block-title block-title-nobgr">Offices</div>
+           		{if !($_companyOffices)}
+           			<fieldset class="grid grid290">
+	                    <section>                         
+	                        <label class="input">
+	                        	<input id="comp_offices_0" name="comp_offices[]" type="text" value="" attr-validate="isLatin">
+	                        </label>
+	 					</section>
+	                </fieldset>
+				{/if}
             	{foreach from=$_companyOffices item=companyOffice}
 				<fieldset class="grid grid290">
                     <section>                         
@@ -149,7 +158,23 @@
     <div>
        	<div class="block-title block-title-nobgr">Benefits</div>
     	<div class="grid">
-    	
+    		
+    		{if !($_companyBenefits)}
+       			<fieldset class="benefitsitem grid grid290">
+                    <section>
+                        <label class="select">
+                            <select name="comp_benefits[]">
+                            	{foreach from=$_allBenefits item=benefit}
+                            		<option value="{$benefit.benefitId}">
+                            			{$benefit.name}
+                            		</option>
+                            	{/foreach}   
+							</select>
+                            <i></i>
+                        </label>
+ 					</section>
+                </fieldset> 
+			{/if}
     		{foreach from=$_companyBenefits item=companyBenefit}
 				<fieldset class="benefitsitem grid grid290">
                     <section>
