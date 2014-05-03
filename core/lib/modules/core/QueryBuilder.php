@@ -264,7 +264,7 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($companyId));
     	$result = $this->mysql->query($sql);
     		
-    	$benefits = $this->mysql->getRow($result);
+    	$benefits = $this->mysql->getDataSet($result);
     
     	return $benefits;
     }

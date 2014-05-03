@@ -20,7 +20,7 @@ class CompanyView extends View
         $this->finish();
     }
     
-	function showCompanyPage($companyProfile, $companyOffices, $allBenefits, $companyBenefits) {
+	function showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits) {
 
 		//basic info
 		$this->assign('_companyProfile', $companyProfile);
@@ -30,7 +30,7 @@ class CompanyView extends View
 		$this->assign('_allBenefits', $allBenefits);
 		$this->assign('_companyBenefits', $companyBenefits);
 		
-        $this->render('company.tpl', 'CONTENT');
+        $this->render('profile.tpl', 'CONTENT');
         $this->finish();
     }
 
