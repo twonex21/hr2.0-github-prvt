@@ -20,7 +20,7 @@ class CompanyView extends View
         $this->finish();
     }
     
-	function showCompanyPage($companyProfile, $companyOffices, $allBenefits, $companyBenefits) {
+	function showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits, $maxPageViews, $usersApplyedCount) {
 
 		//basic info
 		$this->assign('_companyProfile', $companyProfile);
@@ -30,7 +30,13 @@ class CompanyView extends View
 		$this->assign('_allBenefits', $allBenefits);
 		$this->assign('_companyBenefits', $companyBenefits);
 		
-        $this->render('company.tpl', 'CONTENT');
+		//Max page views
+		$this->assign('_maxPageViews', $maxPageViews);
+		
+		//Users applyed count
+		$this->assign('_usersApplyedCount', $usersApplyedCount);
+		
+        $this->render('profile.tpl', 'CONTENT');
         $this->finish();
     }
 

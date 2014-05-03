@@ -10,41 +10,57 @@ class ProfileAction extends Action implements ActionInterface
     public function perform() {
     	
     	//getting detail page company id
-    	$currentCompanyId = $this->request->query->get('cid', 0);    	
+
+    	$companyId = $this->request->query->get('cid');
     	
-    	if(!is_numeric($currentCompanyId)){
-    		//TODO redirect to error page;
-    		echo "Error with id";
-    		exit;
+    	//getting current user or company id
+    	$currentCompanyId = $currentUserId = 0;
+    	if($this->session->isUserAuthorized()){ 
+    		$currentCompanyId = $this->session->getCurrentUserId();
     	}
-    	
-    	//TODO solve worning  trowing in Session class and do not use @
-    	$loggedCompanyId = @$this->session->getCurrentCompanyId();
-    	$loggedUserId = @$this->session->getCurrentUserId();
+    	if($this->session->isCompanyAuthorized()){
+    		$currentUserId = $this->session->getCurrentCompanyId();
+    	}
     	
     	//incrementing page view count
-    	$this->model->incrementPageViews($currentCompanyId);
+    	$this->model->incrementPageViews($companyId);
     	//logging logged user or company visit to current company detail page
-    	if($loggedCompanyId !== 0){
-    		$this->model->logCompanyPageView($currentCompanyId, $loggedCompanyId, COMPANY);
+    	if($currentCompanyId !== 0){
+    		$this->model->logCompanyPageView($companyId, $currentCompanyId, COMPANY);
     	}
-    	if($loggedUserId !== 0){
-    		$this->model->logCompanyPageView($currentCompanyId, $loggedUserId, USER);
+    	if($currentUserId !== 0){
+    		$this->model->logCompanyPageView($companyId, $currentUserId, USER);
     	}
     	
     	// Collecting data
-    	$companyProfile = $this->model->getCompanyProfileById($currentCompanyId);
-    	$companyOffices = $this->model->getCompanyOfficesById($currentCompanyId);
+    	$companyProfile = $this->model->getCompanyProfileById($companyId);
+    	if(empty($companyProfile)){
+    		$this->fc->delegateNotFound();
+    	}
+    	$companyOffices = $this->model->getCompanyOfficesById($companyId);
     	
     	//Benefits
     	$allBenefits = $this->qb->getBenefits();
-    	$companyBenefits = $this->qb->getCompanyBenefits($currentCompanyId);
+
+    	$companyBenefits = $this->qb->getCompanyBenefits($companyId);
+    	
+    	//Maximum pageviews count
+    	$maxPageViews = $this->model->getMaxPageViews();
+    	
+    	//users applyed count
+    	$usersApplyedCount = $this->model->getUsersApplyedCount($companyId);
     	
     	// Setting page title
     	$this->setPageTitle($companyProfile['name']);
     	
-    	$this->view->showCompanyPage($companyProfile, $companyOffices, $allBenefits, $companyBenefits);
-    }        
+    	$this->view->showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, 
+    			                            $companyBenefits, $maxPageViews, $usersApplyedCount);
+    }       
+
+    
+     public function subscribeForOpenings(){
+     	echo 55;
+     }
 }
 
 ?>
