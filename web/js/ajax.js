@@ -338,16 +338,19 @@ function applyToVacancy(vacancyId) {
 
 
 
-function subscribeForOpenings(){
+function subscribeForOpenings(el){
+	var companyId = $(el).attr('data-id');
+	
 	jQuery.ajax({
         dataType: 'json',
         url: '/company/subscribeforopenings/cid/'+companyId+'/t/',
         type: 'POST',
         success: function(json) {
-           //TODO show flash message
+           setMessage('success', json.message, true);
+           $(el).remove();
         },
         error: function(json){
-           //TODO show flash message
+           setMessage('error', json.message, true);
         } 
     });
 }

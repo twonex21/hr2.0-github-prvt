@@ -1,12 +1,8 @@
 {literal}
 <script>
-{/literal}
-	var companyId = {$_companyProfile.companyId};
-{literal}	
-	// Loading ajax lib
-	loadScript('ajax');		
-	// Loading and initializing carousel
-	loadScript('jquery.jcarousel.min', 'initCarousel');	
+	$(function() {		
+		initCarousel();
+	});	
 </script>
 {/literal}
 
@@ -96,8 +92,8 @@
     {if $_HR_SESSION.USER}
 	   	<div class="grid grid320">
 	    	<div class="block-title">Subscribe</div>
-	    	{if $_companyProfile.newVacancies}
-	        	<a id="subscribe-for-openings-btn" class="button subscribe">Subscribe for openings</a>
+	    	{if $_companyProfile.newVacancies && !$_isSubscriptionForOpenings}
+	        	<a id="subscribe-for-openings-btn" class="button subscribe" data-id="{$_companyProfile.companyId}" >Subscribe for openings</a>
 	        {/if}
 	        {if $_companyProfile.subscribeForNews}
 	        	<a class="button">SUBscribe for news</a>     

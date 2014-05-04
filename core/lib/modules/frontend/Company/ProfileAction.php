@@ -16,10 +16,10 @@ class ProfileAction extends Action implements ActionInterface
     	//getting current user or company id
     	$currentCompanyId = $currentUserId = 0;
     	if($this->session->isUserAuthorized()){ 
-    		$currentCompanyId = $this->session->getCurrentUserId();
+    		$currentUserId = $this->session->getCurrentUserId();
     	}
     	if($this->session->isCompanyAuthorized()){
-    		$currentUserId = $this->session->getCurrentCompanyId();
+    		$currentCompanyId = $this->session->getCurrentCompanyId();
     	}
     	
     	//incrementing page view count
@@ -50,17 +50,17 @@ class ProfileAction extends Action implements ActionInterface
     	//users applyed count
     	$usersApplyedCount = $this->model->getUsersApplyedCount($companyId);
     	
+    	//is subscribed
+    	$isSubscriptionForOpenings = $this->model->isSubscriptionForOpenings($companyId, $currentUserId);
+    	
     	// Setting page title
     	$this->setPageTitle($companyProfile['name']);
     	
     	$this->view->showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, 
-    			                            $companyBenefits, $maxPageViews, $usersApplyedCount);
+    			                            $companyBenefits, $maxPageViews, $usersApplyedCount,
+    			                            $isSubscriptionForOpenings);
     }       
 
-    
-     public function subscribeForOpenings(){
-     	echo 55;
-     }
 }
 
 ?>

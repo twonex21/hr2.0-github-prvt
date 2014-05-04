@@ -164,6 +164,21 @@ class CompanyModel extends Model
 	}
 	
 	public function addSubscriptionForOpenings($companyId, $userId){
+		
+		if( !$this->isSubscriptionForOpenings($companyId, $userId) ){
+			$sql = "INSERT INTO hr_company_subscription (company_id, user_id, changed_at) VALUES (%d, %d, NOW())";
+			$sql = $this->mysql->format($sql, array($companyId, $userId));
+			$this->mysql->query($sql);
+			
+			return true;
+		}else{
+			//already subscribed
+			return false;
+		}
+		
+	}
+	
+	public function isSubscriptionForOpenings($companyId, $userId){
 		$sql = "SELECT *
 				FROM hr_company_subscription
 				WHERE company_id=%d AND user_id=%d";
@@ -172,14 +187,9 @@ class CompanyModel extends Model
 		$row = $this->mysql->getRow($result);
 		
 		if(empty($row)){
-			$sql = "INSERT INTO hr_company_subscription (company_id, user_id, changed_at) VALUES (%d, %d, NOW())";
-			$sql = $this->mysql->format($sql, array($companyId, $userId));
-			$this->mysql->query($sql);
-			
-			return true;
-		}else{
-			//already present
 			return false;
+		}else{
+			return true;
 		}
 		
 	}

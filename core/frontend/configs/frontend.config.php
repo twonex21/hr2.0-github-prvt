@@ -97,11 +97,13 @@ define('TPL_STYLESHEET_MAPPING',
 		)
 );
 
+
 define('TPL_SCRIPT_MAPPING',
 		serialize(
 			array(
 				'Main\home.tpl' => array('jquery.mCustomScrollbar.min', 'jquery.jcarousel.min', 'ajax'),
 				'Company\create.tpl' => array('ajax'),
+				'Company\profile.tpl' => array('ajax', 'jquery.jcarousel.min'),
 				'User\create.tpl' => array('ajax'),
 				'User\profile.tpl' => array('jquery.jcarousel.min'),
 			)
