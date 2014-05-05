@@ -64,7 +64,7 @@ class ProfileAction extends Action implements ActionInterface
     	$this->setPageTitle($companyProfile['name']);
     	
     	$this->view->showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, 
-    			                            $companyBenefits, $maxPageViews, $usersApplyedCount,
+    			                            $companyBenefits, $maxPageViews, $usersAppliedCount,
     			                            $isSubscriptionForOpenings);
     }       
 
