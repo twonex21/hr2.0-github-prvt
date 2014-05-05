@@ -51,7 +51,7 @@ class CreateAction extends Action implements ActionInterface
     	$data['languageLevels'] = unserialize(LANGUAGE_LEVELS);
     	$data['softSkills'] = $this->qb->getSoftSkills();
     	$data['softSkillLevels'] = unserialize(SOFT_SKILL_LEVELS);
-    	
+
     	if($this->request->request->isEmpty()) {
     		// POST is empty, no input parameters yet
     		$user['profile'] = $this->model->getUserProfileById($currentUserId);
@@ -94,8 +94,6 @@ class CreateAction extends Action implements ActionInterface
     		
     		if(!$this->request->request->isNullOrEmpty('password') && FrontendUtils::isPasswordLength($this->request->request->get('password'))) {
     			$newPassword = $this->request->request->get('password');
-    		} else {
-    			return;
     		}
     		
     		if(!$this->request->request->isNullOrEmpty('birth-date') && FrontendUtils::isDate($this->request->request->get('birth-date'))) {
@@ -232,8 +230,7 @@ class CreateAction extends Action implements ActionInterface
 					}
 				}
     		}
-    		    		
-    		
+
     		// Handled form data, now saving it in db
     		$this->model->updateUserProfile($currentUserId, 
     										$firstName, 
@@ -268,7 +265,7 @@ class CreateAction extends Action implements ActionInterface
     		
     		$this->setMessage(MSG_TYPE_SUCCESS);
     		
-    		$this->fc->redirect('user', 'profile');
+    		$this->fc->redirect('user', 'profile', 'uid/' . FrontendUtils::hrEncode($currentUserId) . '/t/');
     	}
     }
 }

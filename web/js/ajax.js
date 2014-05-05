@@ -6,7 +6,7 @@ function loadBriefVacancy(vacancyId) {
 	}
 	
 	$('.vac-slider .vac-content').load('/main/loadvacancy', {'vacancyId' : vacancyId}, function() {
-		$('.vac-wrapper').animate({'opacity' : 1, 'top' : '2%'}, 500);
+		$('.vac-wrapper').animate({'opacity' : 1, 'top' : '2%'}, 400);
 	});
 }
 	

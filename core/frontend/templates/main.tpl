@@ -22,7 +22,8 @@
 		<link rel="stylesheet" href="/css/main.css?v={$smarty.server.VERSION}" />		
 		<link rel="stylesheet" href="/css/other.css?v={$smarty.server.VERSION}" />		
 		<link rel="stylesheet" href="/css/form.css?v={$smarty.server.VERSION}" />
-		<link rel="stylesheet" href="/css/magnific.css?v={$smarty.server.VERSION}" />		
+		<link rel="stylesheet" href="/css/magnific.css?v={$smarty.server.VERSION}" />
+		<link rel="stylesheet"  href="/css/dropdownmenu.css?v={$smarty.server.VERSION}" media="screen" />		
 		{if $_HR_STYLESHEETS}
 			{foreach from=$_HR_STYLESHEETS item=stylesheet}
 			<link rel="stylesheet" href="/css/{$stylesheet}.css?v={$smarty.server.VERSION}" />
@@ -57,10 +58,49 @@
 						<a href="#">Expert</a> 
 					</nav>
 					<div class="grid account">
+						{if $_HR_SESSION.USER}
+						<ul class="top-level-menu">
+		                    <li>
+		                        <a href="#" title="{$_HR_SESSION.USER.fullName}">{$_HR_SESSION.USER.fullName|truncate:22:"..":true}</a>
+		                        <ul class="second-level-menu">
+		                            <li>
+		                                <a href="/user/profile/uid/{$_HR_SESSION.USER.idHash}/t/">Account</a>
+		                                <ul class="third-level-menu">
+		                                    <li><a href="/user/create/">Edit profile</a></li>
+		                                    <li><a href="#">Subscribtion</a></li>
+		                                    <li><a href="#">Change password</a></li>
+		                                </ul>
+		                            </li>
+		                            <li><a href="#">Applied jobs</a></li>
+		                            <li><a href="/auth/out/">Log Out</a></li>
+		                        </ul>
+		                    </li>
+		                </ul>
+		                {elseif $_HR_SESSION.COMPANY}
+		                <ul class="top-level-menu">
+		                    <li>
+		                        <a href="#" title="{$_HR_SESSION.COMPANY.name}">{$_HR_SESSION.COMPANY.name|truncate:22:"..":true}</a>
+		                        <ul class="second-level-menu">
+		                            <li>
+		                                <a href="/company/profile/cid/{$_HR_SESSION.COMPANY.idHash}/t/">Account</a>
+		                                <ul class="third-level-menu">
+		                                    <li><a href="/company/create/">Edit profile</a></li>
+		                                    <li><a href="#">Change password</a></li>
+		                                </ul>
+		                            </li>
+		                            <li><a href="/vacancy/open/">Open Vacancy</a></li>
+		                            <li><a href="#">Vacancy Manager</a></li>
+		                            <li><a href="#">Applied Jobs</a></li>
+		                            <li><a href="/auth/out/">Log Out</a></li>
+		                        </ul>
+		                    </li>
+		                </ul>
+		                {else}
 						<div>
 							<a href="/auth/signup/" class="popup">create account</a> 
 							<span>or</span> <a href="#">log in</a>
 						</div>
+						{/if}
 					</div>
 					<div class="grid searchbtn"></div>
 					<div class="clear"></div>

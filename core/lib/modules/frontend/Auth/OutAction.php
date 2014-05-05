@@ -8,6 +8,8 @@ class OutAction extends Action implements ActionInterface
 {
     public function perform() {
     	$this->session->destroy();
+    	
+    	$this->fc->redirect('main', 'home');
     }
 }
 

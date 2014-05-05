@@ -36,9 +36,14 @@ class QueryBuilder extends Model
     	
     	$sql = $this->mysql->format($sql, array($userId));
     	$result = $this->mysql->query($sql);
-    	    
+
+    	while($row = $this->mysql->getNextResult($result)) {
+    		$row['idHash'] = FrontendUtils::hrEncode($row['ID']);
+    		$user = $row;    		
+    	}
+    	
     	// Getting the result row and checking if it corresponds to user session attribues	
-    	$user = FrontendUtils::validateSessionData($this->mysql->getRow($result), unserialize(SESSION_USER_ATTRIBUTES));
+    	$user = FrontendUtils::validateSessionData($user, unserialize(SESSION_USER_ATTRIBUTES));
 
     	return $user;   	
     }
@@ -55,8 +60,13 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($companyId));
     	$result = $this->mysql->query($sql);
     	
+    	while($row = $this->mysql->getNextResult($result)) {
+    		$row['idHash'] = FrontendUtils::hrEncode($row['ID']);
+    		$company = $row;
+    	}
+    	
     	// Getting the result row and checking if it corresponds to company session attribues	
-    	$company = FrontendUtils::validateSessionData($this->mysql->getRow($result), unserialize(SESSION_COMPANY_ATTRIBUTES));
+    	$company = FrontendUtils::validateSessionData($company, unserialize(SESSION_COMPANY_ATTRIBUTES));
 
     	return $company;   	
     }

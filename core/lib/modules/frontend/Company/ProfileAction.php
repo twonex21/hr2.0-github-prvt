@@ -8,18 +8,26 @@ use HR\Core\FrontendUtils;
 class ProfileAction extends Action implements ActionInterface 
 {
     public function perform() {
+    	$companyId = null;
+    	$currentCompanyId = $currentUserId = 0;
+    	$companyOffices = array();
+    	$allBenefits = array();
+    	$companyBenefits = array();
+    	$maxPageViews = 0;
+    	$usersAppliedCount = 0;
+    	
     	
     	//getting detail page company id
-
-    	$companyId = $this->request->query->get('cid', 0);
-    	
-    	//getting current user or company id
-    	$currentCompanyId = $currentUserId = 0;
-    	if($this->session->isUserAuthorized()){ 
-    		$currentCompanyId = $this->session->getCurrentUserId();
+    	if(!$this->request->query->isNullOrEmpty('cid')) {
+    		$companyHash = $this->request->query->get('cid');
+    		$companyId = FrontendUtils::hrDecode($companyHash);
     	}
-    	if($this->session->isCompanyAuthorized()){
-    		$currentUserId = $this->session->getCurrentCompanyId();
+    	
+    	//getting current user or company id    	
+    	if($this->session->isUserAuthorized()){ 
+    		$currentUserId = $this->session->getCurrentUserId();
+    	} else if($this->session->isCompanyAuthorized()){
+    		$currentCompanyId = $this->session->getCurrentCompanyId();
     	}
     	
     	//incrementing page view count
@@ -27,8 +35,7 @@ class ProfileAction extends Action implements ActionInterface
     	//logging logged user or company visit to current company detail page
     	if($currentCompanyId !== 0){
     		$this->model->logCompanyPageView($companyId, $currentCompanyId, COMPANY);
-    	}
-    	if($currentUserId !== 0){
+    	} else if($currentUserId !== 0){
     		$this->model->logCompanyPageView($companyId, $currentUserId, USER);
     	}
     	
@@ -45,16 +52,16 @@ class ProfileAction extends Action implements ActionInterface
     	$companyBenefits = $this->qb->getCompanyBenefits($companyId);
     	
     	//Maximum pageviews count
-    	$maxPageViews = $this->model->getMaxPageViews();
+    	$maxPageViews = $this->model->getMaxCompanyPageViews();
     	
-    	//users applyed count
-    	$usersApplyedCount = $this->model->getUsersApplyedCount($companyId);
+    	//users applied count
+    	$usersAppliedCount = $this->model->getUsersAppliedCount($companyId);
     	
     	// Setting page title
     	$this->setPageTitle($companyProfile['name']);
     	
     	$this->view->showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, 
-    			                            $companyBenefits, $maxPageViews, $usersApplyedCount);
+    			                            $companyBenefits, $maxPageViews, $usersAppliedCount);
     }       
 
     

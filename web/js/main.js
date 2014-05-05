@@ -52,7 +52,7 @@ $(document).ready(function() {
 	/* vacancy - table sorter */
 	$(".tablesorter").tablesorter();
 	
-	$('.vac-slider .vac-item').click(function() {		
+	$('.vac-slider .vac-item').click(function() {			
 		var containerTop = $('.vac-nav').offset().top;	
 		var containerHeight = $('.vac-nav').height();
 		var itemPositionTop = $(this).position().top;

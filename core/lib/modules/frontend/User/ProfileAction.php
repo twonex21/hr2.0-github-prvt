@@ -15,11 +15,8 @@ class ProfileAction extends Action implements ActionInterface
     		// Taking get parameter
     		$userHash = $this->request->query->get('uid');
     		$userId = FrontendUtils::hrDecode($userHash);
-    	} elseif($this->session->isUserAuthorized()) {
-    		// User is watching his/her own profile
-    		$userId = $this->session->getCurrentUserId();
     	}
-    	
+
     	$user['profile'] = $this->qb->getUserProfileById($userId);
     	if(!empty($user['profile'])) {
 			$user['education'] = $this->qb->getUserEducation($userId);

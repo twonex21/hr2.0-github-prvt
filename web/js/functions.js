@@ -221,6 +221,8 @@ function setMessage() {
 		$message.children('.close').show();
 	}
 	
+	$("html, body").animate({scrollTop: 0}, 500);
+	
 	showMessage();
 }
 
