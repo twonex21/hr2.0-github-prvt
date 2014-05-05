@@ -57,17 +57,17 @@ class ProfileAction extends Action implements ActionInterface
     	//users applied count
     	$usersAppliedCount = $this->model->getUsersAppliedCount($companyId);
     	
+    	//is subscribed
+    	$isSubscriptionForOpenings = $this->model->isSubscriptionForOpenings($companyId, $currentUserId);
+    	
     	// Setting page title
     	$this->setPageTitle($companyProfile['name']);
     	
     	$this->view->showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, 
-    			                            $companyBenefits, $maxPageViews, $usersAppliedCount);
+    			                            $companyBenefits, $maxPageViews, $usersApplyedCount,
+    			                            $isSubscriptionForOpenings);
     }       
 
-    
-     public function subscribeForOpenings(){
-     	echo 55;
-     }
 }
 
 ?>

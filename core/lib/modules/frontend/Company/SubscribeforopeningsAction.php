@@ -19,10 +19,11 @@ class SubscribeforopeningsAction extends Action implements ActionInterface
     	}
     	
     	if($currentUserId !== 0){
-    		//TODO probably use false output for displaying already subscribed message ?
     		$this->model->addSubscriptionForOpenings($companyId, $currentUserId);
+    		$this->response->jsonSet(JSON_MESSAGE, "Successfully subscribed.");
     		$this->response->jsonSetStatus(SUCCESS);
     	}else{
+    		$this->response->jsonSet(JSON_MESSAGE, "Sorry error appeared, try again later.");
     		$this->response->jsonSetStatus(FAIL);
     	}
     	

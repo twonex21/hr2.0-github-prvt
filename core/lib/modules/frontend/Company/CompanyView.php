@@ -20,7 +20,7 @@ class CompanyView extends View
         $this->finish();
     }
     
-	function showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits, $maxPageViews, $usersApplyedCount) {
+	function showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits, $maxPageViews, $usersApplyedCount, $isSubscriptionForOpenings) {
 
 		//basic info
 		$this->assign('_companyProfile', $companyProfile);
@@ -35,6 +35,9 @@ class CompanyView extends View
 		
 		//Users applyed count
 		$this->assign('_usersApplyedCount', $usersApplyedCount);
+		
+		//is subscribed
+		$this->assign('_isSubscriptionForOpenings', $isSubscriptionForOpenings);
 		
         $this->render('profile.tpl', 'CONTENT');
         $this->finish();

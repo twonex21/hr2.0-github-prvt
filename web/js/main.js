@@ -196,7 +196,9 @@ $(document).ready(function() {
     });
     
     
-    $('#subscribe-for-openings-btn').click(function(){ subscribeForOpenings() });
+    $('#subscribe-for-openings-btn').click(function(){ 
+    	subscribeForOpenings(this) 
+    });
 	
 });
 
