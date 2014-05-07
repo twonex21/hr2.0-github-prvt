@@ -347,6 +347,49 @@ class UserModel extends Model
 	    	$this->mysql->query($sql, SQL_PREPARED_QUERY);
     	}
     }
+    
+    
+    public function storeUserSearchInfo($userId, $fullName, $location, $experienceStr, $skillStr) {
+    	$sql = "REPLACE INTO hr_user_search (user_id, name, location, experience, skills)
+    			VALUES (%d, '%s', '%s', '%s', '%s')";
+    	$params = array($userId, $fullName, $location, $experienceStr, $skillStr);
+    
+    	// Since we're dealing with user input for the most security
+    	// Executing prepared statements with parameter binding
+    	$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
+    	$this->mysql->query($sql, SQL_PREPARED_QUERY);
+    }
+    
+        
+    public function addWantToWork($userId, $companyId) {
+    	$sql = "INSERT INTO hr_company_workers (user_id, company_id, created_at)
+    			VALUES (%d, %d, NOW())";
+    	$params = array($userId, $companyId);
+    
+    	$sql = $this->mysql->format($sql, $params);
+    	$this->mysql->query($sql);
+    }
+    
+    
+    public function getWantToWorkCompanies($userId) {
+    	$companies = array();
+    	$sql = "SELECT c.company_id AS companyId, c.name 
+    			FROM hr_company_workers cw
+    			INNER JOIN hr_company c ON c.company_id=cw.company_id
+    			WHERE user_id=%d";
+    	$params = array($userId);
+    
+    	$sql = $this->mysql->format($sql, $params);
+    	$result = $this->mysql->query($sql);
+    	
+    	while($row = $this->mysql->getNextResult($result)) {
+    		$row['idHash'] = FrontendUtils::hrEncode($row['companyId']);
+    		$companies[] = $row;
+    	}
+    	
+    	return $companies;
+    }
+        
 }
 
 ?>

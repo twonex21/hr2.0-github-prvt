@@ -137,6 +137,25 @@ class CompanyModel extends Model
 		}
 	}
 	
+	
+	public function getCompanyVacancies($companyId, $count = 30) {
+		$vacancies = array();
+		 
+		$sql = "SELECT v.vacancy_id AS vacancyId, v.company_id AS companyId, v.title, c.name AS companyName, DATE_FORMAT(v.deadline, '%%d %%M, %%Y') AS deadline
+    			FROM hr_vacancy v
+    			INNER JOIN hr_company c ON v.company_id=c.company_id
+    			WHERE c.company_id=%d AND v.status='%s'
+    			ORDER BY v.created_at DESC
+    			LIMIT %d";
+		 
+		$sql = $this->mysql->format($sql, array($companyId, VACANCY_STATUS_ACTIVE, $count));
+		$result = $this->mysql->query($sql);
+		$vacancies = $this->mysql->getDataSet($result);
+		 
+		return $vacancies;
+	}
+	
+	
 	public function getMaxCompanyPageViews(){
 		$sql = "SELECT MAX(page_views) AS maxPageViews FROM hr_company";
 		$result = $this->mysql->query($sql);
@@ -150,6 +169,7 @@ class CompanyModel extends Model
 
 		return $row['maxPageViews'];
 	}
+	
 	
 	public function getUsersAppliedCount($companyId){
 		$sql = "SELECT count(*) as count

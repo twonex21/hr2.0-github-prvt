@@ -10,7 +10,7 @@ class SubscribeforopeningsAction extends Action implements ActionInterface
     public function perform() {
     	
     	//getting detail page company id
-    	$companyId = $this->request->query->get('cid');
+    	$companyId = $this->request->request->get('cid');
     	$this->response->jsonPrepare();
     	
     	$currentUserId = 0;

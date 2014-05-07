@@ -186,17 +186,17 @@ header #header-innner .searchbtn:hover {
 header #search-input-back {
 	display:none;
 	background:#c72b0f;
-	height:110px;	
+	height:100px;	
 }
 		
 header #search-input-back #search-input-inner {
 	background:url(../images/search-ico.png) no-repeat left center;
 	max-width:960px;
-	height:110px;
+	height:100px;
 	margin:auto;	
 }
 		
-header #search-input-back #search-input-inner {
+header #search-input-back #search-input {
 	width:800px;
 	padding:37px 0 37px 60px;
 	font-size:2.8rem;
@@ -210,16 +210,80 @@ header #search-input-back #search-input-inner {
 header #search-result-back {
 	display:none;
 	background:#262626;
-	height:320px;	
+	position:absolute;
+	width:100%;
+	min-height:80px;
+	max-height:400px;
+	z-index:1000;		
 }
 
 header #search-result-inner {
 	background:url(../images/loading.gif) no-repeat center;
-	max-width:960px;
-	height:320px;
+	width:960px;
+	min-height:80px;
+	max-height:320px;
 	margin:auto;	
+}
+
+header #search-result-inner .no-result {
+	background-color: #262626;
+    color: #ABABAB;
+    font-size: 2.4rem;
+    line-height: 80px;
+    text-align: center;	
 }	
 
+header #search-result-inner .search-item {
+	display:block;
+	font-family: 'gothamlight';
+	font-size:1.3rem;
+	color:#FFF;
+	background-color:#262626;
+	border:1px solid #3e3e3e;	
+	border-top:none !important;
+	height:80px;
+}
+
+header #search-result-inner .search-item:hover {
+	background:#313131;	
+	border-color:#4b4b4b;
+}
+
+header #search-result-inner .search-item > div {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing: border-box;
+	height:80px;
+	padding:12px 20px 20px;	
+}
+
+header #search-result-inner .search-item .user-picture {
+	width:75px;
+}
+
+header #search-result-inner .search-item .user-picture > img {
+	width:60px;
+	height:60px;
+	border:1px solid #3E3E3E !important;
+}
+
+header #search-result-inner .search-item > div:first-child {
+	border-right:1px solid #3e3e3e;
+}
+
+header #search-result-inner .search-item h3 {
+	margin-top:8px;
+	text-transform:uppercase;
+	font-size:1.7rem;	
+}
+
+header #search-result-inner .search-item h3 strong {
+	font-weight:bold;
+}
+
+header #search-result-inner .search-item p {
+	color:#CCC;
+}
 /* End of header styles */
 			
 /* home page */
@@ -233,13 +297,13 @@ header #search-result-inner {
 	min-height:635px;
 	margin:auto;	
 }
-.home-vac-cont .vac-slider {
+.vac-slider {
 	position:relative;
 	width:100%;
 	height:638px;
 	padding:10px 0;
 }
-.home-vac-cont .vac-slider .vac-nav {
+.vac-slider .vac-nav {
 	position:absolute;
 	left:0;
 	width:335px;
@@ -247,31 +311,39 @@ header #search-result-inner {
 	paddint:0;
 	overflow:hidden;
 }
-.home-vac-cont .vac-slider .vac-nav .vac-item {
+.vac-slider .vac-nav .vac-item {
 	float:left;
 	width:335px;
 	overflow:hidden;
 	cursor:pointer;	
 }
-.home-vac-cont .vac-slider .vac-nav .vac-item .vac-wrapper {
+.vac-slider .vac-nav .vac-item .vac-wrapper {
 	position:relative;
 	margin-right:20px;
 	padding:9px 20px;
 }
-.home-vac-cont .vac-slider .vac-nav .vac-item.vac-selected .vac-wrapper, 
-.home-vac-cont .vac-slider .vac-nav .vac-item:hover .vac-wrapper {
-	background-color: #DB421F;
+.vac-slider .vac-nav .vac-item.vac-selected .vac-wrapper, 
+.vac-slider .vac-nav .vac-item:hover .vac-wrapper {
+	background-color: #DB421F;	
 }
-.home-vac-cont .vac-slider .vac-nav .vac-item h5 {
+.vac-slider .vac-nav .vac-item h5 {
 	color: rgba(255, 255, 255, 0.7);
     font-size: 1.65rem;
     text-align: right;
     text-transform: uppercase;
 }
-.home-vac-cont .vac-slider .vac-nav .vac-item.vac-selected h5 {
+.vac-slider .vac-nav .vac-item:hover h5 {
+	color: rgba(255, 255, 255, 0.7) !important;    
+}
+.comp-vac-cont .vac-slider .vac-nav .vac-item h5 {
+	color: rgba(0, 0, 0, 0.7);
+	padding:9px 0;		
+}
+
+.vac-slider .vac-nav .vac-item.vac-selected h5 {
 	color: #FFFFFF;    
 }
-.home-vac-cont .vac-slider .vac-nav .vac-item span {
+.vac-slider .vac-nav .vac-item span {
 	display: block;
     font-family: 'gothamlight';
     text-align: right;
@@ -279,8 +351,8 @@ header #search-result-inner {
     font-size: 1.3rem;
     line-height: 1.8rem;
 }
-.home-vac-cont .vac-slider .vac-item.vac-selected .arrow , 
-.home-vac-cont .vac-slider .vac-item:hover .arrow {
+.vac-slider .vac-item.vac-selected .arrow , 
+.vac-slider .vac-item:hover .arrow {
 	position: absolute;
     right: -20px;
     top: 0;
@@ -290,14 +362,14 @@ header #search-result-inner {
     border-style: solid;
     border-width: 30px 0 30px 20px;    
 }
-.home-vac-cont .vac-slider .vac-content {
+.vac-slider .vac-content {
 	position:relative;
 	float:right;
 	width:625px;
 	height:635px;
 	overflow:hidden;
 }
-.home-vac-cont .vac-slider .vac-content .vac-wrapper {
+.vac-slider .vac-content .vac-wrapper {
 	position: absolute;	
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.5rem;
@@ -308,26 +380,26 @@ header #search-result-inner {
 	display: block;
     opacity: 0;
 }
-.home-vac-cont .vac-slider .vac-wrapper h2 {
-	padding: 15px 100px 0;
+.vac-slider .vac-wrapper h2 {
+	padding-top: 15px;
 	color: rgba(255, 255, 255, 0.9);
     font-size: 2.8rem;
     line-height: 3.2rem;    
     text-align: center;
     text-transform: uppercase;
 }
-.home-vac-cont .vac-slider .vac-wrapper .deadline {
+.vac-slider .vac-wrapper .deadline {
 	color: rgba(255, 255, 255, 0.8);
     display: block;
     font-family: 'gothamlight';
     font-size: 1.3rem;
 }
-.home-vac-cont .vac-slider .vac-wrapper .vac-logo {
+.vac-slider .vac-wrapper .vac-logo {
 	display: block;
     padding: 20px 0;
 	height:60px;
 }
-.home-vac-cont .vac-slider .vac-wrapper .vac-info {
+.vac-slider .vac-wrapper .vac-info {
 	height:115px;
 	color: rgba(255, 255, 255, 0.8);
     font-family: 'gothamlight';
@@ -336,21 +408,21 @@ header #search-result-inner {
     line-height: 2rem;
     padding: 0 50px;	
 }
-.home-vac-cont .vac-slider .vac-skills {
+.vac-slider .vac-skills {
 	margin: 45px 15px;
 	overflow:auto;    
 }
-.home-vac-cont .vac-slider .vac-skills .skill {
+.vac-slider .vac-skills .skill {
 	float:left; 
 	width: 120px; 	
 	margin-right:25px;
 	color:rgba(255, 255, 255, 0.7);
 	text-align:center;
 }
-.home-vac-cont .vac-slider .vac-skills .skill:last-child {
+.vac-slider .vac-skills .skill:last-child {
 	margin-right:0px;
 }
-.home-vac-cont .vac-slider .vac-skills .skill .skill-name {
+.vac-slider .vac-skills .skill .skill-name {
 	height:40px;
 	margin-bottom:10px;
 	text-transform:uppercase;	
@@ -358,22 +430,31 @@ header #search-result-inner {
 	font-weight:bold;
 	position:relative;
 }
-.home-vac-cont .vac-slider .vac-skills .skill .skill-name span {
+.vac-slider .vac-skills .skill .skill-name span {
 	display:block;
 	width:100%;
 	text-align:center;
 	position:absolute;
 	bottom:0;	
 }
-.home-vac-cont .vac-slider .vac-skills .skill svg {
+.vac-slider .vac-skills .skill svg {
 	margin:0 auto;
 }
-.home-vac-cont .vac-slider .vac-skills .skill .skill-years {
+.vac-slider .vac-skills .skill .skill-years {
 	padding-top:10px;
 	font-style:italic;
 	font-size:1.3rem;
 	
 }
+
+.comp-vac-cont h2, 
+.comp-vac-cont .vac-info, 
+.comp-vac-cont .deadline, 
+.comp-vac-cont .skill-name, 
+.comp-vac-cont .skill-years {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
 
 .home-top-comp .jcarousel-wrapper {
 	width:960px !important;
@@ -882,5 +963,25 @@ section.message .close {
 	
 .svg-circle text {
 	font-size: 2.0rem;
+}
+
+.login-txt {
+	float:left;
+	padding-top:10px;
+	font-family:'gothamlight';
+	font-style:italic;
+	font-size:1.8rem;
+}
+
+.login-txt a {
+	width:540px;
+	text-align:justify;
+	font-family:'gothammedium';
+	font-weight:bold;
+	color:#555;
+}
+
+.comp-logo > img {
+	border:1px solid #E0E2E2 !important;
 }
 	

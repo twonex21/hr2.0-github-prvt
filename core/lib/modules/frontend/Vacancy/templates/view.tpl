@@ -20,9 +20,10 @@
 <div class="clear"></div>
 <div class="req-skills-top">
 	<h1>Required skills</h1>
-	{if !$_HR_SESSION.user}
+	{if !$_HR_SESSION.USER}
 	<div class="login-txt">You have to <a href="#">log in</a> to see how your skills match this vacancy</div>
-	{elseif $_matching.skillsLevel.level > 0}
+	{* TODO: Get profile completed status and place here in the place of the bullshit below *}
+	{elseif $_matching.skills == 0}
 	<div class="login-txt">You have to <a href="/user/create/">complete your profile</a> to see how your skills match this vacancy</div>		
 	{else}
 	<div class="grid req-skills-top-block">

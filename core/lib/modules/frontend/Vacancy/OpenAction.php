@@ -8,6 +8,7 @@ use HR\Core\FrontendUtils;
 class OpenAction extends Action implements ActionInterface 
 {
     public function perform() {
+    	$currentCompany = null;
     	$currentCompanyId = null;
     	$vacancyId = null;
     	$allIndustries = array();
@@ -44,6 +45,7 @@ class OpenAction extends Action implements ActionInterface
     	$softSkills = array();
     	$tmpSoftSkillLevels = array();
     	$softSkillLevels = array();
+    	$tmpBenefits = array();
     	$benefits = array();
     	
     	// Setting page title
@@ -51,6 +53,7 @@ class OpenAction extends Action implements ActionInterface
     	
     	// Getting authorized user
     	$currentCompanyId = $this->session->getCurrentCompanyId();
+    	$currentCompany = $this->session->getCurrentCompany();
     	
     	$data['industries'] = $this->qb->getIndustries();
     	$data['univerDegrees'] = unserialize(UNIVER_DEGREES);    	
@@ -218,7 +221,12 @@ class OpenAction extends Action implements ActionInterface
     		
     		// Benefits
     		if(!$this->request->request->isNullOrEmpty('benefits') && $this->request->request->isArray('benefits')) {
-    			$benefits = $this->request->request->get('benefits');
+    			$tmpBenefits = $this->request->request->get('benefits');
+    			foreach($tmpBenefits as $benefitId) {
+    				if($benefitId != 0) {
+    					$benefits[] = $benefitId;
+    				}
+    			}
     		}
     		
 
@@ -234,7 +242,7 @@ class OpenAction extends Action implements ActionInterface
     													 $showWantToWorkCount, 
     													 $fileKey, 
     													 $deadline, 
-    													 $status);
+    													 $status);    			    			    			
     			$isNew = true;
     		} 
     		
@@ -263,13 +271,18 @@ class OpenAction extends Action implements ActionInterface
 	    			$this->model->updateVacancyBenefits($vacancyId, $benefits);
 	    		}
 	    		
-	    		// TODO: Think about adding new form fiield for industry
+	    		// TODO: Think about adding new form field for industry
 	    		$industryId = $this->qb->getVacancyIndustryId($vacancyId);
 	    		$this->model->updateVacancyIndustryId($vacancyId, $industryId);
 	    		
+	    		// Storing info for quick search
+	    		// Seperate table used because MySQL < 5.6 doesn't support fulltext indexes in InnoDB (with foreign key constraints)
+	    		$skillNames = $this->qb->getSkillNamesByIds($tmpSkills);
+	    		$this->model->storeVacancySearchInfo($vacancyId, $title, $currentCompany['name'], $location, $additionalInfo, implode(', ', $skillNames));
+	    		
 	    		$this->setMessage(MSG_TYPE_SUCCESS);
 	    		
-	    		$this->fc->redirect('vacancy', 'open', 'vid/' . $vacancyId . '/t/');
+	    		$this->fc->redirect('vacancy', 'view', 'vid/' . $vacancyId . '/t/');
     		} else {
     			// Vacancy was not found
     			$this->fc->delegateNotFound();

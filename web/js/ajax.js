@@ -337,17 +337,40 @@ function applyToVacancy(vacancyId) {
 }
 
 
+function addWantToWork(el){
+	var companyId = $(el).attr('data-id');
+	
+	jQuery.ajax({
+		dataType: 'json',
+		url: '/user/wanttowork/',
+		data: {'cid' : companyId},
+		type: 'POST',
+		success: function(json) {
+			setMessage('success', json.message, true);
+			$(el).animate({'opacity' : 0}, 300, function() {
+				$(this).remove();
+			});
+		},
+		error: function(json){
+			setMessage('error', json.message, true);
+		} 
+	});
+}
+
 
 function subscribeForOpenings(el){
 	var companyId = $(el).attr('data-id');
 	
 	jQuery.ajax({
         dataType: 'json',
-        url: '/company/subscribeforopenings/cid/'+companyId+'/t/',
+        url: '/company/subscribeforopenings/',
+        data: {'cid' : companyId},
         type: 'POST',
         success: function(json) {
            setMessage('success', json.message, true);
-           $(el).remove();
+           $(el).animate({'opacity' : 0}, 300, function() {
+				$(this).remove();
+			});
         },
         error: function(json){
            setMessage('error', json.message, true);

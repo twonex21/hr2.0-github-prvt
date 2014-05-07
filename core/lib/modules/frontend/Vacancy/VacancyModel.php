@@ -370,6 +370,28 @@ class VacancyModel extends Model
     }
     
     
+    public function updateVacancyIndustryId($vacancyId, $industryId) {
+    	$sql = "UPDATE hr_vacancy SET industry_id=%d WHERE vacancy_id=%d";
+    	$params = array($industryId, $vacancyId);
+    	 
+    	$sql = $this->mysql->format($sql, $params);
+    	$this->mysql->query($sql);
+    }
+    
+    
+    
+    public function storeVacancySearchInfo($vacancyId, $title, $companyName, $location, $additionalInfo, $skillStr) {
+    	$sql = "REPLACE INTO hr_vacancy_search (vacancy_id, title, company_name, location, info, skills)
+    			VALUES (%d, '%s', '%s', '%s', '%s', '%s')";
+    	$params = array($vacancyId, $title, $companyName, $location, $additionalInfo, $skillStr);
+    	 
+    	// Since we're dealing with user input for the most security
+    	// Executing prepared statements with parameter binding
+    	$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
+    	$this->mysql->query($sql, SQL_PREPARED_QUERY);
+    }
+    
+    
     public function addVacancyView($vacancyId) {
     	$sql = "UPDATE hr_vacancy SET views=views+1 WHERE vacancy_id=%d";
     	$sql = $this->mysql->format($sql, array($vacancyId));

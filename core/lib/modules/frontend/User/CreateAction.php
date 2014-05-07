@@ -13,6 +13,7 @@ class CreateAction extends Action implements ActionInterface
     	$user = array();
     	$updatedUser = array();
     	
+    	$fullName = '';
     	$firstName = '';
     	$lastName = '';
     	$mail = '';
@@ -67,10 +68,11 @@ class CreateAction extends Action implements ActionInterface
     		
     		// Basic profile info
     		if(!$this->request->request->isNullOrEmpty('full-name') && FrontendUtils::isLatin($this->request->request->get('full-name'))) {
-    			if(strpos($this->request->request->get('full-name'), ' ')) {
-    				list($firstName, $lastName) = explode(' ', $this->request->request->get('full-name'));
+    			$fullName = $this->request->request->get('full-name');
+    			if(strpos($fullName, ' ')) {    				
+    				list($firstName, $lastName) = explode(' ', $fullName);
     			} else {
-    				$firstName = $this->request->request->get('full-name');
+    				$firstName = $fullName;
     			}
     		} else {
     			return;
@@ -98,8 +100,6 @@ class CreateAction extends Action implements ActionInterface
     		
     		if(!$this->request->request->isNullOrEmpty('birth-date') && FrontendUtils::isDate($this->request->request->get('birth-date'))) {
     			$birthDate = $this->request->request->get('birth-date');
-    		} else {
-    			return;
     		}
     		    		    		    		
     		$profileBio = $this->request->request->get('profile-bio', '');
@@ -258,6 +258,12 @@ class CreateAction extends Action implements ActionInterface
     		if(!empty($softSkills)) {
     			$this->model->updateUserSoftSkills($currentUserId, $softSkills);
     		}
+    		
+    		// Storing info for quick search
+    		// Seperate table used because MySQL < 5.6 doesn't support fulltext indexes in InnoDB (with foreign key constraints)
+    		$specNames = $this->qb->getSpecializationsByIds($tmpExpSpecs);
+    		$skillNames = $this->qb->getSkillNamesByIds($tmpSkills);
+    		$this->model->storeUserSearchInfo($currentUserId, $fullName, $location, implode(', ', $specNames), implode(', ', $skillNames));
     		
     		// Updating session data as well
     		$updatedUser = $this->qb->getUserSessionDataById($currentUserId);

@@ -23,7 +23,10 @@ class ProfileAction extends Action implements ActionInterface
 			$user['experience'] = $this->qb->getUserExperience($userId);
 			$user['languages'] = $this->qb->getUserLanguages($userId);
 			$user['skills'] = $this->qb->getUserSkills($userId);
-			$user['softSkills'] = $this->qb->getUserSoftSkills($userId);	    	
+			$user['softSkills'] = $this->qb->getUserSoftSkills($userId);
+
+			$user['wantToWorkIn'] = $this->model->getWantToWorkCompanies($userId);
+			
     		// Setting page title
     		$this->setPageTitle($user['profile']['fullName']);
     	

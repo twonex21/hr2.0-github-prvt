@@ -71,7 +71,7 @@ class CreateAction extends Action implements ActionInterface
     			return;
     		}
     		
-    		if(!$this->request->request->isNullOrEmpty('comp-ad-info') && FrontendUtils::isLatin($this->request->request->get('comp-ad-info'))) {
+    		if(!$this->request->request->isNullOrEmpty('comp-ad-info')) {
     			$companyAdditionalInfo = $this->request->request->get('comp-ad-info');
     		}
     		
@@ -148,7 +148,7 @@ class CreateAction extends Action implements ActionInterface
     		
     		$this->model->updateCompanyBenefits($currentCompanyId, $companyBenefits);
     		
-    		$this->fc->redirect('company', 'profile', 'cid/' . $currentCompanyId . '/t/');
+    		$this->fc->redirect('company', 'profile', 'cid/' . FrontendUtils::hrEncode($currentCompanyId) . '/t/');
     		
     	}
     	

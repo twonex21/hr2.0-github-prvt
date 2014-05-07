@@ -28,7 +28,7 @@
                     <b class="tooltip tooltip-bottom-left">Company officially registered name</b>
                 </label>
                 <label for="comp_ad_info" class="textarea "><span>Some additional information</span>
-                    <textarea id="comp_ad_info" name="comp-ad-info" attr-validate="isLatin">{$_companyProfile.additionalInfo}</textarea>
+                    <textarea id="comp_ad_info" name="comp-ad-info">{$_companyProfile.additionalInfo}</textarea>
                     <b class="tooltip tooltip-bottom-left">About company</b>
                 </label>
             </section>

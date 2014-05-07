@@ -10,9 +10,10 @@ $(document).ready(function() {
 	
 	/* Toggle search */
 	$('.searchbtn').click(function(){
-		if($(this).hasClass("sbtnactive")) 	$(this).removeClass('sbtnactive');	else  $('.searchbtn').addClass('sbtnactive');	
-		$('#search-input-back').slideToggle(300, 'easeInOutCirc', function() {
-			$('#search-input').val('').trigger('keyup');
+		if($(this).hasClass("sbtnactive")) 	$(this).removeClass('sbtnactive');	else  $('.searchbtn').addClass('sbtnactive');
+		
+		$('#search-input').val('').trigger('keypress');
+		$('#search-input-back').slideToggle(300, 'easeInOutCirc', function() {			
 			$('#search-input').focus();
 		});
 	});	
@@ -107,20 +108,7 @@ $(document).ready(function() {
 			);
 	});	*/
 	
-	
-	/*search*/
-	$('#search-input').keyup(function(){
-		if($(this).val()=='') {
-			$('#search-result-back').slideUp(300, 'easeInOutCirc', function() {
-				//$('#search-input').focus();
-			});	
-		}else {
-			$('#search-result-back').slideDown(300, 'easeInOutCirc', function() {
-				//$('#search-input').focus();
-			});	
-		}
-	});
-	
+		
 	$('#fileaddbtn:not(.file-remove)').click(function(e) {
 		$('#upload_file').trigger('click');
 	});
@@ -196,9 +184,44 @@ $(document).ready(function() {
     });
     
     
-    $('#subscribe-for-openings-btn').click(function(){ 
-    	subscribeForOpenings(this) 
+    $('#want_to_work').click(function(){ 
+    	addWantToWork(this); 
     });
+    
+    
+    $('#subscribe-for-openings-btn').click(function(){ 
+    	subscribeForOpenings(this); 
+    });
+    
+        
+    
+    /* Search */    
+	var timeout;
+	var action;
+	var searchKeyword;
+	var scrollLoaded = false;
+	$('#search-input').bind("keypress", function(){
+		clearTimeout(timeout);
+		
+		timeout = setTimeout(function() {
+			if($.trim($('#search-input').val()) != searchKeyword) {
+				action = $('#search-input').attr('data-search-type');
+				searchKeyword = $.trim($('#search-input').val());
+				
+				if(searchKeyword.length == '') {
+					$('#search-result-back').slideUp(300, 'easeInOutCirc', function() {
+						//$('#search-input').focus();
+						$('#search-result-inner').html('');
+					});	
+				} else if(searchKeyword.length > 2) {
+					$('#search-result-back').slideDown(300, 'easeInOutCirc', function() {						
+						$('#search-result-inner').load('/search/' + action + '/', {'keyword' : searchKeyword});						
+					});
+				}				
+			}
+		}, 400);
+			
+	});
 	
 });
 

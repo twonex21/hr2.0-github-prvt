@@ -108,9 +108,12 @@
 			</div>
 			<div id="search-input-back">
 				<div id="search-input-inner">
-					<input id="search-input" value="" maxlength="128"/>
+					<input id="search-input" value="" maxlength="128" data-search-type="{if $_HR_SESSION.COMPANY}user{else}vacancy{/if}" />
 				</div>
 			</div>
+			<div id="search-result-back">
+		    	<div id="search-result-inner"></div>
+		    </div>
 		</header>
 		<!--End of Header-->
 		<section class="message {$_HR_MESSAGE.type}" attr-flash="{$_HR_MESSAGE.isFlash}">

@@ -492,20 +492,25 @@ class FrontendUtils
         $fileNameParts = explode('.', $filePath);
         $extension = strtolower(end($fileNameParts));        
         
-        $imagecreateFunc = "imagecreatefrom" . $extension;        
+        $imagecreateFunc = "imagecreatefrom" . $extension;
+        // Original image        
+        $image = $imagecreateFunc($filePath);
         
         // Resample
-        $newImage = imagecreatetruecolor($newWidth, $newWidth);
-        $white = imagecolorallocate($newImage, 255, 255, 255);
-        imagefill($newImage, 0, 0, $white);
-        
-        $image = $imagecreateFunc($filePath);
+        $newImage = imagecreatetruecolor($newWidth, $newHeight);
+        if($extension == 'png') {
+        	imagesavealpha($newImage, true);        		
+        	$bgColor = imagecolorallocatealpha($newImage, 0, 0, 0, 127);        	
+        } else {
+	        $bgColor = imagecolorallocate($newImage, 255, 255, 255);
+        }
+        imagefill($newImage, 0, 0, $bgColor);                            
         imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
         
         Response::setHeader('Content-type', 'image/' . $extension);
         
         switch($extension) {
-            case 'jpeg':
+            case 'jpeg':            	
                 imagejpeg($newImage, null, 100);
                 break;
             case 'png':
@@ -792,7 +797,13 @@ class FrontendUtils
 				
 				// Creating new image resource for our result image
 				$newImage = imagecreatetruecolor($newWidth, $newHeight);
-				
+				if($type == 'png') {
+					imagesavealpha($newImage, true);
+					
+					$transparent = imagecolorallocatealpha($newImage, 0, 0, 0, 127);
+					imagefill($newImage, 0, 0, $transparent);
+				}
+								 
 				// Cropping and resizing the original image
 				imagecopyresampled($newImage, $originalImage, 0, 0, $cropX, $cropY, $newWidth, $newHeight, $croppedWidth, $croppedHeight);
 				
@@ -1153,7 +1164,8 @@ class FrontendUtils
 					}
 				}
 			}												
-		}
+		}		
+		$matching['skills'] = round($matching['skills']);
 		
 		// Experience matching
 		if(!empty($user['experience']) && !empty($vacancy['experience'])) {
@@ -1175,12 +1187,13 @@ class FrontendUtils
 						}
 						
 						break;
-					}																				
-				}
-				// Considering same industry only once for each user previous job
-				$handledIndustries[] = $vacancyExp['industryId'];
-			}				
+					}
+					// Considering same industry only once for each user previous job
+					$handledIndustries[] = $vacancyExp['industryId'];
+				}				
+			}
 		}
+		$matching['experience'] = round($matching['experience']);
 		
 		// Education matching		
 		if(!empty($user['education']) && !empty($vacancy['education'])) {
@@ -1200,6 +1213,7 @@ class FrontendUtils
 				}
 			}			
 		}
+		$matching['education'] = round($matching['education']);
 		
 		// Language matching
 		if(!empty($user['languages']) && !empty($vacancy['languages'])) {
@@ -1220,6 +1234,7 @@ class FrontendUtils
 				}
 			}	
 		}
+		$matching['languages'] = round($matching['languages']);
 		
 		// Soft skills matching
 		if(!empty($user['softSkills']) && !empty($vacancy['softSkills'])) {
@@ -1240,14 +1255,23 @@ class FrontendUtils
 				}
 			}			
 		}
+		$matching['softSkills'] = round($matching['softSkills']);
 
 		$matchingLevel = 0;
 		foreach($matching as $criteria => $match) {
 			$matchingLevel += constant('MATCHING_' . strtoupper($criteria) . '_WEIGHT') * $match;
 		}		
 		
-		$matching['total'] = ceil($matchingLevel);		
-		
+		$matching['total'] = ($matchingLevel == 0) ? 5 : ceil($matchingLevel);
+
+		$matchingLevels = unserialize(MATCHING_LEVELS);
+		foreach($matchingLevels as $threshold => $level) {
+			if($matching['total'] <= (int)$threshold) {
+				$matching['skillsLevel'] = $level;
+				break;
+			}
+		}
+
 		return $matching;
 	}
 }	

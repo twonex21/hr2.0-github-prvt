@@ -107,17 +107,18 @@
 {/if}
         
 <div class="grid margintop80">
-	<div class="grid">
+	{if $_HR_SESSION.COMPANY}
+	<div class="grid marginright40">
 	<a href="#" class="profbutton">hire me</a>
     </div>
-    <div class="grid wants-work">
-        Wants to work in:
-        <br />
-         <a class="button prof-bot-links">samsung</a> 
-         <a class="button prof-bot-links">apple</a>
-         <a class="button prof-bot-links">microsoft</a>
-         <a class="button prof-bot-links">htc</a>
-         <a class="button prof-bot-links">Fantasy interactive</a>
+    {/if}
+    {if $_user.wantToWorkIn}
+    <div class="grid wants-work">    	
+		<div>Wants to work in:</div>		
+		{foreach from=$_user.wantToWorkIn item=company}        
+        <a href="/company/profile/cid/{$company.idHash}/t/" class="button prof-bot-links" title="{$company.name}">{$company.name|truncate:25:"...":true}</a> 
+        {/foreach}        
     </div>
+    {/if}
 </div>
 <div class="clear"></div>      

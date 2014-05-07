@@ -489,33 +489,19 @@ a.share {
 
 .margintop80{margin-top:80px; margin-bottom:100px}
 .wants-work{
+	width: 710px;
     font-size: 2.1rem;
     color:#585858;
-    padding-left: 42px;
     text-transform: uppercase;
+}
+.wants-work > div {
+	padding-bottom:18px;
 }
 
 a.prof-bot-links {
     background:#c3c3c3;	
     padding: 5px 20px  !important;
-    margin-top:18px;
 }
 a.prof-bot-links:hover{
      background:#00a4f9 !important       
-}
-
-.login-txt {
-	float:left;
-	padding-top:10px;
-	font-family:'gothamlight';
-	font-style:italic;
-	font-size:1.8rem;
-}
-
-.login-txt a {
-	width:540px;
-	text-align:justify;
-	font-family:'gothammedium';
-	font-weight:bold;
-	color:#555;
 }

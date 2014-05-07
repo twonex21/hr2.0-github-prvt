@@ -15,7 +15,7 @@
 	width:16px;
 	height:100%;
 	top:0;
-	left:0;
+	right:0;
 }
 .mCSB_scrollTools .mCSB_draggerContainer{
 	position:absolute;
@@ -207,6 +207,9 @@
 
 /*scrollbar themes*/
 /*dark (dark colored scrollbar)*/
+.mCS-dark>.mCSB_scrollTools{
+	left:0 !important;
+}
 .mCS-dark>.mCSB_scrollTools .mCSB_draggerRail{
 	background:#000; /* rgba fallback */
 	background:rgba(0,0,0,0.15);
@@ -233,4 +236,27 @@
 }
 .mCS-dark>.mCSB_scrollTools .mCSB_buttonRight{
 	background-position:-80px -56px;
+}
+
+/* Custom search theme */
+.mCS-search>.mCSB_scrollTools{
+	opacity:0;
+	filter:"alpha(opacity=0)"; -ms-filter:"alpha(opacity=0)"; /* old ie */
+}
+.mCS-search:hover>.mCSB_scrollTools{
+	opacity:1;
+	filter:"alpha(opacity=100)"; -ms-filter:"alpha(opacity=100)"; /* old ie */
+}
+.mCS-search>.mCSB_scrollTools .mCSB_draggerRail{
+	background: none repeat scroll 0 0 rgba(38, 38, 38, 0.5);
+    border-radius: 1px;
+    width: 4px;
+}
+.mCS-search>.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+	background: none repeat scroll 0 0 rgba(199, 45, 15, 0.85);
+    border-radius: 1px;
+    width: 8px;
+}
+.mCS-search>.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{
+	background: none repeat scroll 0 0 rgba(0, 106, 167, 0.95);
 }

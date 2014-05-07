@@ -20,24 +20,30 @@ class CompanyView extends View
         $this->finish();
     }
     
-	function showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits, $maxPageViews, $usersApplyedCount, $isSubscriptionForOpenings) {
+	function showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, $companyBenefits, $companyVacancies, $maxPageViews, $usersApplyedCount, $isSubscriptionForOpenings, $isWorker) {
 
-		//basic info
+		// Basic info
 		$this->assign('_companyProfile', $companyProfile);
 		$this->assign('_companyOffices', $companyOffices);
 		
-		//benefits
+		// Benefits
 		$this->assign('_allBenefits', $allBenefits);
 		$this->assign('_companyBenefits', $companyBenefits);
 		
-		//Max page views
+		// Vacancies
+		$this->assign('_companyVacancies', $companyVacancies);
+		
+		// Max page views
 		$this->assign('_maxPageViews', $maxPageViews);
 		
-		//Users applyed count
+		// Users applied count
 		$this->assign('_usersApplyedCount', $usersApplyedCount);
 		
-		//is subscribed
+		// Is subscribed
 		$this->assign('_isSubscriptionForOpenings', $isSubscriptionForOpenings);
+		
+		// Wants to work here
+		$this->assign('_isWorker', $isWorker);
 		
         $this->render('profile.tpl', 'CONTENT');
         $this->finish();

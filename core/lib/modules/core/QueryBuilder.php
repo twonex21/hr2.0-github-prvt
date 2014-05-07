@@ -279,8 +279,21 @@ class QueryBuilder extends Model
     	return $benefits;
     }
     
+    public function getVacancyTitle($vacancyId) {
+    	$sql = "SELECT v.title FROM hr_vacancy v WHERE v.vacancy_id=%d";
+    	 
+    	$sql = $this->mysql->format($sql, array($vacancyId));
+    	$result = $this->mysql->query($sql);
+    	 
+    	$title = $this->mysql->getField('title', $result);
+    	 
+    	return $title;
+    }
+    
+    
     public function getVacancyInfo($vacancyId) {
-    	$sql = "SELECT v.vacancy_id AS vacancyId, v.title, v.company_id AS companyId, c.name AS companyName, c.mail AS companyMail, v.location, v.info AS additionalInfo, DATE_FORMAT(v.deadline, '%%d %%M, %%Y') AS deadline, v.file_key AS fileKey,
+    	$sql = "SELECT v.vacancy_id AS vacancyId, v.title, v.company_id AS companyId, c.name AS companyName, c.mail AS companyMail, c.logo_key AS logoKey, v.location, 
+    				   v.info AS additionalInfo, DATE_FORMAT(v.deadline, '%%d %%M, %%Y') AS deadline, v.file_key AS fileKey,
     				   v.views, v.show_applicants_count AS showApplicantsCount, v.show_viewers_count AS showViewersCount, v.show_wanttowork_count AS showWantToWorkCount,
     				   (SELECT COUNT(DISTINCT va.appl_id) FROM hr_vacancy_application va WHERE va.vacancy_id=v.vacancy_id) AS applicantsCount
 				FROM hr_vacancy v
@@ -290,8 +303,11 @@ class QueryBuilder extends Model
     	$sql = $this->mysql->format($sql, array($vacancyId));
     	$result = $this->mysql->query($sql);
     	 
-    	$vacancyInfo = $this->mysql->getRow($result);
-    	 
+    	if($row = $this->mysql->getNextResult($result)) {
+    		$row['companyIdHash'] = FrontendUtils::hrEncode($row['companyId']);
+    		$vacancyInfo = $row;
+    	}    	
+
     	return $vacancyInfo;
     }
     
@@ -532,12 +548,70 @@ class QueryBuilder extends Model
     			}
     			$expIndustries[$expItem['industryId']]++;
     		}
-    		
-    		$industryId = array_search(max($expIndustries), $expIndustries);    		
+    		if(!empty($expIndustries)) {
+    			$industryId = array_search(max($expIndustries), $expIndustries);
+    		}    		
     	}
     	
     	return $industryId;
     } 
+    
+    
+    public function getCompanyVacancyIds($companyId) {
+    	$vacancyIds = array();
+    	$sql = "SELECT vacancy_id FROM hr_vacancy WHERE company_id=%d AND status='%s' OR status='%s'";
+    	 
+    	$sql = $this->mysql->format($sql, array($companyId, VACANCY_STATUS_ACTIVE, VACANCY_STATUS_INACTIVE));
+    	$result = $this->mysql->query($sql);
+
+    	while($row = $this->mysql->getNextResult($result)) {
+    		$vacancyIds[] = $row['vacancy_id'];
+    	}
+    	
+    	return $vacancyIds;
+    }
+    
+    
+    public function getSpecializationsByIds($specIds) {
+    	$specNames = array();
+    	$sql = "SELECT name FROM hr_specialization WHERE spec_id IN(%s)";
+    	 
+    	$sql = $this->mysql->format($sql, array(implode(',', $specIds)));
+    	$result = $this->mysql->query($sql);
+
+    	while($row = $this->mysql->getNextResult($result)) {
+    		$specNames[] = $row['name'];
+    	}
+    	
+    	return $specNames;
+    }
+    
+    
+    public function getSkillNamesByIds($skillIds) {
+    	$skillNames = array();
+    	$sql = "SELECT name FROM hr_skill WHERE skill_id IN(%s)";
+    	 
+    	$sql = $this->mysql->format($sql, array(implode(',', $skillIds)));
+    	$result = $this->mysql->query($sql);
+
+    	while($row = $this->mysql->getNextResult($result)) {
+    		$skillNames[] = $row['name'];
+    	}
+    	
+    	return $skillNames;
+    }
+    
+    
+    public function isAlreadyWorker($userId, $companyId) {
+    	$sql = "SELECT COUNT(*) AS count FROM hr_company_workers WHERE user_id=%d AND company_id=%d";
+    	$params = array($userId, $companyId);
+    
+    	$sql = $this->mysql->format($sql, $params);
+    	$result = $this->mysql->query($sql);
+    	 
+    	return ($this->mysql->getField('count', $result) > 0);
+    }
+        
 }
 
 ?>

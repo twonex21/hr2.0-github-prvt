@@ -1,24 +1,34 @@
 // Site function library
 
 
-function loadScript(src, callback) {	
+function loadScript(src) {	
 	// Getting callback function (must be always passed as second argument)
 	var callback = arguments[1];
 	// Getting callback arguments
-	var args = Array.prototype.slice.call(arguments, 2);		
-	$.getScript( "/js/" + src + ".js", function(data, textStatus, jqxhr) {
+	var args = Array.prototype.slice.call(arguments, 2);
+	if($('head script[src^="/js/' + src + '.js"]').size() == 0) {
+		$.getScript( "/js/" + src + ".js", function(data, textStatus, jqxhr) {
+			if(typeof callback != 'undefined') {
+				$(window).load(function(){
+					// Invoking callback ajax function with passed arguments
+					window[callback].apply(undefined, args);
+				});
+			}
+		});
+	} else {
+		// Script is already available on the page
 		if(typeof callback != 'undefined') {
-			$(window).load(function(){
+			$(window).ready(function() {				
 				// Invoking callback ajax function with passed arguments
 				window[callback].apply(undefined, args);
 			});
 		}
-	});
+	}
 }
 
 
 function addCssFile(href) {
-	if($('#' + href.replace('.', '\\.') + '_css').size() == 0) {
+	if($('head link[href^="/css/' + href + '.css"]').size() == 0) {
 		$('.loaded').hide();		
 		
 		var link = document.createElement('link');
@@ -179,9 +189,17 @@ function initCarousel() {
 
 function initVacancyScroller() {
 	$('.vac-nav').mCustomScrollbar({
-		theme: "dark",
+		theme: 'dark',
 		mouseWheel: true
 	});
+}
+
+
+function initSearchScroller() {
+	$('#search-result-inner').mCustomScrollbar({
+		theme: 'search',
+		mouseWheel: true
+	});		
 }
 
 

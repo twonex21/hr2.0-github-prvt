@@ -13,24 +13,27 @@ class ProfileAction extends Action implements ActionInterface
     	$companyOffices = array();
     	$allBenefits = array();
     	$companyBenefits = array();
+    	$companyVacancies = array();    	
     	$maxPageViews = 0;
     	$usersAppliedCount = 0;
+    	$isSubscriptionForOpenings = false;
+    	$isWorker = false;
+    	    	
     	
-    	
-    	//getting detail page company id
+    	// Getting detail page company id
     	if(!$this->request->query->isNullOrEmpty('cid')) {
     		$companyHash = $this->request->query->get('cid');
     		$companyId = FrontendUtils::hrDecode($companyHash);
     	}
     	
-    	//getting current user or company id    	
+    	// Getting current user or company id    	
     	if($this->session->isUserAuthorized()){ 
     		$currentUserId = $this->session->getCurrentUserId();
     	} else if($this->session->isCompanyAuthorized()){
     		$currentCompanyId = $this->session->getCurrentCompanyId();
     	}
     	
-    	//incrementing page view count
+    	// Incrementing page view
     	$this->model->incrementPageViews($companyId);
     	//logging logged user or company visit to current company detail page
     	if($currentCompanyId !== 0){
@@ -44,28 +47,34 @@ class ProfileAction extends Action implements ActionInterface
     	if(empty($companyProfile)){
     		$this->fc->delegateNotFound();
     	}
+    	
     	$companyOffices = $this->model->getCompanyOfficesById($companyId);
     	
-    	//Benefits
+    	// Benefits
     	$allBenefits = $this->qb->getBenefits();
-
     	$companyBenefits = $this->qb->getCompanyBenefits($companyId);
     	
-    	//Maximum pageviews count
+    	// Company vacancies
+    	$companyVacancies = $this->model->getCompanyVacancies($companyId);
+    	
+    	// Maximum pageviews count
     	$maxPageViews = $this->model->getMaxCompanyPageViews();
     	
-    	//users applied count
+    	// Users applied count
     	$usersAppliedCount = $this->model->getUsersAppliedCount($companyId);
     	
-    	//is subscribed
+    	// Is subscribed
     	$isSubscriptionForOpenings = $this->model->isSubscriptionForOpenings($companyId, $currentUserId);
+    	
+    	// Wants to work here
+    	$isWorker = $this->qb->isAlreadyWorker($currentUserId, $companyId);
     	
     	// Setting page title
     	$this->setPageTitle($companyProfile['name']);
     	
     	$this->view->showCompanyProfilePage($companyProfile, $companyOffices, $allBenefits, 
-    			                            $companyBenefits, $maxPageViews, $usersAppliedCount,
-    			                            $isSubscriptionForOpenings);
+    			                            $companyBenefits, $companyVacancies, $maxPageViews, 
+    										$usersAppliedCount, $isSubscriptionForOpenings, $isWorker);
     }       
 
 }

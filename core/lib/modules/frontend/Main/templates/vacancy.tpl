@@ -1,7 +1,9 @@
 <div class="vac-wrapper">
 	<h2>{$_vacancy.info.title}</h2>
 	<time class="deadline">Deadline: <strong>{$_vacancy.info.deadline}</strong></time>
-    <a href="#" class="vac-logo"><img src="static/companies/logo/samsung.png" width="140" height="60"/></a>
+    <a href="/company/profile/cid/{$_vacancy.info.companyIdHash}/t/" class="vac-logo">
+    	{if $_vacancy.info.logoKey}<img src="/support/resizeimage/tp/2/s/3/dim/h/key/{$_vacancy.info.logoKey}/t/">{/if}
+    </a>
     <p class="vac-info">{$_vacancy.info.additionalInfo|escape|nl2br|truncate:200:"...":true}</p>
     <div class="vac-skills">
     {foreach from=$_vacancy.skills item=skill}

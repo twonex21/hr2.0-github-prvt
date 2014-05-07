@@ -46,14 +46,7 @@ class ViewAction extends Action implements ActionInterface
 				$user['skills'] = $this->qb->getUserSkills($currentUserId);
 				$user['softSkills'] = $this->qb->getUserSoftSkills($currentUserId);
 				
-				$matching = FrontendUtils::calculateMatching($user, $vacancy);				
-				$matchingLevels = unserialize(MATCHING_LEVELS);
-				foreach($matchingLevels as $threshold => $level) {
-					if($matching['skills'] < (int)$threshold) {
-						$matching['skillsLevel'] = $level;
-						break;
-					}
-				}
+				$matching = FrontendUtils::calculateMatching($user, $vacancy);								
 				
 				// Check if user is able to apply for the vacancy
 				// Has not applied yet and total matching is higher than application threshold

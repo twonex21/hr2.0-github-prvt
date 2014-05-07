@@ -9,7 +9,7 @@ class Model
     //public $db = null;            
 
     private static $_instance;
-    protected $mysql = null; //Holds the MySQLBean obje
+    protected $mysql = null; //Holds the MySQLBean object
 
        
     public function __construct() {
