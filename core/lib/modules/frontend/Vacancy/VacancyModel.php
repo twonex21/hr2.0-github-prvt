@@ -170,8 +170,10 @@ class VacancyModel extends Model
     
     public function createVacancy($companyId, $title, $location, $additionalInfo, $showApplicantsCount, $showViewersCount, $showWantToWorkCount, $fileKey, $deadline, $status) {
     	$vacancyId = null;
-    	$sql = "INSERT INTO hr_vacancy (company_id, title, location, info, show_applicants_count, show_viewers_count, show_wanttowork_count, file_key, deadline, status, created_at, changed_at)
-    			VALUES (%d,	'%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', NOW(), NOW())";
+    	
+    	$openedAt = ($status == VACANCY_STATUS_ACTIVE) ? 'NOW()' : 'NULL';
+    	$sql = "INSERT INTO hr_vacancy (company_id, title, location, info, show_applicants_count, show_viewers_count, show_wanttowork_count, file_key, deadline, status, opened_at, created_at, changed_at)
+    			VALUES (%d,	'%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', " . $openedAt . ", NOW(), NOW())";
     	$params = array($companyId, $title, $location, $additionalInfo, $showApplicantsCount, $showViewersCount, $showWantToWorkCount, $fileKey, date('Y-m-d', strtotime($deadline)), $status);
     	
     	$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
@@ -182,14 +184,30 @@ class VacancyModel extends Model
     	return $vacancyId;
     }
     
+    
+    public function getVacancyStatus($vacancyId) {    	    	
+    	$sql = "SELECT status FROM hr_vacancy WHERE vacancy_id=%d";
+    	
+    	$sql = $this->mysql->format($sql, array($vacancyId));
+    	$result = $this->mysql->query($sql);
+    	
+    	return $this->mysql->getField('status', $result);
+    }
 	
-	public function updateVacancy($vacancyId, $title, $location, $additionalInfo, $showApplicantsCount, $showViewersCount, $showWantToWorkCount, $fileKey, $deadline, $status) {
+    
+	public function updateVacancy($vacancyId, $title, $location, $additionalInfo, $showApplicantsCount, $showViewersCount, $showWantToWorkCount, $fileKey, $deadline, $status, $oldStatus) {
     	$sql = "UPDATE hr_vacancy SET title='%s', location='%s', info='%s', show_applicants_count=%d, show_viewers_count=%d, show_wanttowork_count=%d, deadline='%s', status='%s', changed_at=NOW()";
     	$params = array($title, $location, $additionalInfo, $showApplicantsCount, $showViewersCount, $showWantToWorkCount, date('Y-m-d', strtotime($deadline)), $status);
     	
     	if($fileKey != '') {
     		$sql .= ", file_key='%s'";
     		$params[] = $fileKey;
+    	}
+    	
+    	if($oldStatus == VACANCY_STATUS_INACTIVE && $status == VACANCY_STATUS_ACTIVE) {
+    		$sql .= ", opened_at=NOW(), closed_at=NULL";
+    	} elseif($oldStatus == VACANCY_STATUS_ACTIVE && $status == VACANCY_STATUS_INACTIVE) {
+    		$sql .= ", closed_at=NOW()";
     	}
     	
     	$sql .= " WHERE vacancy_id=%d";
@@ -403,6 +421,13 @@ class VacancyModel extends Model
     	$sql = "INSERT INTO hr_vacancy_view (vacancy_id, role, role_user_id, created_at)
     			VALUES (%d, '%s', %d, NOW())";
     	$sql = $this->mysql->format($sql, array($vacancyId, $userRole, $userId));
+    	$this->mysql->query($sql);
+    }
+    
+    
+    public function deleteVacancy($vacancyId) {
+    	$sql = "UPDATE hr_vacancy SET status='%s' WHERE vacancy_id=%d";
+    	$sql = $this->mysql->format($sql, array(VACANCY_STATUS_DELETED, $vacancyId));
     	$this->mysql->query($sql);
     }
 }

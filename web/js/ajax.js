@@ -259,6 +259,41 @@ function ajaxRemoveFile(fileName, type) {
 }
 
 
+function ajaxLogin() {
+	var mail = $.trim($('#si_email').val());
+	var password = $.trim($('#si_password').val());
+	var remember = $('#si_remember_me').is(':checked');
+	
+	if(mail != '' && password != '') {
+		// Performing ajax authentication
+		jQuery.ajax({
+			dataType: "json",
+			url: "/auth/signin/",
+			type: "POST",
+			data: {'mail' : mail, 'password' : password, 'remember' : remember},
+			
+			success: function(json) {
+				if(json.status == 'SUCCESS') {
+					// Successful authentication
+					if(json.hasOwnProperty('redirectUrl')) {
+						window.location.href = json.redirectUrl;
+					} else { 
+						window.location.href = window.location.href;
+					}
+				} else {
+					// Authentication error
+					if(json.hasOwnProperty('message')) {
+						$('.signin-body .error').text(json.message).show().animate({'opacity' : 1}, 300);
+						$('.signin-body label').addClass('state-error');
+					}
+				}
+			},
+			error: function(json){} 
+		});
+	}
+}
+
+
 function ajaxValidateForm() {
 	var params = {'fields' : []};
 	var currentField = {};
@@ -327,7 +362,7 @@ function applyToVacancy(vacancyId) {
 
         success: function(json) {
             if(json.status == 'SUCCESS') {
-            	document.location.href = document.location.href;
+            	window.location.href = window.location.href;
             } else {
             	
             }
@@ -346,10 +381,39 @@ function addWantToWork(el){
 		data: {'cid' : companyId},
 		type: 'POST',
 		success: function(json) {
-			setMessage('success', json.message, true);
-			$(el).animate({'opacity' : 0}, 300, function() {
-				$(this).remove();
-			});
+			if(json.status == 'SUCCESS') {
+				setMessage('success', json.message, true);
+				$(el).animate({'opacity' : 0}, 300, function() {
+					$(this).remove();
+				});
+			} else {
+				setMessage('error', json.message, true);
+			}
+		},
+		error: function(json){
+			setMessage('error', json.message, true);
+		} 
+	});
+}
+
+
+function addHiring(el){
+	var userId = $(el).attr('data-id');
+	
+	jQuery.ajax({
+		dataType: 'json',
+		url: '/company/hire/',
+		data: {'uid' : userId},
+		type: 'POST',
+		success: function(json) {
+			if(json.status == 'SUCCESS') {
+				setMessage('success', json.message, true);
+				$(el).animate({'opacity' : 0}, 300, function() {
+					$(this).remove();
+				});
+			} else {
+				setMessage('error', json.message, true);
+			}
 		},
 		error: function(json){
 			setMessage('error', json.message, true);
@@ -367,10 +431,37 @@ function subscribeForOpenings(el){
         data: {'cid' : companyId},
         type: 'POST',
         success: function(json) {
-           setMessage('success', json.message, true);
-           $(el).animate({'opacity' : 0}, 300, function() {
-				$(this).remove();
-			});
+        	if(json.status == 'SUCCESS') {
+				setMessage('success', json.message, true);
+					$(el).animate({'opacity' : 0}, 300, function() {
+					$(this).remove();
+				});
+        	} else {
+        		setMessage('error', json.message, true);
+        	}
+        },
+        error: function(json){
+           setMessage('error', json.message, true);
+        } 
+    });
+}
+
+
+function deleteVacancy(vacancyId) {
+	jQuery.ajax({
+        dataType: 'json',
+        url: '/vacancy/delete/',
+        data: {'vid' : vacancyId},
+        type: 'POST',
+        success: function(json) {
+        	if(json.status == 'SUCCESS') {
+				setMessage('success', json.message, true);           
+				$('tr[data-id="' + vacancyId + '"]').animate({'opacity' : 0}, 500, function() {
+					$(this).remove();
+				});
+        	} else {
+        		setMessage('error', json.message, true);
+        	}
         },
         error: function(json){
            setMessage('error', json.message, true);

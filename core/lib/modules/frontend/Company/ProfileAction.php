@@ -55,7 +55,7 @@ class ProfileAction extends Action implements ActionInterface
     	$companyBenefits = $this->qb->getCompanyBenefits($companyId);
     	
     	// Company vacancies
-    	$companyVacancies = $this->model->getCompanyVacancies($companyId);
+    	$companyVacancies = $this->qb->getCompanyVacancies($companyId, VACANCY_STATUS_ACTIVE);
     	
     	// Maximum pageviews count
     	$maxPageViews = $this->model->getMaxCompanyPageViews();

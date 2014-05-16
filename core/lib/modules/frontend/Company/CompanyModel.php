@@ -137,25 +137,7 @@ class CompanyModel extends Model
 		}
 	}
 	
-	
-	public function getCompanyVacancies($companyId, $count = 30) {
-		$vacancies = array();
-		 
-		$sql = "SELECT v.vacancy_id AS vacancyId, v.company_id AS companyId, v.title, c.name AS companyName, DATE_FORMAT(v.deadline, '%%d %%M, %%Y') AS deadline
-    			FROM hr_vacancy v
-    			INNER JOIN hr_company c ON v.company_id=c.company_id
-    			WHERE c.company_id=%d AND v.status='%s'
-    			ORDER BY v.created_at DESC
-    			LIMIT %d";
-		 
-		$sql = $this->mysql->format($sql, array($companyId, VACANCY_STATUS_ACTIVE, $count));
-		$result = $this->mysql->query($sql);
-		$vacancies = $this->mysql->getDataSet($result);
-		 
-		return $vacancies;
-	}
-	
-	
+		
 	public function getMaxCompanyPageViews(){
 		$sql = "SELECT MAX(page_views) AS maxPageViews FROM hr_company";
 		$result = $this->mysql->query($sql);
@@ -212,6 +194,113 @@ class CompanyModel extends Model
 			return true;
 		}
 		
+	}
+	
+
+	public function getCompanyApplicants($companyId) {
+		$applicants = array();
+		
+		$sql = "SELECT v.vacancy_id AS vacancyId, v.title AS vacancyTitle, v.status AS vacancyStatus, u.user_id AS userId, 
+					   CONCAT(u.first_name, ' ', u.last_name) AS fullName, DATE_FORMAT(va.created_at, '%%Y-%%m-%%d') AS appliedAt
+				FROM hr_vacancy_application va
+				INNER JOIN hr_vacancy v ON v.vacancy_id=va.vacancy_id	
+				INNER JOIN hr_user u ON u.user_id=va.user_id	
+				WHERE v.company_id=%d
+				ORDER BY va.created_at DESC";		
+		$sql = $this->mysql->format($sql, array($companyId));
+		$result = $this->mysql->query($sql);
+		
+		$users = array();
+		$vacancies = array();
+		while($row = $this->mysql->getNextResult($result)) {
+			if(isset($vacancies[$row['vacancyId']])) {
+				$vacancy = $vacancies[$row['vacancyId']];
+			} else {
+				$vacancy = array();
+				// TODO: Think about getting all user or vacancy data in one call
+				$vacancy['education'] = $this->qb->getVacancyEducation($row['vacancyId']);
+				$vacancy['experience'] = $this->qb->getVacancyExperience($row['vacancyId']);
+				$vacancy['languages'] = $this->qb->getVacancyLanguages($row['vacancyId']);
+				$vacancy['skills'] = $this->qb->getVacancySkills($row['vacancyId']);
+				$vacancy['softSkills'] = $this->qb->getVacancySoftSkills($row['vacancyId']);
+				
+				$vacancies[$row['vacancyId']] = $vacancy;
+			}
+			
+			if(isset($users[$row['userId']])) {
+				$user = $users[$row['userId']];
+			} else {
+				$user = array();
+				// TODO: Think about getting all user or vacancy data in one call
+				$user['education'] = $this->qb->getUserEducation($row['userId']);
+				$user['experience'] = $this->qb->getUserExperience($row['userId']);
+				$user['languages'] = $this->qb->getUserLanguages($row['userId']);
+				$user['skills'] = $this->qb->getUserSkills($row['userId']);
+				$user['softSkills'] = $this->qb->getUserSoftSkills($row['userId']);
+				
+				$users[$row['userId']] = $user;
+			}
+			
+			if(!empty($vacancy) && !empty($user)) {								 
+				$row['matching'] = FrontendUtils::calculateMatching($user, $vacancy);
+			}
+			
+			$row['idHash'] = FrontendUtils::hrEncode($row['userId']);
+			
+			$applicants[] = $row;
+		}
+		
+		return $applicants;
+	}
+	
+	
+	public function getCompanyWorkers($companyId, $vacancies) {
+		$applicants = array();
+		
+		$sql = "SELECT u.user_id AS userId, CONCAT(u.first_name, ' ', u.last_name) AS fullName, DATE_FORMAT(cw.created_at, '%%Y-%%m-%%d') AS appliedAt
+				FROM hr_company_workers cw
+				INNER JOIN hr_user u ON cw.user_id=u.user_id 
+				WHERE cw.company_id=%d
+				ORDER BY cw.created_at DESC";		
+		$sql = $this->mysql->format($sql, array($companyId));
+		$result = $this->mysql->query($sql);
+		
+		while($row = $this->mysql->getNextResult($result)) {						
+			if(!empty($vacancies)) {
+				$user = array();
+				// TODO: Think about getting all user or vacancy data in one call
+				$user['education'] = $this->qb->getUserEducation($row['userId']);
+				$user['experience'] = $this->qb->getUserExperience($row['userId']);
+				$user['languages'] = $this->qb->getUserLanguages($row['userId']);
+				$user['skills'] = $this->qb->getUserSkills($row['userId']);
+				$user['softSkills'] = $this->qb->getUserSoftSkills($row['userId']);
+				 
+				$maxMatching = 0;
+				foreach($vacancies as $vacancy) {
+					$row['matching'] = FrontendUtils::calculateMatching($user, $vacancy);
+					if($row['matching'] > $maxMatching) {
+						$maxMatching = $row['matching'];
+						$row['matching']['vacancyId'] = $vacancy['vacancyId'];
+						$row['matching']['vacancyTitle'] = $vacancy['title'];
+					}
+				}
+			}
+			
+			$row['idHash'] = FrontendUtils::hrEncode($row['userId']);
+			$workers[] = $row;			
+		}
+		
+		return $workers;
+	}
+	
+	
+	public function addHiredUser($userId, $companyId) {
+		$sql = "INSERT INTO hr_company_hiring (user_id, company_id, created_at)
+    			VALUES (%d, %d, NOW())";
+		$params = array($userId, $companyId);
+		
+		$sql = $this->mysql->format($sql, $params);
+		$this->mysql->query($sql);
 	}
 	
 }

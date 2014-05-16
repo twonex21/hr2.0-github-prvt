@@ -48,6 +48,24 @@ class CompanyView extends View
         $this->render('profile.tpl', 'CONTENT');
         $this->finish();
     }
+    
+    
+    public function showCompanyApplicants($applicants, $pagesCount) {
+    	$this->assign('_applicants', $applicants);
+    	$this->assign('_pagesCount', $pagesCount);
+    	
+    	$this->render('applicants.tpl', 'CONTENT');
+    	$this->finish();
+    }
+    
+    
+    public function showCompanyWorkers($workers, $pagesCount) {
+    	$this->assign('_workers', $workers);
+    	$this->assign('_pagesCount', $pagesCount);
+    	
+    	$this->render('workers.tpl', 'CONTENT');
+    	$this->finish();
+    }
 
 }
 

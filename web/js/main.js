@@ -18,25 +18,8 @@ $(document).ready(function() {
 		});
 	});	
 	
-	/* sign-in */	
-	$('.popup').magnificPopup({
-		type: 'ajax',
-		overflowY: 'auto',
-		removalDelay: 100,
-		showCloseBtn: true,
-		closeBtnInside: false,
-		closeOnContentClick: false,
-		closeOnBgClick: false,
-		preloader: true,
-		mainClass: 'my-mfp-zoom-in',
-		fixedContentPos: true,
-		fixedBgPos: true,
-		ajax: {
-		  settings:  {cache:false},
-		  tError: '<a href="%url%">The content</a> could not be loaded.' //  Error message, can contain %curr% and %total% tags if gallery is enabled
-		}
-		
-	});
+	/* sign-in */
+	initPopup();
 	
 	/* Sign-up tab switch */
 	$(document).on('click', '.tab-switch a', function() {
@@ -51,7 +34,17 @@ $(document).ready(function() {
 	});	
 	
 	/* vacancy - table sorter */
-	$(".tablesorter").tablesorter();
+	$(".tablesorter").tablesorter().bind("sortEnd",function() { 
+		showPage(1); 
+    });	
+	
+	$('#pager a').click(function() {
+		var page = parseInt($(this).text());
+		
+		showPage(page);
+		return false;
+	});
+		
 	
 	$('.vac-slider .vac-item').click(function() {			
 		var containerTop = $('.vac-nav').offset().top;	
@@ -173,9 +166,15 @@ $(document).ready(function() {
 	});		
 	
 	$(document).on('click', '.sbutton, .profbutton', function(e) {
-		ajaxValidateForm();
+		if($(this).parents('.signin-body').size() == 0) {
+			ajaxValidateForm();
+		}
 		e.preventDefault();
 	});	
+	
+	$(document).on('click', '.signin-body .sbutton', function(e) {
+		ajaxLogin();
+	});
 	
     $('.vacbutton').click(function(e) {
     	var vacancyId = $(this).attr('attr-id');
@@ -185,9 +184,14 @@ $(document).ready(function() {
     
     
     $('#want_to_work').click(function(){ 
-    	addWantToWork(this); 
+    	addWantToWork(this);
+    	return false;
     });
     
+    $('#hire_me').click(function(){ 
+    	addHiring(this); 
+    	return false;
+    });
     
     $('#subscribe-for-openings-btn').click(function(){ 
     	subscribeForOpenings(this); 
@@ -222,6 +226,64 @@ $(document).ready(function() {
 		}, 400);
 			
 	});
+	
+	
+	$('#vac-table tbody tr').click(function() {
+		var vacancyId = $(this).attr('data-id');
+		location.href = '/vacancy/view/vid/' + vacancyId + '/t/';
+	});
+
+	$('#vac-table .delete').click(function(e) {		
+		var vacancyId = $(this).parents('tr').attr('data-id');
+		if(confirm('Are you sure you want to delete this vacancy?')) {
+			deleteVacancy(vacancyId);
+		}
+		return false;
+	});
+	
+	$('#appl-table .delete').click(function(e) {		
+		var applId = $(this).parents('tr').attr('data-id');
+		if(confirm('Are you sure you want to delete this vacancy?')) {
+			deleteVacancy(vacancyId);
+		}
+		return false;
+	});
+	
+	/*
+	$('#vac-table th').click(function() {
+		var columnIdx = $(this).index() + 1;
+		var sortOrder = 'asc';
+				
+		var $row;		
+		var ultimate;
+		var $ultimateRow;
+		
+		if(sortOrder == 'asc') {			
+			for(var idx = 0; idx < $('#vac-table tbody tr').size() - 1; idx++) {				
+				$ultimateRow = $('#vac-table tbody tr:nth-child(' + (idx + 1) + ')');
+				ultimate = $ultimateRow.find('td:nth-child(' + columnIdx + ')').text();
+				
+				$('#vac-table tbody tr').each(function(i) {
+					if(i >= idx) {
+						$row = $(this);
+						value = $row.find('td:nth-child(' + columnIdx + ')').text();
+						console.log(i + '.)' + value);
+						if(value < ultimate) {							
+							ultimate = value;
+							$ultimateRow = $row;
+						}
+					}					
+				});
+				
+				if($('#vac-table tbody tr:nth-child(' + (idx + 1) + ')').attr('data-id') != $ultimateRow.attr('data-id')) {
+					$('#vac-table tbody tr:nth-child(' + (idx + 1) + ')').before($ultimateRow);					
+				}
+			}			
+		} else if(sortOrder == 'desc') {
+			
+		}				
+	});
+	*/
 	
 });
 

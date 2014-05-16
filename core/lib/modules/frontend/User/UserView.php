@@ -20,6 +20,15 @@ class UserView extends View
         $this->render('profile.tpl', 'CONTENT');
         $this->finish();
     }
+    
+    
+    public function showUserApplications($applications, $pagesCount) {
+    	$this->assign('_applications', $applications);
+    	$this->assign('_pagesCount', $pagesCount);
+    	
+    	$this->render('applications.tpl', 'CONTENT');
+    	$this->finish();
+    }
 }
 
 ?>

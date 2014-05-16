@@ -1,0 +1,1 @@
+ALTER TABLE `hr_user` ADD COLUMN `type` ENUM('HR','FACEBOOK','LINKEDIN') DEFAULT 'HR' NOT NULL AFTER `user_id`, ADD COLUMN `external_id` VARCHAR(60) NULL AFTER `type`, CHANGE `password` `password` VARCHAR(62) CHARSET utf8 COLLATE utf8_general_ci NULL;

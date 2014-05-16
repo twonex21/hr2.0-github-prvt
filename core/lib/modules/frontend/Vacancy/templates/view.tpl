@@ -1,11 +1,8 @@
 {literal}
 <script>
-	addCssFile('araks');	
-	addCssFile('account');
-	// Loading ajax lib
-	loadScript('ajax');		
-	// Loading and initializing carousel
-	loadScript('jquery.jcarousel.min', 'initCarousel');	
+	$(function() {		
+		initCarousel();	
+	});	
 </script>
 {/literal}
 
@@ -14,8 +11,8 @@
 		<div class="vacancy-top-text">{$_vacancy.info.title}, <div>{$_vacancy.info.location}</div></div>
 		<div><i>Deadline:</i> {$_vacancy.info.deadline}</div>
 	</div>		
-	<div class="clear margintop35"></div>      
-	<img height="68" width="200" alt="" src="/images/samsung.png">
+	<div class="clear margintop35"></div>	
+	{if $_vacancy.info.logoKey}<a href="/company/profile/cid/{$_vacancy.info.companyIdHash}/t/" title="{$_vacancy.info.companyName}"><img height="68" alt="" src="/support/resizeimage/tp/2/s/2/dim/h/key/{$_vacancy.info.logoKey}/t/"></a>{/if}
 </section>
 <div class="clear"></div>
 <div class="req-skills-top">

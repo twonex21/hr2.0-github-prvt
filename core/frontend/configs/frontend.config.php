@@ -41,7 +41,7 @@ define('SESSION_COMPANY_ATTRIBUTES',
 define('USER_SECURED_ACTIONS',
 	serialize(
 		array(
-			'user' => array('create', 'wanttowork'),
+			'user' => array('create', 'wanttowork', 'appliedjobs'),
 			'vacancy' => array('apply'),			
 			'company' => array('subscribeforopenings')
 		)
@@ -52,8 +52,8 @@ define('USER_SECURED_ACTIONS',
 define('COMPANY_SECURED_ACTIONS',
 	serialize(
 		array(
-			'company' => array('create'),
-			'vacancy' => array('open'),
+			'company' => array('create', 'applicants', 'workers'),
+			'vacancy' => array('open', 'manager', 'delete'),
 			'search' => array('user')
 		)
 	)
@@ -96,6 +96,7 @@ define('TPL_STYLESHEET_MAPPING',
 				'Company\profile.tpl' => array('mCustomScrollbar'),
 				'User\create.tpl' => array('glDatePicker.flatwhite'),
 				'User\profile.tpl' => array('araks'),
+				'Vacancy\view.tpl' => array('araks', 'account'),
 			)
 		)
 );
@@ -108,7 +109,9 @@ define('TPL_SCRIPT_MAPPING',
 				'Company\create.tpl' => array('ajax'),
 				'Company\profile.tpl' => array('jquery.mCustomScrollbar.min', 'ajax', 'jquery.jcarousel.min'),
 				'User\create.tpl' => array('ajax'),
-				'User\profile.tpl' => array('jquery.jcarousel.min'),
+				'User\profile.tpl' => array('jquery.jcarousel.min', 'ajax'),
+				'Vacancy\view.tpl' => array('ajax', 'jquery.jcarousel.min'),
+				'Vacancy\manager.tpl' => array('ajax', 'jquery.tablesorter.pager'),
 			)
 		)
 );

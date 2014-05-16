@@ -8,6 +8,7 @@ class AutoLoader
    	private function __construct() {
    		spl_autoload_register(array($this, 'autoloadCore'));
    		spl_autoload_register(array($this, 'autoloadFrontend'));
+   		spl_autoload_register(array($this, 'autoloadFacebook'));
    	}
    	
    	private function autoloadCore($className) {
@@ -25,6 +26,15 @@ class AutoLoader
     	array_shift($parts);
     	
     	$classFile = FRONTEND_DIR . implode("/", $parts) . '.php';    	
+    	if(file_exists($classFile)) {
+    		require $classFile;
+    	}
+   	}
+   	
+   	private function autoloadFacebook($className) {
+   		$parts = explode('\\', $className);   		
+    	
+    	$classFile = FB_SDK_DIR . implode("/", $parts) . '.php';    	
     	if(file_exists($classFile)) {
     		require $classFile;
     	}

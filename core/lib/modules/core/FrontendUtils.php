@@ -472,7 +472,7 @@ class FrontendUtils
     }
     
     
-    public static function outputImage($filePath, $dimension, $dimensionSize) {
+    public static function outputImage($filePath, $dimension, $dimensionSize, $filter = '') {
         $width = 0;
         $height = 0;
         $ratio = 0;
@@ -494,7 +494,7 @@ class FrontendUtils
         
         $imagecreateFunc = "imagecreatefrom" . $extension;
         // Original image        
-        $image = $imagecreateFunc($filePath);
+        $image = $imagecreateFunc($filePath);                
         
         // Resample
         $newImage = imagecreatetruecolor($newWidth, $newHeight);
@@ -506,6 +506,11 @@ class FrontendUtils
         }
         imagefill($newImage, 0, 0, $bgColor);                            
         imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        
+        // Applying filter
+        if($filter != '') {
+        	imagefilter($newImage, $filter);
+        }
         
         Response::setHeader('Content-type', 'image/' . $extension);
         
@@ -577,29 +582,28 @@ class FrontendUtils
     }
     
     
-    public static function uploadVideo($tempFilename,$fileName,$newFileName) {
-    	$microsecs = "";
-        $secs = "";
-        $fileType = "";
-        
-        $fileType = substr($fileName, strrpos($fileName,".")+1); 
-        
-        /*srand((double) microtime()*1000000);          
-        
-        $newFileName = rand(0,99999999).".".$fileType;        */
-        // Generating 10 symbols length random string
-        //$newFileName = self::randomString(10, false, true);
-        $filePath = MEDIA_DIR."videos/".$newFileName.".".$fileType;
-
-        if (move_uploaded_file($tempFilename, $filePath)) {
-            return $newFileName;
-        }
-        else {
-            return "";
-        }
-
+    public static function uploadExternalPicture($pictureUrl) {    	 
+    	$getFile = getimagesize($pictureUrl);
+    	$extension = (isset($getFile['mime'])) ? substr($getFile['mime'], strpos($getFile['mime'], '/') + 1) : 'jpeg';
+    	$extension = ($extension == 'jpg') ? 'jpeg' : $extension;
+    	 
+    	$newFileName = self::randomString(10, false, true);        	
+    	$filePath = sprintf(USER_PICTURE_PATH, $newFileName, $extension);       	
+    	
+    	$imagecreate = 'imagecreatefrom' . $extension;    	
+    	if(function_exists($imagecreate)) {
+    		$newImage = $imagecreate($pictureUrl);
+    		// Saving the result image into file
+    		$imageFunc = 'image' . $extension;
+    		$quality = ($extension == 'png') ? 8 : 90;
+    		if(function_exists($imageFunc) && $imageFunc($newImage, $filePath, $quality)) {
+    			return array('key' => $newFileName, 'extension' => $extension);
+    		}
+    	}
+    	
+    	return array();
     }
-
+    
     
     public static function getTempFilePath($key) {
     	$allExtensions = array_merge(unserialize(HR_PICTURE_EXTENSIONS), unserialize(HR_FILE_EXTENSIONS));
@@ -660,7 +664,7 @@ class FrontendUtils
     	return self::getFilePath($key, VACANCY);
     }
 
-    public static function saveTemporaryFile($key, $type, $stripPrefix = false) {
+    public static function saveTemporaryFile($key, $type) {
     	// Finding temp path by key
     	$tempLocation = self::getTempFilePath($key);
 		

@@ -47,6 +47,26 @@ function addCssFile(href) {
 	}
 }
 
+function initPopup() {
+	$('.popup').magnificPopup({
+		type: 'ajax',
+		overflowY: 'auto',
+		removalDelay: 100,
+		showCloseBtn: true,
+		closeBtnInside: false,
+		closeOnContentClick: false,
+		closeOnBgClick: false,
+		preloader: true,
+		mainClass: 'my-mfp-zoom-in',
+		fixedContentPos: true,
+		fixedBgPos: true,
+		ajax: {
+		  settings:  {cache:false},
+		  tError: '<a href="%url%">The content</a> could not be loaded.' //  Error message, can contain %curr% and %total% tags if gallery is enabled
+		}
+		
+	});	
+}
 
 function addBlock($btn) {
 	// Getting first block
@@ -248,5 +268,19 @@ function setMessage() {
 function closeMessage() {	
 	$('.message').animate({'opacity' : 0}, 800, function() {
 		$(this).css({'display' : 'none'});
+	});
+}
+
+
+function showPage(page) {console.log(page);
+	var perPage = 10;
+	
+	$('.pager a[data-page=' + page + ']').addClass('active').siblings().removeClass('active');
+	$(".tablesorter tbody tr").each(function(i) {
+		if(i < (page - 1) * perPage || i >= page * perPage) {
+			$(this).hide();
+		} else {
+			$(this).show();
+		}
 	});
 }

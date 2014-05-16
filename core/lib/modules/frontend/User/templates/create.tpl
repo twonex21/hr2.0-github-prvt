@@ -144,7 +144,7 @@
 	                    <select name="exp-years[]">
 	                        {section start=1 loop=5 name=numbers}
 							    <option value="{$smarty.section.numbers.index}" {if $expItem && $smarty.section.numbers.index == $expItem.years}selected{/if}>{$smarty.section.numbers.index}</option>
-							{/section}              
+							{/section}
 							<option value="5+" {if $expItem && $expItem.years == "5+"}selected{/if}>5+</option>                                                         
 	                    </select>
 	                    <i></i>

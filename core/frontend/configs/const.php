@@ -11,6 +11,10 @@ define('COMPANY', 'COMPANY');
 define('RESUME', 'RESUME');
 define('VACANCY', 'VACANCY');
 
+define('TYPE_HR', 'HR');
+define('TYPE_LINKEDIN', 'LINKEDIN');
+define('TYPE_FACEBOOK', 'FACEBOOK');
+
 define('SQL_UNPREPARED_QUERY', 1);
 define('SQL_PREPARED_QUERY', 2);
 
@@ -33,6 +37,7 @@ define('MSG_TYPE_SUCCESS', 'success');
 // Vacancy statuse
 define('VACANCY_STATUS_ACTIVE', 'ACTIVE');
 define('VACANCY_STATUS_INACTIVE', 'INACTIVE');
+define('VACANCY_STATUS_DELETED', 'DELETED');
 
 define('SMALL_IMAGE_SIZE',  60);
 define('MIDDLE_IMAGE_SIZE', 100);
@@ -94,5 +99,11 @@ define('MATCHING_LEVELS',
 define('MATCHING_APPLICATION_THRESHOLD', 50);
 
 // External API keys
+
+// FB App
+define('FB_APP_ID', '1433597923560645');
+//define('FB_APP_ID', '1433610363559401');
+define('FB_APP_SECRET', 'eba6125a889f9d8bf587315e30e95f55');
+//define('FB_APP_SECRET', '46bf0de8c256b950c09e17a8b02bdf6d');
 
 ?>

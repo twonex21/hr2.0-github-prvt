@@ -109,7 +109,7 @@
 <div class="grid margintop80">
 	{if $_HR_SESSION.COMPANY}
 	<div class="grid marginright40">
-	<a href="#" class="profbutton">hire me</a>
+	<a href="#" id="hire_me" class="profbutton" data-id="{$_user.profile.userId}">hire me</a>
     </div>
     {/if}
     {if $_user.wantToWorkIn}

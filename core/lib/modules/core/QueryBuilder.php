@@ -8,7 +8,7 @@ class QueryBuilder extends Model
     	parent::__construct();
     }
     
-    
+         
     public function notAlreadyUsed($mail) {
     	$sql = "SELECT COUNT(user_id) AS count FROM hr_user WHERE mail='%1\$s'
     			UNION
@@ -69,6 +69,29 @@ class QueryBuilder extends Model
     	$company = FrontendUtils::validateSessionData($company, unserialize(SESSION_COMPANY_ATTRIBUTES));
 
     	return $company;   	
+    }
+    
+    
+    public function getUserSessionDataByExternalId($externalId) {
+    	$user = array();
+    	 
+    	$sql = "SELECT user_id AS ID, mail, first_name AS firstName, last_name AS lastName, CONCAT(first_name, ' ', last_name) AS fullName,
+    				   resume_key AS resumeKey, DATE_FORMAT(created_at, '%%Y-%%m-%%d') AS registrationDate
+    			FROM hr_user
+    			WHERE external_id='%s'";
+    	 
+    	$sql = $this->mysql->format($sql, array($externalId));
+    	$result = $this->mysql->query($sql);
+    
+    	while($row = $this->mysql->getNextResult($result)) {
+    		$row['idHash'] = FrontendUtils::hrEncode($row['ID']);
+    		$user = $row;
+    	}
+    	 
+    	// Getting the result row and checking if it corresponds to user session attribues
+    	$user = FrontendUtils::validateSessionData($user, unserialize(SESSION_USER_ATTRIBUTES));
+    
+    	return $user;
     }
     
     
@@ -292,6 +315,8 @@ class QueryBuilder extends Model
     
     
     public function getVacancyInfo($vacancyId) {
+    	$vacancyInfo = array();
+    	
     	$sql = "SELECT v.vacancy_id AS vacancyId, v.title, v.company_id AS companyId, c.name AS companyName, c.mail AS companyMail, c.logo_key AS logoKey, v.location, 
     				   v.info AS additionalInfo, DATE_FORMAT(v.deadline, '%%d %%M, %%Y') AS deadline, v.file_key AS fileKey,
     				   v.views, v.show_applicants_count AS showApplicantsCount, v.show_viewers_count AS showViewersCount, v.show_wanttowork_count AS showWantToWorkCount,
@@ -572,6 +597,33 @@ class QueryBuilder extends Model
     }
     
     
+    public function getCompanyVacancies($companyId, $status = '', $count = 30) {
+    	$whereSql = '';
+    	$vacancies = array();    		
+    	$params = array($companyId, VACANCY_STATUS_DELETED, $count);
+    	
+    	if($status != '') {
+    		$whereSql = " AND v.status='%4\$s'";
+    		$params[] = $status;
+    	}
+    	
+    	$sql = "SELECT v.vacancy_id AS vacancyId, v.company_id AS companyId, v.title, c.name AS companyName, 
+    				   DATE_FORMAT(v.deadline, '%%d %%M, %%Y') AS deadline, DATE_FORMAT(v.deadline, '%%Y-%%m-%%d') AS deadlineShort, 
+    				   DATE_FORMAT(v.opened_at, '%%Y-%%m-%%d') AS openedAt, DATE_FORMAT(v.closed_at, '%%Y-%%m-%%d') AS closedAt, v.status
+    			FROM hr_vacancy v
+    			INNER JOIN hr_company c ON v.company_id=c.company_id
+    			WHERE c.company_id=%d AND v.status != '%2\$s'" . $whereSql . "
+    			ORDER BY v.created_at DESC
+    			LIMIT %3\$d";    	    	
+    		
+    	$sql = $this->mysql->format($sql, $params);
+    	$result = $this->mysql->query($sql);
+    	$vacancies = $this->mysql->getDataSet($result);
+    		
+    	return $vacancies;
+    }
+    
+            
     public function getSpecializationsByIds($specIds) {
     	$specNames = array();
     	$sql = "SELECT name FROM hr_specialization WHERE spec_id IN(%s)";
@@ -611,7 +663,74 @@ class QueryBuilder extends Model
     	 
     	return ($this->mysql->getField('count', $result) > 0);
     }
-        
+    
+    
+    public function isAlreadyHired($userId, $companyId) {
+    	$sql = "SELECT COUNT(*) AS count FROM hr_company_hiring WHERE user_id=%d AND company_id=%d";
+    	$params = array($userId, $companyId);
+    
+    	$sql = $this->mysql->format($sql, $params);
+    	$result = $this->mysql->query($sql);
+    	 
+    	return ($this->mysql->getField('count', $result) > 0);
+    }
+    
+    
+    public function isVacancyOwner($companyId, $vacancyId) {
+    	$sql = "SELECT COUNT(vacancy_id) AS count FROM hr_vacancy WHERE vacancy_id=%d AND company_id=%d";
+    	 
+    	$sql = $this->mysql->format($sql, array($vacancyId, $companyId));
+    	$result = $this->mysql->query($sql);
+    	 
+    	if($row = $this->mysql->getRow($result)) {
+    		if($row['count'] > 0) {
+    			return true;
+    		}
+    	}
+    	 
+    	return false;
+    }
+    
+
+    public function isUserProfileComplete($userId) {
+    	$sql = "SELECT resume_key AS resumeKey,
+				       (SELECT COUNT(*) FROM hr_user_education ue WHERE ue.user_id=u.user_id) AS univerCount,
+				       (SELECT COUNT(*) FROM hr_user_language ul WHERE ul.user_id=u.user_id) AS langsCount,
+				       (SELECT COUNT(*) FROM hr_user_skill us WHERE us.user_id=u.user_id) AS skillsCount
+				FROM hr_user u
+				WHERE u.user_id=%d";
+    	
+    	$sql = $this->mysql->format($sql, array($userId));
+    	$result = $this->mysql->query($sql);
+    	
+    	if($row = $this->mysql->getRow($result)) {
+    		if($row['resumeKey'] || ($row['univerCount'] > 0 && $row['langsCount'] > 0 && $row['skillsCount'] > 0)) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
+    
+    
+    public function isCompanyProfileComplete($companyId) {
+    	$sql = "SELECT additional_info AS info, linkedin, facebook, twitter,
+				       (SELECT COUNT(*) FROM hr_company_office co WHERE co.company_id=c.company_id) AS officesCount,
+				       (SELECT COUNT(*) FROM hr_company_benefit cb WHERE cb.company_id=c.company_id) AS benefitsCount
+				FROM hr_company c
+				WHERE c.company_id=%d";
+    	
+    	$sql = $this->mysql->format($sql, array($companyId));
+    	$result = $this->mysql->query($sql);
+    	
+    	if($row = $this->mysql->getRow($result)) {
+    		if($row['info'] != '' && ($row['linkedin'] || $row['facebook'] || $row['facebook']) && ($row['officesCount'] > 0 || $row['benefitsCount'] > 0)) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
 }
 
 ?>

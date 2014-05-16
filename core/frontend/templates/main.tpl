@@ -71,7 +71,7 @@
 		                                    <li><a href="#">Change password</a></li>
 		                                </ul>
 		                            </li>
-		                            <li><a href="#">Applied jobs</a></li>
+		                            <li><a href="/user/applications/">Applied jobs</a></li>
 		                            <li><a href="/auth/out/">Log Out</a></li>
 		                        </ul>
 		                    </li>
@@ -89,8 +89,9 @@
 		                                </ul>
 		                            </li>
 		                            <li><a href="/vacancy/open/">Open Vacancy</a></li>
-		                            <li><a href="#">Vacancy Manager</a></li>
-		                            <li><a href="#">Applied Jobs</a></li>
+		                            <li><a href="/vacancy/manager/">Vacancy Manager</a></li>
+		                            <li><a href="/company/applicants/">Applied Jobs</a></li>
+		                            <li><a href="/company/workers/">Want to work here</a></li>
 		                            <li><a href="/auth/out/">Log Out</a></li>
 		                        </ul>
 		                    </li>
@@ -98,7 +99,7 @@
 		                {else}
 						<div>
 							<a href="/auth/signup/" class="popup">create account</a> 
-							<span>or</span> <a href="#">log in</a>
+							<span>or</span> <a href="/auth/signin/" class="popup">log in</a>
 						</div>
 						{/if}
 					</div>

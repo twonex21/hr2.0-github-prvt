@@ -248,8 +248,9 @@ class OpenAction extends Action implements ActionInterface
     		
     		if($this->qb->vacancyExists($vacancyId)) {
 	    		if(!$isNew) {
+	    			$oldStatus = $this->model->getVacancyStatus($vacancyId); 
 	    			// Updating old vacancy
-	    			$this->model->updateVacancy($vacancyId, $title, $location, $additionalInfo, $showApplicantsCount, $showViewersCount, $showWantToWorkCount, $fileKey, $deadline, $status);
+	    			$this->model->updateVacancy($vacancyId, $title, $location, $additionalInfo, $showApplicantsCount, $showViewersCount, $showWantToWorkCount, $fileKey, $deadline, $status, $oldStatus);
 	    		}
 				
 	    		if(!empty($education)) {

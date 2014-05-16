@@ -17,6 +17,7 @@ class ResizeImageAction extends Action implements ActionInterface
         $dimensionSize = MIDDLE_IMAGE_SIZE; // Default size
         $type = 1;	 						// 1 for USER, 2 for COMPANY
         $square = false;
+        $filter = '';
         
         if($this->request->query->has('s') && $this->request->query->isDigit('s')) {
             $sizeType = $this->request->query->getInt('s');
@@ -28,6 +29,12 @@ class ResizeImageAction extends Action implements ActionInterface
                 
         $fileName = $this->request->query->get('key', '');        
         
+        // Determines whether to apply grayscale filter
+        if(!$this->request->query->isNullOrEmpty('gs')) {
+        	$filter = IMG_FILTER_GRAYSCALE;
+        }
+        
+        // Determines whether output square image
         $square = !$this->request->query->isNullOrEmpty('sq');
         
         if($this->request->query->has('tmp') && $this->request->query->getInt('tmp') == 1) {
@@ -51,7 +58,7 @@ class ResizeImageAction extends Action implements ActionInterface
         }        
             
     	if($filePath != '')
-        	FrontendUtils::outputImage($filePath, $dimension, $dimensionSize);
+        	FrontendUtils::outputImage($filePath, $dimension, $dimensionSize, $filter);
     }
 }
 //EOF

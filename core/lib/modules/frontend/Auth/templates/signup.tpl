@@ -2,7 +2,8 @@
 <script>
 	addCssFile('account');
 
-	$(function() {		
+	$(function() {
+		initPopup();
 		$('.tab-switch a:first').trigger('click');	
 	});	
 </script>
@@ -12,7 +13,7 @@
 	<section class="create-account-sec">
 		<div class="create-account-header">
 			<div class="account-title">Welcome to HR.am!</div>
-	        <div class="account-title-sub"><span>Already have an account?</span>&nbsp;&nbsp;<a href="#">CLICK HERE TO LOG IN</a></div>
+	        <div class="account-title-sub"><span>Already have an account?</span>&nbsp;&nbsp;<a href="/auth/signin/" class="popup">CLICK HERE TO LOG IN</a></div>
 		</div>
 	    <div class="create-account-body">
 	    	<div class="tab-switch">

@@ -8,6 +8,10 @@ define('PT_HOME', 'Home');
 define('PT_EDIT_USER_PROFILE', 'Edit Profile');
 define('PT_EDIT_COMPANY_PROFILE', 'Edit Company Profile');
 define('PT_OPEN_VACANCY', 'Open Vacancy');
+define('PT_VACANCY_MANAGER', 'Vacancy Manager');
+define('PT_JOB_APPLICANTS', 'Job Applicants');
+define('PT_JOB_APPLICATIONS', 'Job Applications');
+define('PT_COMPANY_WORKERS', 'Who wants to work here');
 
 // Validation
 define('VALIDATION_FILE_UPLOAD_ERROR', 'Some error occured during file upload');

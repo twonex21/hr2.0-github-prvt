@@ -2,9 +2,9 @@
 	<h2>{$_vacancy.info.title}</h2>
 	<time class="deadline">Deadline: <strong>{$_vacancy.info.deadline}</strong></time>
     <a href="/company/profile/cid/{$_vacancy.info.companyIdHash}/t/" class="vac-logo">
-    	{if $_vacancy.info.logoKey}<img src="/support/resizeimage/tp/2/s/3/dim/h/key/{$_vacancy.info.logoKey}/t/">{/if}
+    	{if $_vacancy.info.logoKey}<img src="/support/resizeimage/tp/2/s/3/dim/h/gs/1/key/{$_vacancy.info.logoKey}/t/">{/if}
     </a>
-    <p class="vac-info">{$_vacancy.info.additionalInfo|escape|nl2br|truncate:200:"...":true}</p>
+    <p class="vac-info">{$_vacancy.info.additionalInfo|escape|nl2br|truncate:300:"...":false}</p>
     <div class="vac-skills">
     {foreach from=$_vacancy.skills item=skill}
 		<div class="skill">

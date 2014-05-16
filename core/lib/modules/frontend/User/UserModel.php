@@ -389,7 +389,42 @@ class UserModel extends Model
     	
     	return $companies;
     }
-        
+
+    
+    public function getUserApplications($userId, $user) {
+    	$applications = array();
+    
+    	$sql = "SELECT v.vacancy_id AS vacancyId, v.title AS vacancyTitle, v.status AS vacancyStatus,
+				       c.company_id AS companyId, c.name AS companyName, DATE_FORMAT(va.created_at, '%%Y-%%m-%%d') AS appliedAt
+				FROM hr_vacancy_application va
+				INNER JOIN hr_vacancy v ON v.vacancy_id=va.vacancy_id
+				INNER JOIN hr_company c ON c.company_id=v.company_id
+				WHERE va.user_id=%d
+				ORDER BY va.created_at DESC";
+    	$sql = $this->mysql->format($sql, array($userId));
+    	$result = $this->mysql->query($sql);
+    
+    	$vacancies = array();
+    	while($row = $this->mysql->getNextResult($result)) {    		
+			$vacancy = array();
+			// TODO: Think about getting all user or vacancy data in one call
+			$vacancy['education'] = $this->qb->getVacancyEducation($row['vacancyId']);
+			$vacancy['experience'] = $this->qb->getVacancyExperience($row['vacancyId']);
+			$vacancy['languages'] = $this->qb->getVacancyLanguages($row['vacancyId']);
+			$vacancy['skills'] = $this->qb->getVacancySkills($row['vacancyId']);
+			$vacancy['softSkills'] = $this->qb->getVacancySoftSkills($row['vacancyId']);    
+    			
+    		if(!empty($vacancy) && !empty($user)) {
+    			$row['matching'] = FrontendUtils::calculateMatching($user, $vacancy);
+    		}
+    			
+    		$row['idHash'] = FrontendUtils::hrEncode($row['companyId']);
+    			
+    		$applications[] = $row;
+    	}
+    
+    	return $applications;
+    }
 }
 
 ?>

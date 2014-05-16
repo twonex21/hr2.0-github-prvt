@@ -8,6 +8,7 @@ define('LOG_DIR',      MEDIA_DIR . '/logs/');
 define('TEMP_DIR',     MEDIA_DIR . '/temp_files/');
 define('CORE_DIR',     LIB_DIR . '/modules/core/');
 define('FRONTEND_DIR', LIB_DIR . '/modules/frontend/');
+define('FB_SDK_DIR',   LIB_DIR . '/facebook/src/');
 
 //Database access
 define('BASE_DB_HOST', '127.0.0.1');

@@ -23,6 +23,15 @@ class VacancyView extends View
     	$this->render('view.tpl', 'CONTENT');
     	$this->finish();
     }
+	
+    
+    public function showVacancyManager($vacancies, $pagesCount) {    	
+    	$this->assign('_vacancies', $vacancies);    	
+    	$this->assign('_pagesCount', $pagesCount);    	
+    
+    	$this->render('manager.tpl', 'CONTENT');
+    	$this->finish();
+    }
 }
 
 ?>
