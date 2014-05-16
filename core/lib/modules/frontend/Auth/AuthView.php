@@ -9,7 +9,9 @@ class AuthView extends View
         $this->render('signup.tpl');        
     }
     
-	public function showUserSignupForm() {		
+	public function showUserSignupForm($fbUrl) {
+		$this->assign('_fbUrl', $fbUrl);
+		
         $this->render('signup-user.tpl');
     }
     

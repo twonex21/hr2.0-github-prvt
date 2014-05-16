@@ -1,7 +1,7 @@
 <div class="social-login">
     <div class="account-block-title">Connect your social account</div>
     <a class="button linkedin" href="#">LOGIN VIA linkedin</a>
-    <a class="button face" href="#">LOGIN VIA facebook</a>
+    <a class="button face" href="#" data-url="{$_fbUrl}">LOGIN VIA facebook</a>
 	<a class="button twitter" href="#">LOGIN VIA twitter</a>                
 </div>
 <div class="login-from">

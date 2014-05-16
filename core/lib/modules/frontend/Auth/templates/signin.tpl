@@ -4,17 +4,6 @@
 
 	$(function() {		
 		initPopup();
-
-		$('.face').click(function() {
-			var fbUrl = $(this).attr('data-url');			
-			var fbWindow = window.open(fbUrl, 'fbWindow', 'width=600, height=420');
-			fbWindow.addEventListener("beforeunload", function(e) {				
-			   	
-			}, false);
-		});
-
-
-		
 	});	
 </script>
 {/literal}

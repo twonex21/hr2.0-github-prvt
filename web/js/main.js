@@ -33,6 +33,12 @@ $(document).ready(function() {
 		return false;
 	});	
 	
+	/* FB Login */
+	$(document).on('click', '.social-login .face', function() {
+		var fbUrl = $(this).attr('data-url');			
+		var fbWindow = window.open(fbUrl, 'fbWindow', 'width=600, height=420');			
+	});
+	
 	/* vacancy - table sorter */
 	$(".tablesorter").tablesorter().bind("sortEnd",function() { 
 		showPage(1); 

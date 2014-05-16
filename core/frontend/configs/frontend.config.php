@@ -41,7 +41,7 @@ define('SESSION_COMPANY_ATTRIBUTES',
 define('USER_SECURED_ACTIONS',
 	serialize(
 		array(
-			'user' => array('create', 'wanttowork', 'appliedjobs'),
+			'user' => array('create', 'wanttowork', 'applications'),
 			'vacancy' => array('apply'),			
 			'company' => array('subscribeforopenings')
 		)
@@ -52,7 +52,7 @@ define('USER_SECURED_ACTIONS',
 define('COMPANY_SECURED_ACTIONS',
 	serialize(
 		array(
-			'company' => array('create', 'applicants', 'workers'),
+			'company' => array('create', 'applicants', 'workers', 'hire'),
 			'vacancy' => array('open', 'manager', 'delete'),
 			'search' => array('user')
 		)

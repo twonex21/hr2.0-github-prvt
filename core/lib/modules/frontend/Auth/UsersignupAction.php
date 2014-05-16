@@ -1,6 +1,9 @@
 <?php
 namespace HR\Auth;
 
+use Facebook\FacebookSession as FacebookSession;
+use Facebook\FacebookRedirectLoginHelper as FacebookRedirectLoginHelper;
+
 use HR\Core\ActionInterface;
 use HR\Core\Action;
 use HR\Core\FrontendUtils;
@@ -19,7 +22,12 @@ class UserSignupAction extends Action implements ActionInterface
     	// User must be not authorized
     	if(!$this->session->isUserAuthorized() && !$this->session->isCompanyAuthorized()) {	    	    		
     		if($this->request->request->isEmpty()) {
-				$this->view->showUserSignupForm();
+    			// Generating FB Login url
+    			FacebookSession::setDefaultApplication(FB_APP_ID, FB_APP_SECRET);
+    			$fbHelper = new FacebookRedirectLoginHelper('http://local.hr.am/auth/fbconnect/');
+    			$fbUrl = $fbHelper->getLoginUrl(array('email', 'user_birthday', 'user_location'), 'popup');
+    			
+				$this->view->showUserSignupForm($fbUrl);
     		} else {
     			// Form submitted, handling POST data	    		
 	    		if(!$this->request->request->isNullOrEmpty('email') && FrontendUtils::isEmailAddress($this->request->request->get('email')) && $this->qb->notAlreadyUsed($this->request->request->get('email'))) {
