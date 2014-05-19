@@ -260,17 +260,21 @@ function ajaxRemoveFile(fileName, type) {
 
 
 function ajaxLogin() {
-	var mail = $.trim($('#si_email').val());
-	var password = $.trim($('#si_password').val());
-	var remember = $('#si_remember_me').is(':checked');
+	var postData = {};
 	
-	if(mail != '' && password != '') {
+	postData.mail = $.trim($('#si_email').val());
+	postData.password = $.trim($('#si_password').val());
+	if($('#si_remember_me').is(':checked')) {
+		postData.remember = 'on';
+	}	
+	
+	if(postData.mail != '' && postData.password != '') {
 		// Performing ajax authentication
 		jQuery.ajax({
 			dataType: "json",
 			url: "/auth/signin/",
 			type: "POST",
-			data: {'mail' : mail, 'password' : password, 'remember' : remember},
+			data: postData,
 			
 			success: function(json) {
 				if(json.status == 'SUCCESS') {

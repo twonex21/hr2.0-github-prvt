@@ -89,6 +89,18 @@ class AuthModel extends Model
     	 
     	return ($this->mysql->getField('count', $result) > 0);
     }
+    
+    
+    public function setCookieInfo($entity, $cKey, $cTime) {
+    	$table = 'hr_' . strtolower($entity['type']);
+    	$column = strtolower($entity['type']) . '_id';
+    	
+    	$sql = "UPDATE %s SET ckey='%s', ctime='%s' WHERE %s=%d";
+    	    	
+    	$params = array($table, $cKey, $cTime, $column, $entity['ID']);
+    	$sql = $this->mysql->format($sql, $params);
+    	$this->mysql->query($sql);		    	
+    }
 }
 
 

@@ -13,7 +13,7 @@ class HomeAction extends Action implements ActionInterface
     	$randomIndustry = array();
     	$topVacanciesCount = 0;
     	    	    	
-    	$this->setPageTitle(PT_HOME);
+    	$this->setPageTitle(PT_HOME);    	
     	
     	$recentVacancies = $this->model->getRecentVacancies(30);
     	$topCompanies = $this->model->getTopCompanies();

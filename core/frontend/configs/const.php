@@ -15,6 +15,9 @@ define('TYPE_HR', 'HR');
 define('TYPE_LINKEDIN', 'LINKEDIN');
 define('TYPE_FACEBOOK', 'FACEBOOK');
 
+define('COOKIE_NAME', 'hr_ckey');
+define('COOKIE_TIME_OUT', 90);
+
 define('SQL_UNPREPARED_QUERY', 1);
 define('SQL_PREPARED_QUERY', 2);
 
