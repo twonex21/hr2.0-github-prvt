@@ -106,4 +106,8 @@ define('FB_APP_ID', '1433597923560645');
 define('FB_APP_SECRET', 'eba6125a889f9d8bf587315e30e95f55');
 //define('FB_APP_SECRET', '46bf0de8c256b950c09e17a8b02bdf6d');
 
+// Linked In App
+define('LI_APP_ID', '75q3xb2ucw1170');
+define('LI_APP_SECRET', '7kOdvId1VA6WyN5I');
+
 ?>

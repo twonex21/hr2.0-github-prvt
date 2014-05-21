@@ -9,8 +9,9 @@ class AuthView extends View
         $this->render('signup.tpl');        
     }
     
-	public function showUserSignupForm($fbUrl) {
+	public function showUserSignupForm($fbUrl, $linkedInUrl) {
 		$this->assign('_fbUrl', $fbUrl);
+		$this->assign('_linkedInUrl', $linkedInUrl);
 		
         $this->render('signup-user.tpl');
     }
@@ -19,8 +20,9 @@ class AuthView extends View
         $this->render('signup-company.tpl');
     }
     
-    public function showSigninPage($fbUrl) {
+    public function showSigninPage($fbUrl, $linkedInUrl) {
     	$this->assign('_fbUrl', $fbUrl);
+    	$this->assign('_linkedInUrl', $linkedInUrl);
     	
     	$this->render('signin.tpl');
     }
@@ -31,6 +33,13 @@ class AuthView extends View
     	$this->assign('_redirectUrl', $redirectUrl);
     	
     	$this->render('fb-success.tpl');
+    }
+    
+    public function showLinkedInPage($success = true, $redirectUrl = '') {
+    	$this->assign('_success', $success);
+    	$this->assign('_redirectUrl', $redirectUrl);
+    	
+    	$this->render('li-success.tpl');
     }
 }
 

@@ -4,6 +4,8 @@ namespace HR\Auth;
 use Facebook\FacebookSession as FacebookSession;
 use Facebook\FacebookRedirectLoginHelper as FacebookRedirectLoginHelper;
 
+use HappyR\LinkedIn\LinkedIn;
+
 use HR\Core\ActionInterface;
 use HR\Core\Action;
 
@@ -24,8 +26,12 @@ class SigninAction extends Action implements ActionInterface
     			$fbHelper = new FacebookRedirectLoginHelper('http://local.hr.am/auth/fbconnect/');
     			$fbUrl = $fbHelper->getLoginUrl(array('email', 'user_birthday', 'user_location'), 'popup');
     			
+    			$linkedIn = new LinkedIn(LI_APP_ID, LI_APP_SECRET);
+    			$linkedIn->setRedirectUrl('http://hr.dev/auth/liconnect/');
+    			$linkedInUrl = $linkedIn->getLoginUrl();
+    			
     			// Showing signin modal
-    			$this->view->showSigninPage($fbUrl);
+    			$this->view->showSigninPage($fbUrl, $linkedInUrl);
     		} else {
     			$this->response->jsonPrepare();
     			

@@ -39,6 +39,12 @@ $(document).ready(function() {
 		var fbWindow = window.open(fbUrl, 'fbWindow', 'width=600, height=420');			
 	});
 	
+	/* Linked In Login */
+	$(document).on('click', '.social-login .linkedin', function() {
+		var linkedInUrl = $(this).attr('data-url');			
+		var linkedInWindow = window.open(linkedInUrl, 'linkedInWindow', 'width=600, height=420');			
+	});
+	
 	/* vacancy - table sorter */
 	$(".tablesorter").tablesorter().bind("sortEnd",function() { 
 		showPage(1); 

@@ -4,6 +4,8 @@ namespace HR\Auth;
 use Facebook\FacebookSession as FacebookSession;
 use Facebook\FacebookRedirectLoginHelper as FacebookRedirectLoginHelper;
 
+use HappyR\LinkedIn\LinkedIn;
+
 use HR\Core\ActionInterface;
 use HR\Core\Action;
 use HR\Core\FrontendUtils;
@@ -27,7 +29,11 @@ class UserSignupAction extends Action implements ActionInterface
     			$fbHelper = new FacebookRedirectLoginHelper('http://local.hr.am/auth/fbconnect/');
     			$fbUrl = $fbHelper->getLoginUrl(array('email', 'user_birthday', 'user_location'), 'popup');
     			
-				$this->view->showUserSignupForm($fbUrl);
+    			$linkedIn = new LinkedIn(LI_APP_ID, LI_APP_SECRET);
+    			$linkedIn->setRedirectUrl('http://hr.dev/auth/liconnect/');
+    			$linkedInUrl = $linkedIn->getLoginUrl();
+    			
+				$this->view->showUserSignupForm($fbUrl, $linkedInUrl);
     		} else {
     			// Form submitted, handling POST data	    		
 	    		if(!$this->request->request->isNullOrEmpty('email') && FrontendUtils::isEmailAddress($this->request->request->get('email')) && $this->qb->notAlreadyUsed($this->request->request->get('email'))) {
