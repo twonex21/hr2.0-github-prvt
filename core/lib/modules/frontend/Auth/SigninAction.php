@@ -8,6 +8,7 @@ use HappyR\LinkedIn\LinkedIn;
 
 use HR\Core\ActionInterface;
 use HR\Core\Action;
+use HR\Core\FrontendUtils;
 
 class SigninAction extends Action implements ActionInterface 
 {
@@ -71,6 +72,19 @@ class SigninAction extends Action implements ActionInterface
     					// Sending success status
     					$this->response->jsonSetStatus(SUCCESS);
     				}
+    				
+    				if($this->request->request->get('remember')) {
+    					$userAgent = $this->request->server->get('HTTP_USER_AGENT');    					
+    					$cKey = sha1($userAgent.$entity['ID'].$entity['type']);
+    					$cTime = time() + 60 * 60 * 24 * COOKIE_TIME_OUT;
+    					
+    					// Setting actual cookie
+    					setcookie(COOKIE_NAME, $cKey, $cTime, '/');
+
+    					// Storing cookie info
+    					$this->model->setCookieInfo($entity, $cKey, $cTime);
+    				}
+    				
     			} else {
     				$this->response->jsonSet(JSON_MESSAGE, 'Wrong e-mail or password');
     			}

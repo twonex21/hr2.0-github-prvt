@@ -22,6 +22,8 @@ class FrontendController
 	private $request;
 	private $response;
 	
+	private $qb;
+	
 	private $namespace;
 	private $controller;
 	private $action;
@@ -34,6 +36,8 @@ class FrontendController
    		
    		$this->request = new Request();   						                
         $this->response = new Response();
+        
+        $this->qb = new QueryBuilder();
 	}
 		
     /**
@@ -81,7 +85,34 @@ class FrontendController
         } elseif(!$this->request->query->isNullOrEmpty(self::CONTROLLER_KEY) && !$this->request->query->isNullOrEmpty(self::ACTION_KEY)) {
 	        $controller = $this->request->query->get(self::CONTROLLER_KEY);
 	        $action = $this->request->query->get(self::ACTION_KEY);
-        }                
+        }
+        
+        // Checking user cookie and authorizing user if cookie is valid
+        if(!$this->session->isUserAuthorized() && 
+           !$this->session->isCompanyAuthorized() && 
+           !$this->request->cookies->isNullOrEmpty(COOKIE_NAME)
+          ) 
+        {
+        	$cKey = $this->request->cookies->get(COOKIE_NAME);
+        	$entity = $this->qb->getUserByCookie($cKey);
+        	
+        	if(!empty($entity) && time() < $entity['expiryTime']) {        		
+        		// User found and cookie is not expired
+        		$userAgent = $this->request->server->get('HTTP_USER_AGENT');    					
+    			if($cKey == sha1($userAgent.$entity['ID'].$entity['type'])) {
+    				// Cookie is stored on right user agent
+    				if($entity['type'] == USER) {
+    					// Authorizing user
+    					$currentUser = $this->qb->getUserSessionDataById($entity['ID']);
+    					$this->session->setCurrentUser($currentUser);    				
+    				} else if($entity['type'] == COMPANY) {
+    					// Authorizing company
+    					$currentCompany = $this->qb->getCompanySessionDataById($entity['ID']);
+    					$this->session->setCurrentCompany($currentCompany);    					
+    				}
+    			}
+        	}
+        }
         
         // Let delegate handle the rest
         $this->delegate($controller, $action, $parameters);

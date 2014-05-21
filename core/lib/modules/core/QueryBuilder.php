@@ -9,6 +9,24 @@ class QueryBuilder extends Model
     }
     
          
+    public function getUserByCookie($cKey) {
+    	$entity = array();
+    	
+    	$sql = "SELECT user_id AS ID, 'USER' AS type, ctime AS expiryTime FROM hr_user WHERE ckey='%1\$s'
+    			UNION
+    			SELECT company_id AS ID, 'COMPANY' AS type, ctime AS expiryTime FROM hr_company WHERE ckey='%1\$s'";
+    	 
+    	$sql = $this->mysql->format($sql, array($cKey));
+    	$result = $this->mysql->query($sql);
+    	 
+    	if($row = $this->mysql->getRow($result)) {
+    		$entity = $row;
+    	}
+    	 
+    	return $entity;
+    }
+    
+    
     public function notAlreadyUsed($mail) {
     	$sql = "SELECT COUNT(user_id) AS count FROM hr_user WHERE mail='%1\$s'
     			UNION
