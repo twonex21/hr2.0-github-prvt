@@ -21,11 +21,11 @@ class AuthModel extends Model
     }
 
     
-	public function registerExternalUser($type, $externalId, $mail, $firstName, $lastName, $birthDate, $location, $pictureKey) {    	
-    	$sql = "INSERT INTO hr_user (type, external_id, mail, first_name, last_name, birth_date, location, picture_key, changed_at, created_at)
-    			VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', NOW(), NOW())";
+	public function registerExternalUser($type, $externalId, $mail, $firstName, $lastName, $birthDate, $location, $pictureKey, $linkedInProfileUrl = "") {    	
+    	$sql = "INSERT INTO hr_user (type, external_id, mail, first_name, last_name, birth_date, location, picture_key, linkedin, changed_at, created_at)
+    			VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', NOW(), NOW())";
     	
-    	$params = array($type, $externalId, $mail, $firstName, $lastName, $birthDate, $location, $pictureKey);
+    	$params = array($type, $externalId, $mail, $firstName, $lastName, $birthDate, $location, $pictureKey, $linkedInProfileUrl);
     	$sql = $this->mysql->format($sql, $params, SQL_PREPARED_QUERY);
     	$result = $this->mysql->query($sql, SQL_PREPARED_QUERY);
 		

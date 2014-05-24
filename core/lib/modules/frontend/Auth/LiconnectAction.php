@@ -18,7 +18,7 @@ class LiconnectAction extends Action implements ActionInterface
     	$mail = "";
     	$birthDate = "";
     	$location = "";
-    	$publicProfileUrl = "";
+    	$linkedInProfileUrl = "";
     	
     	
     	$linkedIn = new LinkedIn(LI_APP_ID, LI_APP_SECRET);
@@ -34,15 +34,15 @@ class LiconnectAction extends Action implements ActionInterface
 				
 				$firstName = $userInfo['firstName'];
 				$lastName = $userInfo['lastName'];
-				//TODO use ?
-				$publicProfileUrl = $userInfo['publicProfileUrl'];
-				//
+				$linkedInProfileUrl = $userInfo['publicProfileUrl'];
 				$mail = $userInfo['emailAddress'];
 				
 				//TODO check image quality
 				if(isset($userInfo['pictureUrl'])){
+					
 					$pictureUrl = $userInfo['pictureUrl'];
 					$picture = FrontendUtils::uploadExternalPicture($pictureUrl);
+					
 					if(!empty($picture)) {
 						// Saving cropped version as well
 						$pictureKey = $picture['key'];
@@ -60,10 +60,9 @@ class LiconnectAction extends Action implements ActionInterface
 					$location = $userInfo['location']['name'];
 				}
 			
-				//TODO use $publicProfileUrl ???
 				// Registering external user
 				if($this->qb->notAlreadyUsed($mail)) {
-					$currentUserId = $this->model->registerExternalUser(TYPE_LINKEDIN, $externalId, $mail, $firstName, $lastName, $birthDate, $location, $pictureKey);
+					$currentUserId = $this->model->registerExternalUser(TYPE_LINKEDIN, $externalId, $mail, $firstName, $lastName, $birthDate, $location, $pictureKey, $linkedInProfileUrl);
 					$currentUser = $this->qb->getUserSessionDataById($currentUserId);
 				}
 			}
